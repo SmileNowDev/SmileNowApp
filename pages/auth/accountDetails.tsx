@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState } from "react";
 import {
 	Button,
@@ -10,16 +10,26 @@ import {
 	View,
 } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
-import { Context } from "../../providers/provider";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import userApi from "../../api/user/user";
 export default function AccountDetailsScreen({ navigation }) {
-	const { setLoggedIn } = useContext(Context);
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
 	function handleNext() {
-		setLoggedIn(true);
 		navigation.navigate("Home");
 	}
+
+	async function uploadDetails() {
+		const result = await userApi.updateUser({
+			name,
+			username,
+			bio: "Add a bio...",
+		});
+		if (result.ok) {
+			handleNext();
+		}
+	}
+
 	return (
 		<SafeAreaView
 			style={{
@@ -74,7 +84,7 @@ export default function AccountDetailsScreen({ navigation }) {
 					(hint: at least 5 characters)
 				</Text>
 				<TouchableOpacity
-					onPress={handleNext}
+					onPress={uploadDetails}
 					// disabled={name.length < 1 && username.length < 5}
 					style={{
 						...ButtonStyles.button,

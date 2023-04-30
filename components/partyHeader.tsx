@@ -3,32 +3,18 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "./icons";
 import { Colors, Fonts } from "../styles/theme";
 import { useNavigation } from "@react-navigation/native";
+import { GlobalStyles } from "../styles/styles";
 interface HeaderProps {
 	title: string;
-	setInvitesVisible: Dispatch<SetStateAction<boolean>>;
-	setDetailsVisible: Dispatch<SetStateAction<boolean>>;
-	navigation: any;
+	eventId: string;
+	name: string;
 }
-export default function PartyHeader({
-	title,
-	setInvitesVisible,
-	setDetailsVisible,
-	navigation,
-}: HeaderProps) {
+export default function PartyHeader({ title, eventId, name }: HeaderProps) {
+	const navigation = useNavigation();
 	return (
 		<View
 			style={{
-				display: "flex",
-				flexDirection: "row",
-				justifyContent: "space-between",
-				paddingVertical: 10,
-				paddingHorizontal: 15,
-				backgroundColor: Colors.background,
-
-				shadowOffset: { width: 0, height: 2 },
-				shadowRadius: 8,
-				shadowColor: "rgba(0, 0, 0, 0.25)",
-				elevation: 2,
+				...GlobalStyles.header,
 			}}>
 			<TouchableOpacity onPress={() => navigation.goBack()}>
 				<Icon name={"chevron-left"} size={30} />
@@ -50,14 +36,20 @@ export default function PartyHeader({
 					alignItems: "center",
 					gap: 15,
 				}}>
-				<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+				<TouchableOpacity
+					onPress={() =>
+						navigation.navigate("InviteToParty", { eventId, name })
+					}>
 					<Icon
 						name="person-add-alt-1"
 						size={25}
 						color={Colors.textSecondary}
 					/>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+				<TouchableOpacity
+					onPress={() =>
+						navigation.navigate("PartyDetails", { eventId, name })
+					}>
 					<Icon
 						name="settings"
 						type="Feather"

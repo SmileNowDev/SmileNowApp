@@ -1,5 +1,15 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { Colors, Fonts } from "./theme";
+
+export const Dim = {
+	width: Dimensions.get("window").width,
+	height: Dimensions.get("window").height,
+	sm: 5,
+	md: 10,
+	lg: 15,
+	xl: 20,
+	xxl: 40,
+};
 export const ButtonStyles = StyleSheet.create({
 	button: {
 		display: "flex",
@@ -10,6 +20,16 @@ export const ButtonStyles = StyleSheet.create({
 		paddingVertical: 10,
 		paddingHorizontal: 30,
 		gap: 2,
+	},
+	buttonSmall: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 5,
+		paddingVertical: 5,
+		paddingHorizontal: 15,
+		gap: 5,
 	},
 	buttonLarge: {
 		display: "flex",
@@ -33,13 +53,18 @@ export const ButtonStyles = StyleSheet.create({
 		borderColor: "#FFFFFF",
 		backgroundColor: "transparent",
 	},
+	buttonTextSmall: {
+		fontFamily: Fonts.button.fontFamily,
+		fontSize: 12,
+		color: Colors.background,
+	},
 	buttonText: {
 		fontFamily: Fonts.button.fontFamily,
 		color: Colors.background,
 	},
 	buttonTextLarge: {
 		fontFamily: Fonts.button.fontFamily,
-		fontSize: 24,
+		fontSize: 20,
 		color: Colors.background,
 	},
 	primary: {
@@ -47,6 +72,18 @@ export const ButtonStyles = StyleSheet.create({
 	},
 	secondary: {
 		backgroundColor: Colors.secondary,
+	},
+	outlined: {
+		backgroundColor: "transparent",
+		borderColor: Colors.border,
+		borderWidth: 1,
+		borderStyle: "solid",
+	},
+	primaryOutlined: {
+		backgroundColor: "transparent",
+		borderColor: Colors.primary,
+		borderWidth: 1,
+		borderStyle: "solid",
 	},
 });
 export const GlobalStyles = StyleSheet.create({
@@ -65,5 +102,27 @@ export const GlobalStyles = StyleSheet.create({
 		shadowRadius: 7,
 		shadowColor: "rgba(0, 0, 0, 0.25)",
 		elevation: -4,
+	},
+	textInput: {
+		fontFamily: Fonts.body.fontFamily,
+		fontSize: 16,
+		padding: 6,
+		borderBottomColor: Colors.border,
+		borderBottomWidth: 2,
+		borderStyle: "solid",
+		backgroundColor: Colors.foreground,
+	},
+	header: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		paddingVertical: 10,
+		paddingHorizontal: 10,
+		backgroundColor: Colors.background,
+
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 8,
+		shadowColor: "rgba(0, 0, 0, 0.25)",
+		elevation: -2,
 	},
 });

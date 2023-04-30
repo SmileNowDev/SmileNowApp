@@ -70,7 +70,7 @@ export default function Photo({
 							style={{
 								fontFamily: Fonts.handWriting.fontFamily,
 							}}>
-							{owner}
+							{owner.name}
 						</Text>
 					</View>
 					<View style={styles.reactionContainer}>

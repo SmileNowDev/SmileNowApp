@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+	Image,
 	SafeAreaView,
 	StyleSheet,
 	Text,
@@ -9,16 +10,26 @@ import {
 import { Colors, Fonts } from "../styles/theme";
 import Header from "../components/header";
 import Icon from "../components/icons";
+import userApi from "../api/user/user";
+import { Context } from "../providers/provider";
 export default function ProfilePage({ navigation }) {
-	const user = {
-		image: "blah",
-		name: "Sally",
-		userName: "sally123",
-	};
+	const [user, setUser] = useState({ name: "", pic: "", username: "" });
+	const { userId } = useContext(Context);
+	async function getUser() {
+		const result = await userApi.get({ userId });
+		if (result.ok) {
+			//@ts-expect-error
+			setUser(result.data);
+		}
+	}
+
+	useEffect(() => {
+		getUser();
+	}, [userId]);
 
 	return (
 		<SafeAreaView>
-			<Header goBack title={"My Profile"} navigation={navigation} />
+			<Header goBack title={"My Profile"} />
 			<View
 				style={{
 					paddingTop: 30,
@@ -29,12 +40,37 @@ export default function ProfilePage({ navigation }) {
 				}}>
 				<View
 					style={{
+						position: "relative",
 						height: 150,
 						width: 150,
 						borderRadius: 75,
-						backgroundColor: Colors.primary,
 						marginBottom: 10,
-					}}></View>
+					}}>
+					{user.pic === "" ? (
+						<Image
+							source={require("../assets/logo_color.png")}
+							style={{ width: "100%", height: "100%", borderRadius: 75 }}
+						/>
+					) : (
+						<Image
+							source={{ uri: user.pic }}
+							style={{ width: "100%", height: "100%", borderRadius: 75 }}
+						/>
+					)}
+
+					<TouchableOpacity
+						onPress={() => navigation.navigate("TakeProfilePicture")}
+						style={{
+							position: "absolute",
+							bottom: 0,
+							right: 0,
+							backgroundColor: Colors.background,
+							padding: 4,
+							borderRadius: 20,
+						}}>
+						<Icon name="account-edit" type={"MaterialCommunity"} size={30} />
+					</TouchableOpacity>
+				</View>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
@@ -48,7 +84,7 @@ export default function ProfilePage({ navigation }) {
 						fontSize: Fonts.button.fontSize,
 						color: Colors.textSecondary,
 					}}>
-					@{user.userName}
+					@{user.username}
 				</Text>
 			</View>
 			<View
@@ -60,13 +96,15 @@ export default function ProfilePage({ navigation }) {
 					marginVertical: 20,
 				}}>
 				<TouchableOpacity
-					onPress={() => {}}
+					onPress={() => {
+						// TODO: open the app store page!
+					}}
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.primaryLight,
 					}}>
-					<Icon name="share" type={"Feather"} size={30} />
-					<Text>Share Profile</Text>
+					<Icon name="star" type={"Feather"} size={30} />
+					<Text>Rate Us!</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => {}}
@@ -78,15 +116,14 @@ export default function ProfilePage({ navigation }) {
 					<Text>Edit Profile</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => {}}
+					onPress={() => navigation.navigate("Settings")}
 					style={{ ...styles.optionButton, backgroundColor: Colors.border }}>
 					<Icon name="settings" type={"Feather"} size={30} />
 					<Text>Settings</Text>
 				</TouchableOpacity>
 			</View>
 
-			{/* quick actions */}
-			{/* my pictures */}
+			{/* TODO:  my pictures */}
 		</SafeAreaView>
 	);
 }

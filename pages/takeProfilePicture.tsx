@@ -18,12 +18,11 @@ import Icon from "../components/icons";
 import { Colors, Fonts } from "../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../styles/styles";
 import postApi from "../api/post/post";
+import userApi from "../api/user/user";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
-	const { eventId } = route.params;
-	const [caption, setCaption] = useState("");
 	const [permission, requestPermission] = Camera.useCameraPermissions();
-	const [cameraType, setCameraType] = useState(CameraType.back);
+	const cameraType = CameraType.front;
 	const [flashMode, setFlashMode] = useState(FlashMode.off);
 	const [isPreviewing, setIsPreviewing] = useState(false);
 	const [photo, setPhoto] = useState(null);
@@ -50,11 +49,6 @@ export default function CameraPage({ route, navigation }) {
 		setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off);
 	};
 
-	const toggleCameraType = () => {
-		setCameraType(
-			cameraType === CameraType.back ? CameraType.front : CameraType.back
-		);
-	};
 	const createFormData = (photo, body = {}) => {
 		let formData = new FormData();
 		let filename = photo.uri.split("/").pop();
@@ -69,14 +63,14 @@ export default function CameraPage({ route, navigation }) {
 		let formData = createFormData(photo);
 		const result = await postApi.uploadImage({ formData, postId });
 		if (result.ok) {
-			navigation.navigate("Party", { eventId });
+			navigation.goBack();
 		}
 	}
-	async function handlePost() {
-		const result = await postApi.create({ eventId, caption });
+	async function handleSave() {
+		let formData = createFormData(photo);
+		const result = await userApi.uploadAvatar({ formData });
 		if (result.ok) {
 			//@ts-expect-error
-
 			uploadImage(result.data._id);
 		}
 	}
@@ -110,9 +104,11 @@ export default function CameraPage({ route, navigation }) {
 						style={{
 							height: width - 20,
 							width: width - 20,
-							borderRadius: 20,
+							borderRadius: (width - 20) / 2,
 							overflow: "hidden",
-							marginTop: 20,
+
+							position: "absolute",
+							top: width / 2,
 						}}
 						type={cameraType}
 						flashMode={flashMode}
@@ -136,77 +132,68 @@ export default function CameraPage({ route, navigation }) {
 							onPress={() => takePhoto()}>
 							<View style={styles.innerShutter} />
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => toggleCameraType()}>
-							<Icon
-								name="ios-camera-reverse"
-								size={30}
-								type={"Ion"}
-								color={Colors.textSecondary}
-							/>
-						</TouchableOpacity>
+						<View style={{ opacity: 0 }}>
+							<Icon name="" size={30} />
+						</View>
 					</View>
 				</>
 			) : (
 				<>
-					<TextInput
-						placeholderTextColor={Colors.textSecondary}
+					<View style={{ height: 100, marginTop: 30 }}>
+						<Text
+							style={{
+								fontFamily: Fonts.title.fontFamily,
+								fontSize: 40,
+							}}>
+							Looks Great!
+						</Text>
+					</View>
+					<Image
+						// @ts-expect-error
+						source={{ uri: photo?.uri }}
 						style={{
-							...GlobalStyles.textInput,
-							marginTop: 30,
-							width: width - 20,
-							height: 100,
-						}}
-						placeholder="Caption Your Photo"
-						value={caption}
-						onChangeText={setCaption}
-					/>
-					<View
-						style={{
-							position: "relative",
+							position: "absolute",
+							top: width / 2,
 							height: width - 20,
 							width: width - 20,
-							marginTop: 20,
-						}}>
-						<Image
-							// @ts-expect-error
-							source={{ uri: photo?.uri }}
-							style={{ width: "100%", height: "100%", borderRadius: 10 }}
-						/>
+							borderRadius: (width - 20) / 2,
+						}}
+					/>
+					<View style={{ position: "absolute", bottom: 100 }}>
 						<TouchableOpacity
 							onPress={() => retakePhoto()}
 							style={{
-								position: "absolute",
-								top: 20,
-								left: 20,
-								...ButtonStyles.buttonSmall,
-								backgroundColor: Colors.foreground,
+								...ButtonStyles.button,
+								...ButtonStyles.primaryOutlined,
 							}}>
 							<Icon
 								name="image-remove"
 								size={20}
 								type={"MaterialCommunity"}
-								color={Colors.textSecondary}
+								color={Colors.primary}
 							/>
 							<Text
 								style={{
-									...ButtonStyles.buttonTextSmall,
-									color: Colors.textSecondary,
+									...ButtonStyles.buttonText,
+									color: Colors.primary,
 								}}>
 								Retake
 							</Text>
 						</TouchableOpacity>
-					</View>
 
-					<TouchableOpacity
-						style={{
-							marginTop: 20,
-							width: width - 20,
-							...ButtonStyles.buttonLarge,
-							...ButtonStyles.primary,
-						}}
-						onPress={() => handlePost()}>
-						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Post</Text>
-					</TouchableOpacity>
+						<TouchableOpacity
+							style={{
+								marginTop: 10,
+								width: width - 20,
+								...ButtonStyles.button,
+								...ButtonStyles.primary,
+							}}
+							onPress={() => handleSave()}>
+							<Text style={{ ...ButtonStyles.buttonTextLarge }}>
+								Save Photo
+							</Text>
+						</TouchableOpacity>
+					</View>
 				</>
 			)}
 		</SafeAreaView>

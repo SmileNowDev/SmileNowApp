@@ -4,21 +4,17 @@ import Icon from "./icons";
 import { Colors, Fonts } from "../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../styles/styles";
-interface HeaderProps {
-	goBack?: boolean;
-	title?: string;
-}
-export default function Header({ goBack = false, title }: HeaderProps) {
+
+export default function HomeHeader() {
 	const navigation = useNavigation();
 	return (
 		<View
 			style={{
 				...GlobalStyles.header,
 			}}>
-			<TouchableOpacity onPress={() => navigation.goBack()}>
-				<Icon name={"chevron-left"} size={30} />
+			<TouchableOpacity onPress={() => navigation.navigate("Friends")}>
+				<Icon name={"people"} size={30} />
 			</TouchableOpacity>
-
 			<Text
 				style={{
 					flex: 1,
@@ -26,9 +22,12 @@ export default function Header({ goBack = false, title }: HeaderProps) {
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
 				}}>
-				{title ? title : "SmileNow"}
+				SmileNow
 			</Text>
-			<View style={{ width: 30 }} />
+			<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+				<Icon name="person" size={30} />
+			</TouchableOpacity>
+			{/* profile button */}
 		</View>
 	);
 }

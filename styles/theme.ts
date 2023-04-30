@@ -11,7 +11,7 @@ export const Colors = {
 	urgent: "#ed7286",
 
 	background: "#FAFAFA",
-	foreground: "#F2F2F2",
+	foreground: "#EEEEEE",
 	text: "#1F1F1F",
 	textSecondary: "#767676",
 	border: "#E5E5E5",
@@ -32,6 +32,10 @@ export const Fonts = {
 	body: {
 		fontFamily: "LibreFranklin_400Regular",
 		fontSize: 16,
+	},
+	small: {
+		fontFamily: "LibreFranklin_400Regular",
+		fontSize: 12,
 	},
 	handWriting: {
 		fontFamily: "FuzzyBubbles_400Regular",

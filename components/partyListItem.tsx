@@ -7,12 +7,18 @@ interface ListProps {
 	icon: string;
 	name: string;
 	canPost: boolean;
+	eventId: string;
 }
-export default function PartyListItem({ icon, name, canPost }: ListProps) {
+export default function PartyListItem({
+	icon,
+	name,
+	canPost,
+	eventId,
+}: ListProps) {
 	const navigation = useNavigation();
 	return (
 		<TouchableOpacity
-			onPress={() => navigation.navigate("Party", { partyId: "asdbsadf" })}
+			onPress={() => navigation.navigate("Party", { eventId })}
 			style={{
 				display: "flex",
 				flexDirection: "row",

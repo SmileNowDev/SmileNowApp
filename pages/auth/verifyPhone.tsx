@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
 	Button,
 	Image,
@@ -8,16 +8,51 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Alert,
 } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import Icon from "../../components/icons";
-export default function VerifyPhonePage({ navigation }) {
+import authApi from "../../api/user/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Context } from "../../providers/provider";
+import jwt_decode from "jwt-decode";
+
+export default function VerifyPhonePage({ route, navigation }) {
+	const { phone } = route.params;
 	const [code, setCode] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorText, setErrorText] = useState("");
+	const { setLoggedIn, setUserId } = useContext(Context);
 	function handleNext() {
 		navigation.navigate("AccountDetails");
+	}
+
+	async function login() {
+		const result = await authApi.login({ phone, password });
+		if (result.ok) {
+			//@ts-expect-error
+			await AsyncStorage.setItem("access-token", result.data.accessToken);
+			//@ts-expect-error
+			await AsyncStorage.setItem("refresh-token", result.data.refreshToken);
+			//@ts-expect-error
+
+			const userId = await jwt_decode(result.data.accessToken)._id;
+			setUserId(userId);
+			setLoggedIn(true);
+			handleNext();
+		} else {
+			Alert.alert("Error authenticating");
+		}
+	}
+
+	async function verifyAccount() {
+		const result = await authApi.verify({ phone, code, password });
+		if (result.ok) {
+			await login();
+		} else {
+			setErrorText("Something went wrong, try again.");
+		}
 	}
 	return (
 		<SafeAreaView
@@ -91,7 +126,7 @@ export default function VerifyPhonePage({ navigation }) {
 					(hint: at least 8 characters)
 				</Text>
 				<TouchableOpacity
-					onPress={handleNext}
+					onPress={verifyAccount}
 					// disabled={code.length < 5 && password.length < 8}
 					style={{
 						...ButtonStyles.button,
