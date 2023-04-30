@@ -12,6 +12,7 @@ import Header from "../components/header";
 import Icon from "../components/icons";
 import userApi from "../api/user/user";
 import { Context } from "../providers/provider";
+import Avatar from "../components/avatar";
 export default function ProfilePage({ navigation }) {
 	const [user, setUser] = useState({ name: "", pic: "", username: "" });
 	const { userId } = useContext(Context);
@@ -46,17 +47,7 @@ export default function ProfilePage({ navigation }) {
 						borderRadius: 75,
 						marginBottom: 10,
 					}}>
-					{user.pic === "" ? (
-						<Image
-							source={require("../assets/logo_color.png")}
-							style={{ width: "100%", height: "100%", borderRadius: 75 }}
-						/>
-					) : (
-						<Image
-							source={{ uri: user.pic }}
-							style={{ width: "100%", height: "100%", borderRadius: 75 }}
-						/>
-					)}
+					<Avatar pic={user.pic} size={150} id={userId} />
 
 					<TouchableOpacity
 						onPress={() => navigation.navigate("TakeProfilePicture")}

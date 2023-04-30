@@ -9,6 +9,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
+import Avatar from "./avatar";
 
 export default function UserCard({
 	profilePicture,
@@ -19,10 +20,7 @@ export default function UserCard({
 }) {
 	return (
 		<TouchableOpacity style={styles.container} onPress={onPress}>
-			<Image
-				source={{ uri: profilePicture }}
-				style={{ width: 40, height: 40, borderRadius: 20 }}
-			/>
+			<Avatar pic={profilePicture} size={40} id={id} />
 			<View style={{ flex: 1 }}>
 				<Text
 					style={{

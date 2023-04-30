@@ -67,14 +67,17 @@ export default function PostPage({ route, navigation }) {
 					style={{ padding: 10 }}
 					refreshControl={
 						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}
-				>
+					}>
 					{!loading ? (
 						<Photo
 							postId={postId}
 							image={post?.src}
 							caption={post?.caption}
-							owner={{ name: post?.user.name, picture: post?.user.src }}
+							owner={{
+								name: post?.user.name,
+								picture: post?.user.src,
+								id: post?.user._id,
+							}}
 							date={post?.date}
 							likes={post?.likes}
 							isLiked={post?.isLiked}
@@ -91,8 +94,7 @@ export default function PostPage({ route, navigation }) {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-						}}
-					>
+						}}>
 						<TextInput
 							numberOfLines={2}
 							style={{
@@ -101,7 +103,7 @@ export default function PostPage({ route, navigation }) {
 								flex: 1,
 								height: 50,
 							}}
-							placeholder='Comment'
+							placeholder="Comment"
 							value={comment}
 							onChangeText={setComment}
 						/>
@@ -116,9 +118,8 @@ export default function PostPage({ route, navigation }) {
 								alignItems: "center",
 								alignSelf: "flex-end",
 								marginLeft: 10,
-							}}
-						>
-							<Icon name='send' size={30} color={Colors.background} />
+							}}>
+							<Icon name="send" size={30} color={Colors.background} />
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}

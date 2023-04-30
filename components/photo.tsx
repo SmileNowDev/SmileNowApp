@@ -10,6 +10,7 @@ import {
 import Icon from "./icons";
 import { Colors, Fonts } from "../styles/theme";
 import likeApi from "../api/interaction/like";
+import Avatar from "./avatar";
 const { width, height } = Dimensions.get("window");
 export interface PhotoProps {
 	postId: string;
@@ -18,6 +19,7 @@ export interface PhotoProps {
 	owner: {
 		picture: string;
 		name: string;
+		id: string;
 	};
 	date: string;
 	likes: number;
@@ -69,52 +71,32 @@ export default function Photo({
 						marginTop: 10,
 						fontFamily: Fonts.handWriting.fontFamily,
 						fontSize: Fonts.handWriting.fontSize,
-					}}
-				>
+					}}>
 					{caption}
 				</Text>
 				<View style={styles.footer}>
 					<View style={styles.user}>
-						{owner.picture ? (
-							<Image
-								source={{ uri: owner.picture }}
-								style={{
-									height: 20,
-									width: 20,
-									borderRadius: 10,
-								}}
-							/>
-						) : (
-							<Image
-								source={require("../assets/logo_color.png")}
-								style={{
-									height: 20,
-									width: 20,
-									borderRadius: 10,
-								}}
-							/>
-						)}
+						<Avatar pic={owner.picture} size={20} id={owner.id} />
 
 						<Text
 							style={{
 								fontFamily: Fonts.handWriting.fontFamily,
-							}}
-						>
+							}}>
 							{owner.name}
 						</Text>
 					</View>
 					<View style={styles.reactionContainer}>
 						<TouchableOpacity style={styles.reaction} onPress={handleLike}>
 							<Icon
-								name='heart'
-								type='Ion'
+								name="heart"
+								type="Ion"
 								size={20}
 								color={liked ? Colors.primary : Colors.textSecondary}
 							/>
 							<Text style={{ fontFamily: Fonts.body.fontFamily }}>{likes}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity style={styles.reaction} disabled>
-							<Icon name='message' size={20} color={Colors.textSecondary} />
+							<Icon name="message" size={20} color={Colors.textSecondary} />
 							<Text style={{ fontFamily: Fonts.body.fontFamily }}>
 								{comments}
 							</Text>

@@ -7,6 +7,7 @@ import {
 	FlatList,
 	Image,
 	ScrollView,
+	StyleSheet,
 } from "react-native";
 import Header from "../components/header";
 import { Dim, GlobalStyles } from "../styles/styles";
@@ -17,7 +18,9 @@ import ContactCard from "../components/contactCard";
 import { debounce } from "lodash";
 import userApi from "../api/user/user";
 import friendApi from "../api/user/friend";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
+const Tab = createMaterialTopTabNavigator();
 export function getInitials(firstName: string, lastName: string) {
 	if (!firstName && !lastName) return "??";
 	if (!lastName) return firstName.substring(0, 1);
@@ -79,49 +82,25 @@ export default function FriendsPage() {
 		console.log("res: ", result);
 
 		if (result.ok) {
+			// @ts-expect-error
 			setFriends(result.data);
 		}
 	}
-
-	return (
-		<SafeAreaView>
-			<Header goBack />
-			<ScrollView style={{ padding: 10 }}>
-				{/* friends */}
-				<Text
-					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-					}}
-				>
-					Your Friends
-				</Text>
-				<FlatList
-					data={friends}
-					renderItem={({ item }) => {
-						return (
-							<UserCard
-								profilePicture={item.user.src}
-								name={item.name}
-								username={item.username}
-								id={item.id}
-								onPress={() => {}}
-							/>
-						);
-					}}
-				/>
-				{/* contacts */}
-				<Text
-					style={{
-						marginTop: 20,
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-					}}
-				>
-					Invite Contacts
-				</Text>
+	function RequestTab() {
+		// friend requests you've received
+		return (
+			<ScrollView style={styles.tabContainer}>
+				<Text style={styles.tabTitle}></Text>
+			</ScrollView>
+		);
+	}
+	function AddFriendsTab() {
+		// contacts then mutuals
+		return (
+			<ScrollView style={styles.tabContainer}>
+				<Text style={styles.tabTitle}>Invite Contacts</Text>
 				<TextInput
-					placeholder='Search Contacts'
+					placeholder="Search Contacts"
 					style={GlobalStyles.textInput}
 					value={searchQuery}
 					onChangeText={(query) => {
@@ -137,7 +116,7 @@ export default function FriendsPage() {
 								profilePicture={item.src}
 								name={item.name}
 								username={item.username}
-								id={item.id}
+								id={item._id}
 								onPress={() => {}}
 							/>
 						);
@@ -164,6 +143,54 @@ export default function FriendsPage() {
 
 				<View style={{ height: Dim.height / 2 }} />
 			</ScrollView>
-		</SafeAreaView>
+		);
+	}
+	function MyFriendsTab() {
+		// my friends
+		return (
+			<ScrollView style={styles.tabContainer}>
+				<Text style={styles.tabTitle}>My Friends</Text>
+				<FlatList
+					data={friends}
+					renderItem={({ item }) => {
+						return (
+							<UserCard
+								profilePicture={item.user.src}
+								name={item.name}
+								username={item.username}
+								id={item._id}
+								onPress={() => {}}
+							/>
+						);
+					}}
+				/>
+			</ScrollView>
+		);
+	}
+	function RequestsSentTab() {
+		// pending requests
+		return (
+			<ScrollView style={styles.tabContainer}>
+				<Text style={styles.tabTitle}></Text>
+			</ScrollView>
+		);
+	}
+	return (
+		<Tab.Navigator>
+			<Tab.Screen name="Requests" component={RequestTab} />
+			<Tab.Screen name="AddFriends" component={AddFriendsTab} />
+			<Tab.Screen name="MyFriends" component={MyFriendsTab} />
+			<Tab.Screen name="RequestsSent" component={RequestsSentTab} />
+		</Tab.Navigator>
 	);
 }
+const styles = StyleSheet.create({
+	tabContainer: {
+		padding: 10,
+	},
+	tabTitle: {
+		fontFamily: Fonts.subTitle.fontFamily,
+		fontSize: Fonts.subTitle.fontSize,
+		color: Colors.textSecondary,
+	},
+});

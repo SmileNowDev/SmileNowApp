@@ -7,6 +7,7 @@ import { ButtonStyles } from "../styles/styles";
 import userApi from "../api/user/user";
 import Icon from "./icons";
 import { Fonts, Colors } from "../styles/theme";
+import friendApi from "../api/user/friend";
 interface AvatarProps {
 	pic: string;
 	size: number;
@@ -47,6 +48,10 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 		}
 	}
 	async function getUser() {
+		if (!id) {
+			console.error("user id is undefined in avatar");
+			return;
+		}
 		const response = await userApi.get({ userId: id });
 		console.log(response.data);
 		if (response.ok) {
@@ -59,32 +64,40 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 		}
 	}
 	function handleNavigate() {
+		console.log(id, userId);
 		if (id === userId) {
+			// @ts-expect-error
 			navigation.navigate("Profile");
 		} else {
-			console.log("Here");
 			getUser();
 			setModalVisible(true);
 		}
 	}
 	async function sendFriendRequest() {
-		const result = await userApi.friendApi.request({ userId: id });
-		// todo
+		const result = await friendApi.request({ userId: id });
+		if (result.ok) {
+			setFriendStatus("requested");
+		}
 	}
 	async function acceptFriendRequest() {
-		// todo
+		const result = await friendApi.accept({ userId: id });
+		if (result.ok) {
+			setFriendStatus("accepted");
+		}
 	}
 	async function removeFriend() {
-		// todo
+		const result = await friendApi.deleteFriend({ userId: id });
+		if (result.ok) {
+			setFriendStatus("stranger");
+		}
 	}
 	function ActionButton() {
 		if (friendStatus === "stranger") {
 			return (
 				<TouchableOpacity
 					onPress={() => sendFriendRequest()}
-					style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
-				>
-					<Icon name='person-add' size={20} color='white' />
+					style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
+					<Icon name="person-add" size={20} color="white" />
 					<Text style={{ ...ButtonStyles.buttonText }}>
 						Send Friend Request
 					</Text>
@@ -98,17 +111,14 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
-							marginTop: 20,
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						{name} wants to be friends!
 					</Text>
 					<TouchableOpacity
 						onPress={() => acceptFriendRequest()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.success }}
-					>
-						<Icon name='person-add' size={20} color='white' />
+						style={{ ...ButtonStyles.button, ...ButtonStyles.success }}>
+						<Icon name="person-add" size={20} color="white" />
 						<Text style={{ ...ButtonStyles.buttonText }}>
 							Accept Friend Request
 						</Text>
@@ -123,16 +133,14 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
-							marginTop: 20,
 							marginBottom: 10,
 							textAlign: "center",
-						}}
-					>
+						}}>
 						Still waiting for {name} to add you back
 					</Text>
 					<TouchableOpacity
-						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}
-					>
+						onPress={() => removeFriend()}
+						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Friend Request Pending
 						</Text>
@@ -147,17 +155,14 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
-							marginTop: 20,
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						You're friends with {name}
 					</Text>
 					<TouchableOpacity
 						onPress={() => removeFriend()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}
-					>
-						<Icon name='person-remove' size={20} color={Colors.text} />
+						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}>
+						<Icon name="person-remove" size={20} color={Colors.text} />
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Remove Friend
 						</Text>
@@ -171,23 +176,26 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 			<TouchableOpacity onPress={() => handleNavigate()}>
 				<Picture size={size} />
 			</TouchableOpacity>
-			<ModalWrapper visible={modalVisible} setVisible={setModalVisible}>
+			<ModalWrapper
+				visible={modalVisible}
+				setVisible={setModalVisible}
+				fullHeight={false}
+				scrollable={false}
+				noSwipe={false}>
 				<View
 					style={{
 						flexDirection: "column",
 						alignItems: "center",
 						justifyContent: "flex-start",
-					}}
-				>
+					}}>
 					<Picture size={80} />
 					<Text
 						style={{
 							marginTop: 20,
-							marginBottom: 10,
+							marginBottom: 5,
 							fontFamily: Fonts.title.fontFamily,
 							fontSize: Fonts.title.fontSize,
-						}}
-					>
+						}}>
 						{name}
 					</Text>
 					<Text
@@ -195,11 +203,10 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 							fontFamily: Fonts.title.fontFamily,
 							fontSize: Fonts.button.fontSize,
 							color: Colors.textSecondary,
-						}}
-					>
+						}}>
 						@{userName}
 					</Text>
-					<View>
+					<View style={{ paddingVertical: 30 }}>
 						<ActionButton />
 					</View>
 					<TouchableOpacity
@@ -208,8 +215,7 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 							...ButtonStyles.button,
 							...ButtonStyles.outlined,
 							marginTop: 50,
-						}}
-					>
+						}}>
 						<Text>Close</Text>
 					</TouchableOpacity>
 				</View>
