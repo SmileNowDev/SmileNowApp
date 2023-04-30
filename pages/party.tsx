@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-	Dimensions,
+	RefreshControl,
 	SafeAreaView,
 	ScrollView,
 	Text,
@@ -11,38 +11,16 @@ import PartyHeader from "../components/partyHeader";
 import Photo from "../components/photo";
 import Icon from "../components/icons";
 import { Colors } from "../styles/theme";
-import { ButtonStyles } from "../styles/styles";
+import { ButtonStyles, Dim } from "../styles/styles";
 import eventApi from "../api/post/event";
 import postApi from "../api/post/post";
 
-const { width, height } = Dimensions.get("window");
 export default function PartyPage({ route, navigation }) {
 	const { eventId } = route.params;
+	const [refreshing, setRefreshing] = useState(false);
 	const [canPost, setCanPost] = useState(false);
 	const [name, setName] = useState("");
 	const [posts, setPosts] = useState([]);
-	const testPhotos = [
-		{
-			image:
-				"https://fastly.picsum.photos/id/185/200/200.jpg?hmac=YNeKNCPhFVkjxUu5nB7ZP8UJVw_zYu3TPLI11_edSWc",
-			caption: "This is a test caption",
-			owner: "sally123",
-			date: "2021-03-01",
-			likes: 5,
-			isLiked: true,
-			comments: 3,
-		},
-		{
-			image:
-				"https://fastly.picsum.photos/id/676/200/200.jpg?hmac=hgeMQEIK4Mn27Q2oLRWjXo1rgxwTbk1CnJE954h_HyM",
-			caption: "This is a test caption",
-			owner: "sally123",
-			date: "2021-03-01",
-			likes: 5,
-			isLiked: false,
-			comments: 3,
-		},
-	];
 
 	async function getPosts() {
 		const result = await postApi.getPosts({ eventId, page: 1 });
@@ -62,7 +40,12 @@ export default function PartyPage({ route, navigation }) {
 			setCanPost(result.data.canPost);
 		}
 	}
-
+	function onRefresh() {
+		setRefreshing(true);
+		getEvent();
+		getPosts();
+		setRefreshing(false);
+	}
 	useEffect(() => {
 		getPosts();
 		getEvent();
@@ -115,21 +98,32 @@ export default function PartyPage({ route, navigation }) {
 					</TouchableOpacity>
 				</View>
 			) : null}
-			<ScrollView style={{ width: "100%", padding: 10 }}>
+			<ScrollView
+				style={{ width: "100%", padding: 10 }}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}>
 				{posts.map(function (photo: any, index) {
 					return (
-						<Photo
-							image={photo.src}
-							caption={photo.caption}
-							owner={{ name: photo.user.name, picture: photo.user.picture }}
-							date={photo.updatedAt}
-							likes={photo.likes || 0}
-							isLiked={photo.isLiked || false}
-							comments={photo.comments || 0}
-						/>
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate("Post", { postId: photo._id });
+							}}>
+							<Photo
+								postId={photo._id}
+								image={photo.src}
+								caption={photo.caption}
+								owner={{ name: photo.user.name, picture: photo.user.picture }}
+								date={photo.updatedAt}
+								likes={photo.likes || 0}
+								isLiked={photo.isLiked || false}
+								comments={photo.comments || 0}
+								refresh={onRefresh}
+							/>
+						</TouchableOpacity>
 					);
 				})}
-				<View style={{ height: height / 2 }} />
+				<View style={{ height: Dim.height / 2 }} />
 			</ScrollView>
 			{/* header that lets you access party details */}
 			{/* list of pictures */}

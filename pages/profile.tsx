@@ -107,7 +107,9 @@ export default function ProfilePage({ navigation }) {
 					<Text>Rate Us!</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => {}}
+					onPress={() => {
+						navigation.navigate("EditProfile");
+					}}
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.secondaryLight,

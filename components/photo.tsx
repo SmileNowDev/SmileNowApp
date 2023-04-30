@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	Image,
 	StyleSheet,
@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import Icon from "./icons";
 import { Colors, Fonts } from "../styles/theme";
+import likeApi from "../api/interaction/like";
 const { width, height } = Dimensions.get("window");
-interface PhotoProps {
+export interface PhotoProps {
+	postId: string;
 	image: string;
 	caption: string;
 	owner: {
@@ -21,8 +23,10 @@ interface PhotoProps {
 	likes: number;
 	isLiked: boolean;
 	comments: number;
+	refresh: () => void;
 }
 export default function Photo({
+	postId,
 	image,
 	caption,
 	owner,
@@ -30,18 +34,31 @@ export default function Photo({
 	likes,
 	isLiked,
 	comments,
-}) {
+	refresh,
+}: PhotoProps) {
+	const [liked, setLiked] = useState(isLiked);
 	function handleOpen() {
 		console.log("open");
 	}
-	function handleLike() {
-		console.log("like");
+	async function handleLike() {
+		if (!liked) {
+			const result = await likeApi.create({ postId });
+			if (result.ok) {
+				setLiked(true);
+			}
+		} else {
+			const result = await likeApi.deleteLike({ postId });
+			if (result.ok) {
+				setLiked(false);
+			}
+		}
+		refresh();
 	}
 	function handleComment() {
 		console.log("comment");
 	}
 	return (
-		<TouchableOpacity style={styles.photo} onPress={() => handleOpen()}>
+		<View style={styles.photo}>
 			<Image
 				source={{ uri: image }}
 				style={{ height: width - 40, width: width - 40 }}
@@ -57,15 +74,26 @@ export default function Photo({
 				</Text>
 				<View style={styles.footer}>
 					<View style={styles.user}>
-						<Image
-							source={{ uri: owner.image }}
-							style={{
-								height: 20,
-								width: 20,
-								borderRadius: 10,
-								backgroundColor: "pink",
-							}}
-						/>
+						{owner.picture ? (
+							<Image
+								source={{ uri: owner.picture }}
+								style={{
+									height: 20,
+									width: 20,
+									borderRadius: 10,
+								}}
+							/>
+						) : (
+							<Image
+								source={require("../assets/logo_color.png")}
+								style={{
+									height: 20,
+									width: 20,
+									borderRadius: 10,
+								}}
+							/>
+						)}
+
 						<Text
 							style={{
 								fontFamily: Fonts.handWriting.fontFamily,
@@ -81,7 +109,7 @@ export default function Photo({
 								name="heart"
 								type="Ion"
 								size={20}
-								color={isLiked ? Colors.primary : Colors.textSecondary}
+								color={liked ? Colors.primary : Colors.textSecondary}
 							/>
 							<Text style={{ fontFamily: Fonts.body.fontFamily }}>{likes}</Text>
 						</TouchableOpacity>
@@ -96,7 +124,7 @@ export default function Photo({
 					</View>
 				</View>
 			</View>
-		</TouchableOpacity>
+		</View>
 	);
 }
 

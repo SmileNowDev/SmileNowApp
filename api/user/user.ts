@@ -15,10 +15,14 @@ const uploadAvatar = ({ formData }) =>
 
 const deleteAvatar = () => client.delete(`${endpoint}/avatar`);
 
+const getContacts = ({ phoneNumbers }) =>
+	client.post(`${endpoint}/contacts`, { phoneNumbers });
+
 const userApi = {
 	get,
 	updateUser,
 	uploadAvatar,
 	deleteAvatar,
+	getContacts,
 };
 export default userApi;

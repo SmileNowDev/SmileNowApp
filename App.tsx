@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Context, Provider as MyProvider } from "./providers/provider";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
 import {
 	useFonts,
@@ -41,10 +41,17 @@ import { Colors } from "./styles/theme";
 import TakeProfilePicture from "./pages/takeProfilePicture";
 import Settings from "./pages/settings";
 import LoginPage from "./pages/auth/login";
+import SplashPage from "./pages/splash";
+import Post from "./pages/post";
+import PostPage from "./pages/post";
+import EditProfile from "./pages/editProfile";
+import EditProfilePage from "./pages/editProfile";
 
 type RootStackParamList = {
+	Splash: undefined;
 	Home: undefined;
 	Party: { partyId: string };
+	Post: { postId: string };
 	CreateParty: undefined;
 	JoinParty: undefined;
 	InviteToParty: { joinCode: string; eventId: string };
@@ -53,6 +60,7 @@ type RootStackParamList = {
 	Camera: { partyId: string };
 	TakeProfilePicture: undefined;
 	Profile: undefined;
+	EditProfile: undefined;
 	SignUp: undefined;
 	Login: undefined;
 	VerifyPhone: { phone: string };
@@ -90,9 +98,16 @@ export default function App() {
 				<NavigationContainer>
 					<Stack.Navigator
 						screenOptions={{ headerShown: false }}
-						initialRouteName={loggedIn ? "Home" : "SignUp"}>
-						<Stack.Screen name="Home" component={HomePage} />
+						initialRouteName={"Splash"}>
+						<Stack.Screen name="Splash" component={SplashPage} />
+						<Stack.Screen
+							name="Home"
+							component={HomePage}
+							options={{ gestureEnabled: false }}
+						/>
+
 						<Stack.Screen name="Party" component={PartyPage} />
+						<Stack.Screen name="Post" component={PostPage} />
 						<Stack.Screen name="JoinParty" component={JoinPartyPage} />
 						<Stack.Screen name="CreateParty" component={CreatePartyPage} />
 						<Stack.Screen name="InviteToParty" component={InviteToParty} />
@@ -100,12 +115,17 @@ export default function App() {
 						<Stack.Screen name="PartyDetails" component={PartyDetailsPage} />
 						<Stack.Screen name="Camera" component={CameraPage} />
 						<Stack.Screen name="Profile" component={ProfilePage} />
+						<Stack.Screen name="EditProfile" component={EditProfilePage} />
 						<Stack.Screen
 							name="TakeProfilePicture"
 							component={TakeProfilePicture}
 						/>
 
-						<Stack.Screen name="SignUp" component={SignUpPage} />
+						<Stack.Screen
+							name="SignUp"
+							component={SignUpPage}
+							options={{ gestureEnabled: false }}
+						/>
 						<Stack.Screen name="Login" component={LoginPage} />
 						<Stack.Screen name="VerifyPhone" component={VerifyPhonePage} />
 						<Stack.Screen

@@ -34,6 +34,7 @@ export default function LoginPage({ navigation }) {
 			//@ts-expect-error
 
 			const userId = await jwt_decode(result.data.accessToken)._id;
+			console.log({ userId });
 			setUserId(userId);
 			setLoggedIn(true);
 			navigation.navigate("Home");

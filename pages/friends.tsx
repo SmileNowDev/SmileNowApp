@@ -15,6 +15,7 @@ import UserCard from "../components/userCard";
 import * as Contacts from "expo-contacts";
 import ContactCard from "../components/contactCard";
 import { debounce } from "lodash";
+import userApi from "../api/user/user";
 
 const friends = [
 	{
@@ -57,20 +58,37 @@ export default function FriendsPage() {
 				if (data.length > 0) {
 					//@ts-expect-error
 					setContacts(data);
-					const contact = data[6];
-					console.log(contact);
+					const phoneNumbers = data
+						.map((contact) =>
+							contact.phoneNumbers ? contact.phoneNumbers[0].digits : undefined
+						)
+						.filter((phoneNumber) => phoneNumber !== undefined);
+					alert(phoneNumbers.find((o) => o === undefined).length);
+
+					await getContacts(phoneNumbers);
+					// array of only numbers, ignoring undefined
 				}
 			}
 		})();
 	}, []);
+	const [contactsToAdd, setContactsToAdd] = useState([]);
+
+	async function getContacts(phoneNumbers) {
+		let pn = await phoneNumbers.filter((s) => s !== undefined);
+		const result = await userApi.getContacts(pn);
+
+		if (result.ok) {
+			alert("success");
+			//@ts-expect-error
+			setContactsToAdd(result.data);
+		}
+	}
 
 	function getInitials(firstName: string, lastName: string) {
 		if (!firstName && !lastName) return "??";
 		if (!lastName) return firstName.substring(0, 1);
 		if (!firstName) return lastName.substring(0, 1);
-		else {
-			return firstName.substring(0, 1) + lastName.substring(0, 1);
-		}
+		else return firstName.substring(0, 1) + lastName.substring(0, 1);
 	}
 	return (
 		<SafeAreaView>
@@ -116,19 +134,36 @@ export default function FriendsPage() {
 					}}
 				/>
 				<FlatList
+					data={contactsToAdd}
+					keyExtractor={(item) => item._id}
+					renderItem={({ item }) => {
+						return (
+							<UserCard
+								profilePicture={item.src}
+								name={item.name}
+								username={item.username}
+								id={item.id}
+								onPress={() => {}}
+							/>
+						);
+					}}
+				/>
+				<FlatList
 					data={contacts.filter(
 						(item) => item?.name?.includes(searchQuery) || !searchQuery
 					)}
 					keyExtractor={(item) => item.id}
 					renderItem={({ item }) => {
-						return (
-							<ContactCard
-								name={item.name}
-								id={item.id}
-								number={item.phoneNumbers[0]?.number}
-								initials={getInitials(item.firstName, item.lastName)}
-							/>
-						);
+						if (item.phoneNumbers) {
+							return (
+								<ContactCard
+									name={item.name}
+									id={item.id}
+									number={item.phoneNumbers[0].digits}
+									initials={getInitials(item.firstName, item.lastName)}
+								/>
+							);
+						}
 					}}
 				/>
 

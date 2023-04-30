@@ -85,8 +85,11 @@ export default function HomePage({ navigation }) {
 	const responseListener = useRef();
 
 	useEffect(() => {
+		//@ts-expect-error
 		notificationListener.current =
 			Notifications.addNotificationReceivedListener((notification) => {});
+		//@ts-expect-error
+
 		responseListener.current =
 			Notifications.addNotificationResponseReceivedListener((response) => {
 				let data = response.notification.request.content.data;

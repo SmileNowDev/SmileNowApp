@@ -6,8 +6,12 @@ const create = ({ postId, text }) =>
 
 const deleteComment = ({ postId }) => client.delete(`${endpoint}/${postId}`);
 
+const getComments = ({ postId, page }) =>
+	client.get(`${endpoint}/${postId}/${page}`);
+
 const commentApi = {
 	create,
 	deleteComment,
+	getComments,
 };
 export default commentApi;
