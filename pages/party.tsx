@@ -24,7 +24,6 @@ export default function PartyPage({ route, navigation }) {
 
 	async function getPosts() {
 		const result = await postApi.getPosts({ eventId, page: 1 });
-		console.log("data: ", result.data);
 		if (result.ok) {
 			//@ts-expect-error
 			setPosts(result.data);
@@ -81,18 +80,21 @@ export default function PartyPage({ route, navigation }) {
 						zIndex: 10,
 						left: 20,
 						right: 20,
-					}}>
+					}}
+				>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Camera", { eventId })}
-						style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}>
+						style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}
+					>
 						<Icon
-							name="camera"
+							name='camera'
 							size={30}
-							type="Feather"
+							type='Feather'
 							color={Colors.background}
 						/>
 						<Text
-							style={{ ...ButtonStyles.buttonText, color: Colors.background }}>
+							style={{ ...ButtonStyles.buttonText, color: Colors.background }}
+						>
 							Take a Photo!
 						</Text>
 					</TouchableOpacity>
@@ -102,21 +104,23 @@ export default function PartyPage({ route, navigation }) {
 				style={{ width: "100%", padding: 10 }}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}>
+				}
+			>
 				{posts.map(function (photo: any, index) {
 					return (
 						<TouchableOpacity
 							onPress={() => {
 								navigation.navigate("Post", { postId: photo._id });
-							}}>
+							}}
+						>
 							<Photo
 								postId={photo._id}
 								image={photo.src}
 								caption={photo.caption}
-								owner={{ name: photo.user.name, picture: photo.user.picture }}
+								owner={{ name: photo.user.name, picture: photo.user.src }}
 								date={photo.updatedAt}
 								likes={photo.likes || 0}
-								isLiked={photo.isLiked || false}
+								isLiked={photo.isLiked}
 								comments={photo.comments || 0}
 								refresh={onRefresh}
 							/>

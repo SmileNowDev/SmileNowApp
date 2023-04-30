@@ -34,7 +34,6 @@ export default function LoginPage({ navigation }) {
 			//@ts-expect-error
 
 			const userId = await jwt_decode(result.data.accessToken)._id;
-			console.log({ userId });
 			setUserId(userId);
 			setLoggedIn(true);
 			navigation.navigate("Home");
@@ -51,7 +50,8 @@ export default function LoginPage({ navigation }) {
 				paddingTop: 150,
 				display: "flex",
 				alignItems: "center",
-			}}>
+			}}
+		>
 			{/* LOGO */}
 			<TouchableOpacity
 				onPress={() => navigation.goBack()}
@@ -60,8 +60,9 @@ export default function LoginPage({ navigation }) {
 					position: "absolute",
 					top: 60,
 					left: 0,
-				}}>
-				<Icon name="arrow-back" color={Colors.background} size={30} />
+				}}
+			>
+				<Icon name='arrow-back' color={Colors.background} size={30} />
 			</TouchableOpacity>
 			<Text
 				style={{
@@ -69,7 +70,8 @@ export default function LoginPage({ navigation }) {
 					fontFamily: Fonts.subTitle.fontFamily,
 					fontSize: Fonts.subTitle.fontSize,
 					color: Colors.background,
-				}}>
+				}}
+			>
 				Welcome Back!
 			</Text>
 			<Image
@@ -83,10 +85,10 @@ export default function LoginPage({ navigation }) {
 			/>
 
 			<TextInput
-				placeholder="Enter your Phone Number"
+				placeholder='Enter your Phone Number'
 				value={phone}
 				onChangeText={setPhone}
-				keyboardType="phone-pad"
+				keyboardType='phone-pad'
 				autoFocus={true}
 				placeholderTextColor={Colors.border}
 				style={{
@@ -102,7 +104,7 @@ export default function LoginPage({ navigation }) {
 				}}
 			/>
 			<TextInput
-				placeholder="Enter your password"
+				placeholder='Enter your password'
 				value={password}
 				onChangeText={setPassword}
 				secureTextEntry={true}
@@ -130,7 +132,8 @@ export default function LoginPage({ navigation }) {
 					borderRadius: 5,
 					opacity: phone.length < 10 ? 0.5 : 1,
 					width: "100%",
-				}}>
+				}}
+			>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
 			</TouchableOpacity>
 

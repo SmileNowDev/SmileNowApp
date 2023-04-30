@@ -26,24 +26,26 @@ export default function PartyListItem({
 				gap: 5,
 				padding: 10,
 				justifyContent: "flex-start",
-			}}>
+			}}
+		>
 			<View
 				style={{
-					backgroundColor: "pink",
+					backgroundColor: Colors.secondary,
 					height: 40,
 					width: 40,
 					borderRadius: 20,
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
-				}}>
-				<Text style={{ fontSize: 25 }}>{icon}</Text>
+				}}
+			>
+				<Text style={{ fontSize: 22 }}>{icon}</Text>
 			</View>
 			<Text style={{ flex: 1 }}>{name}</Text>
 			{canPost ? (
-				<Icon name={"camera"} type="Ion" color={Colors.primary} size={20} />
+				<Icon name={"camera"} type='Ion' color={Colors.primary} size={20} />
 			) : (
-				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
+				<Icon name='chevron-right' size={20} color={Colors.textSecondary} />
 			)}
 		</TouchableOpacity>
 	);

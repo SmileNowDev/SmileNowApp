@@ -19,7 +19,7 @@ export const ButtonStyles = StyleSheet.create({
 		borderRadius: 5,
 		paddingVertical: 10,
 		paddingHorizontal: 30,
-		gap: 2,
+		gap: 5,
 	},
 	buttonSmall: {
 		display: "flex",
@@ -72,6 +72,12 @@ export const ButtonStyles = StyleSheet.create({
 	},
 	secondary: {
 		backgroundColor: Colors.secondary,
+	},
+	success: {
+		backgroundColor: Colors.success,
+	},
+	gray: {
+		backgroundColor: "#CCCCCC",
 	},
 	outlined: {
 		backgroundColor: "transparent",

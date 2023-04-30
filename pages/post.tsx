@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	FlatList,
 	RefreshControl,
 	SafeAreaView,
@@ -16,24 +17,26 @@ import commentApi from "../api/interaction/comment";
 import Icon from "../components/icons";
 import { Colors } from "../styles/theme";
 import { Dim, GlobalStyles } from "../styles/styles";
+import Comment from "../components/comment";
 
 export default function PostPage({ route, navigation }) {
 	const { postId } = route.params;
-	const [post, setPost] = useState<any>(null);
+	const [post, setPost] = useState<any>();
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [comment, setComment] = useState("");
 	const [comments, setComments] = useState([]);
 	async function getPost() {
+		setLoading(true);
+
 		const result = await postApi.getPost({ postId });
-		// console.log("post: ", result.data);
 		if (result.ok) {
 			setPost(result.data);
 		}
+		setLoading(false);
 	}
 	async function getComments() {
 		const result = await commentApi.getComments({ postId, page: 1 });
-		console.log("data: ", result);
 		if (result.ok) {
 			//@ts-expect-error
 			setComments(result.data);
@@ -53,11 +56,8 @@ export default function PostPage({ route, navigation }) {
 		setRefreshing(false);
 	}
 	useEffect(() => {
-		console.log("postId: ", postId);
-		setLoading(true);
 		getPost();
 		getComments();
-		setLoading(false);
 	}, []);
 	if (!loading) {
 		return (
@@ -67,25 +67,32 @@ export default function PostPage({ route, navigation }) {
 					style={{ padding: 10 }}
 					refreshControl={
 						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}>
-					<Photo
-						postId={postId}
-						image={post?.src}
-						caption={post?.caption}
-						owner={{ name: post?.user.name, picture: post?.user.src }}
-						date={post?.date}
-						likes={post?.likes}
-						isLiked={post?.isLiked}
-						comments={post?.comments}
-						refresh={onRefresh}
-					/>
+					}
+				>
+					{!loading ? (
+						<Photo
+							postId={postId}
+							image={post?.src}
+							caption={post?.caption}
+							owner={{ name: post?.user.name, picture: post?.user.src }}
+							date={post?.date}
+							likes={post?.likes}
+							isLiked={post?.isLiked}
+							comments={post?.comments}
+							refresh={onRefresh}
+						/>
+					) : (
+						<ActivityIndicator />
+					)}
+
 					<View
 						style={{
 							display: "flex",
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-						}}>
+						}}
+					>
 						<TextInput
 							numberOfLines={2}
 							style={{
@@ -94,7 +101,7 @@ export default function PostPage({ route, navigation }) {
 								flex: 1,
 								height: 50,
 							}}
-							placeholder="Comment"
+							placeholder='Comment'
 							value={comment}
 							onChangeText={setComment}
 						/>
@@ -109,15 +116,25 @@ export default function PostPage({ route, navigation }) {
 								alignItems: "center",
 								alignSelf: "flex-end",
 								marginLeft: 10,
-							}}>
-							<Icon name="send" size={30} color={Colors.background} />
+							}}
+						>
+							<Icon name='send' size={30} color={Colors.background} />
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}
-					{/* <FlatList
+					<FlatList
 						data={comments}
-						renderItem={({ item }) => <Text>{item.text}</Text>}
-					/> */}
+						renderItem={({ item }) => (
+							<Comment
+								commentId={item._id}
+								pic={item.user.src}
+								name={item.user.name}
+								comment={item.text}
+								date={item.updatedAd}
+								userId={item.user._id}
+							/>
+						)}
+					/>
 					<View style={{ height: Dim.height / 2 }}></View>
 				</ScrollView>
 			</SafeAreaView>

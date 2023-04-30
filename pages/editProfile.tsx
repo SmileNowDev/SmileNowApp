@@ -32,6 +32,7 @@ export default function EditProfilePage({ navigation }) {
 	}
 	async function save() {
 		const result = await userApi.updateUser({ name, username });
+		console.log("result: ", result);
 		if (result.ok) {
 			navigation.goBack();
 		} else {
@@ -51,7 +52,8 @@ export default function EditProfilePage({ navigation }) {
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Name
 				</Text>
 				<TextInput
@@ -65,7 +67,8 @@ export default function EditProfilePage({ navigation }) {
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Username
 				</Text>
 				<TextInput
@@ -81,17 +84,20 @@ export default function EditProfilePage({ navigation }) {
 						gap: 5,
 						paddingVertical: 5,
 						marginTop: 20,
-					}}>
+					}}
+				>
 					<TouchableOpacity
 						onPress={() => cancel()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}
+					>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Cancel Changes
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => save()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
+					>
 						<Text style={{ ...ButtonStyles.buttonText }}>Save Changes</Text>
 					</TouchableOpacity>
 				</View>

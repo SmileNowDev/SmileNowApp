@@ -36,7 +36,7 @@ export default function Photo({
 	comments,
 	refresh,
 }: PhotoProps) {
-	const [liked, setLiked] = useState(isLiked);
+	const [liked, setLiked] = useState(isLiked ? true : false);
 	function handleOpen() {
 		console.log("open");
 	}
@@ -69,7 +69,8 @@ export default function Photo({
 						marginTop: 10,
 						fontFamily: Fonts.handWriting.fontFamily,
 						fontSize: Fonts.handWriting.fontSize,
-					}}>
+					}}
+				>
 					{caption}
 				</Text>
 				<View style={styles.footer}>
@@ -97,26 +98,23 @@ export default function Photo({
 						<Text
 							style={{
 								fontFamily: Fonts.handWriting.fontFamily,
-							}}>
+							}}
+						>
 							{owner.name}
 						</Text>
 					</View>
 					<View style={styles.reactionContainer}>
-						<TouchableOpacity
-							style={styles.reaction}
-							onPress={() => handleLike()}>
+						<TouchableOpacity style={styles.reaction} onPress={handleLike}>
 							<Icon
-								name="heart"
-								type="Ion"
+								name='heart'
+								type='Ion'
 								size={20}
 								color={liked ? Colors.primary : Colors.textSecondary}
 							/>
 							<Text style={{ fontFamily: Fonts.body.fontFamily }}>{likes}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity
-							style={styles.reaction}
-							onPress={() => handleComment()}>
-							<Icon name="message" size={20} color={Colors.textSecondary} />
+						<TouchableOpacity style={styles.reaction} disabled>
+							<Icon name='message' size={20} color={Colors.textSecondary} />
 							<Text style={{ fontFamily: Fonts.body.fontFamily }}>
 								{comments}
 							</Text>

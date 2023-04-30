@@ -30,12 +30,10 @@ export default function CameraPage({ route, navigation }) {
 	const cameraRef = useRef(null);
 	const takePhoto = async () => {
 		if (cameraRef.current) {
-			//@ts-expect-error
 			const result = await cameraRef.current.takePictureAsync({
 				quality: 0.1,
 				base64: true,
 			});
-			console.log({ result });
 			setPhoto(result);
 			setIsPreviewing(true);
 		}
@@ -94,7 +92,8 @@ export default function CameraPage({ route, navigation }) {
 			style={{
 				flex: 1,
 				alignItems: "center",
-			}}>
+			}}
+		>
 			{!isPreviewing ? (
 				<>
 					<View style={{ height: 100, marginTop: 30 }}>
@@ -102,7 +101,8 @@ export default function CameraPage({ route, navigation }) {
 							style={{
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: 40,
-							}}>
+							}}
+						>
 							SmileNow!
 						</Text>
 					</View>
@@ -116,12 +116,13 @@ export default function CameraPage({ route, navigation }) {
 						}}
 						type={cameraType}
 						flashMode={flashMode}
-						ref={cameraRef}></Camera>
+						ref={cameraRef}
+					></Camera>
 
 					<View style={styles.footer}>
 						<TouchableOpacity onPress={() => toggleFlashMode()}>
 							<Icon
-								name="flash"
+								name='flash'
 								size={30}
 								type={"Ion"}
 								color={
@@ -133,12 +134,13 @@ export default function CameraPage({ route, navigation }) {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={styles.shutter}
-							onPress={() => takePhoto()}>
+							onPress={() => takePhoto()}
+						>
 							<View style={styles.innerShutter} />
 						</TouchableOpacity>
 						<TouchableOpacity onPress={() => toggleCameraType()}>
 							<Icon
-								name="ios-camera-reverse"
+								name='ios-camera-reverse'
 								size={30}
 								type={"Ion"}
 								color={Colors.textSecondary}
@@ -156,7 +158,7 @@ export default function CameraPage({ route, navigation }) {
 							width: width - 20,
 							height: 100,
 						}}
-						placeholder="Caption Your Photo"
+						placeholder='Caption Your Photo'
 						value={caption}
 						onChangeText={setCaption}
 					/>
@@ -166,7 +168,8 @@ export default function CameraPage({ route, navigation }) {
 							height: width - 20,
 							width: width - 20,
 							marginTop: 20,
-						}}>
+						}}
+					>
 						<Image
 							// @ts-expect-error
 							source={{ uri: photo?.uri }}
@@ -180,9 +183,10 @@ export default function CameraPage({ route, navigation }) {
 								left: 20,
 								...ButtonStyles.buttonSmall,
 								backgroundColor: Colors.foreground,
-							}}>
+							}}
+						>
 							<Icon
-								name="image-remove"
+								name='image-remove'
 								size={20}
 								type={"MaterialCommunity"}
 								color={Colors.textSecondary}
@@ -191,7 +195,8 @@ export default function CameraPage({ route, navigation }) {
 								style={{
 									...ButtonStyles.buttonTextSmall,
 									color: Colors.textSecondary,
-								}}>
+								}}
+							>
 								Retake
 							</Text>
 						</TouchableOpacity>
@@ -204,7 +209,8 @@ export default function CameraPage({ route, navigation }) {
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
 						}}
-						onPress={() => handlePost()}>
+						onPress={() => handlePost()}
+					>
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Post</Text>
 					</TouchableOpacity>
 				</>

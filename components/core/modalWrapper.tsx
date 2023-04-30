@@ -15,6 +15,7 @@ interface ModalProps {
 	children: any;
 	fullHeight?: boolean;
 	scrollable?: boolean;
+	noSwipe?: boolean;
 }
 export default function ModalWrapper({
 	visible,
@@ -57,7 +58,8 @@ export default function ModalWrapper({
 				margin: 0,
 				left: 0,
 				height: Dim.height,
-			}}>
+			}}
+		>
 			<View style={containerStyle}>
 				{scrollable ? (
 					<ScrollView>

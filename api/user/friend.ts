@@ -7,12 +7,20 @@ const accept = ({ userId }) => client.put(`${endpoint}/${userId}`);
 
 const deleteFriend = ({ userId }) => client.delete(`${endpoint}/${userId}`);
 
-const getFriends = ({ status }) => client.delete(`${endpoint}/${status}`);
+const getMyFriends = ({ page }) => client.get(`${endpoint}/MyFriends/${page}`);
+
+const getMyRequests = ({ page }) =>
+	client.get(`${endpoint}/myRequests/${page}`);
+
+const getRequestingMe = ({ page }) =>
+	client.get(`${endpoint}/requestingMe/${page}`);
 
 const friendApi = {
 	request,
 	accept,
 	deleteFriend,
-	getFriends,
+	getMyFriends,
+	getMyRequests,
+	getRequestingMe,
 };
 export default friendApi;

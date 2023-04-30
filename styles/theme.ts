@@ -9,7 +9,7 @@ export const Colors = {
 	secondaryLight: "#D1D6FF",
 	//Others
 	urgent: "#ed7286",
-
+	success: "#4caf50",
 	background: "#FAFAFA",
 	foreground: "#EEEEEE",
 	text: "#1F1F1F",
