@@ -18,14 +18,20 @@ import Icon from "../components/icons";
 import { Colors } from "../styles/theme";
 import { Dim, GlobalStyles } from "../styles/styles";
 import Comment from "../components/comment";
+import ScreenWrapper from "../components/core/screenWrapper";
 
 export default function PostPage({ route, navigation }) {
 	const { postId } = route.params;
 	const [post, setPost] = useState<any>();
+
 	const [refreshing, setRefreshing] = useState(false);
-	const [loading, setLoading] = useState(false);
 	const [comment, setComment] = useState("");
 	const [comments, setComments] = useState([]);
+	const [page, setPage] = useState(1); // Add this state
+	const [hasMore, setHasMore] = useState(true); // Add this state
+	const [loading, setLoading] = useState(false); // Add this state
+	const [bottomLoading, setBottomLoading] = useState(false);
+
 	async function getPost() {
 		setLoading(true);
 
@@ -41,6 +47,28 @@ export default function PostPage({ route, navigation }) {
 			//@ts-expect-error
 			setComments(result.data);
 		}
+	}
+	async function loadMore() {
+		if (!hasMore) {
+			return;
+		}
+
+		setBottomLoading(true);
+		const nextPage = page + 1;
+		const result = await commentApi.getComments({ postId, page: nextPage });
+
+		if (result.ok) {
+			// @ts-expect-error
+			if (result.data.length > 0) {
+				//@ts-expect-error
+				setList((prevEvents) => [...prevEvents, ...result.data]);
+				setPage(nextPage);
+			} else {
+				setHasMore(false);
+			}
+		}
+
+		setBottomLoading(false);
 	}
 	async function handleComment() {
 		const result = await commentApi.create({ postId, text: comment });
@@ -63,11 +91,13 @@ export default function PostPage({ route, navigation }) {
 		return (
 			<SafeAreaView>
 				<Header goBack />
-				<ScrollView
-					style={{ padding: 10 }}
-					refreshControl={
-						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}>
+				<ScreenWrapper
+					onRefresh={getComments}
+					scrollEnabled={true}
+					loading={loading}
+					onBottomScroll={loadMore}
+					bottomLoading={bottomLoading}
+				>
 					{!loading ? (
 						<Photo
 							postId={postId}
@@ -94,7 +124,8 @@ export default function PostPage({ route, navigation }) {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-						}}>
+						}}
+					>
 						<TextInput
 							numberOfLines={2}
 							style={{
@@ -103,7 +134,7 @@ export default function PostPage({ route, navigation }) {
 								flex: 1,
 								height: 50,
 							}}
-							placeholder="Comment"
+							placeholder='Comment'
 							value={comment}
 							onChangeText={setComment}
 						/>
@@ -118,8 +149,9 @@ export default function PostPage({ route, navigation }) {
 								alignItems: "center",
 								alignSelf: "flex-end",
 								marginLeft: 10,
-							}}>
-							<Icon name="send" size={30} color={Colors.background} />
+							}}
+						>
+							<Icon name='send' size={30} color={Colors.background} />
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}
@@ -137,7 +169,7 @@ export default function PostPage({ route, navigation }) {
 						)}
 					/>
 					<View style={{ height: Dim.height / 2 }}></View>
-				</ScrollView>
+				</ScreenWrapper>
 			</SafeAreaView>
 		);
 	}

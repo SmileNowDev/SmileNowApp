@@ -28,7 +28,7 @@ export default function ContactCard({
 }: ContactCardProps) {
 	// function invite() {
 	// 	// TODO: this is not working
-	// 	const message = `Hey!, join me on SmileNow - the fun app that makes taking party photos awesome! Download it here: [Link to Download the App]. Let's snap some cool photos together!"`;
+	// 	const message = `Hey!, join me on Smile Now - the fun app that makes taking party photos awesome! Download it here: [Link to Download the App]. Let's snap some cool photos together!"`;
 
 	// 	const url = `sms:&body=${message}`;
 
@@ -52,7 +52,8 @@ export default function ContactCard({
 		<TouchableOpacity
 			style={styles.container}
 			onPress={() => sendText()}
-			key={id}>
+			key={id}
+		>
 			<View
 				style={{
 					height: 40,
@@ -61,13 +62,15 @@ export default function ContactCard({
 					backgroundColor: Colors.border,
 					alignItems: "center",
 					justifyContent: "center",
-				}}>
+				}}
+			>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize - 2,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					{initials}
 				</Text>
 			</View>
@@ -76,7 +79,8 @@ export default function ContactCard({
 					style={{
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}>
+					}}
+				>
 					{name}
 				</Text>
 			</View>
@@ -85,13 +89,15 @@ export default function ContactCard({
 				style={{
 					...ButtonStyles.buttonSmall,
 					...ButtonStyles.primaryOutlined,
-				}}>
-				<Icon name="add" size={20} color={Colors.primary} />
+				}}
+			>
+				<Icon name='add' size={20} color={Colors.primary} />
 				<Text
 					style={{
 						...ButtonStyles.buttonTextSmall,
 						color: Colors.primary,
-					}}>
+					}}
+				>
 					Invite
 				</Text>
 			</TouchableOpacity>

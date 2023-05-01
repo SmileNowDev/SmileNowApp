@@ -14,6 +14,7 @@ import userApi from "../api/user/user";
 import { Context } from "../providers/provider";
 import Avatar from "../components/avatar";
 export default function ProfilePage({ navigation }) {
+	const [loading, setLoading] = useState(false);
 	const [user, setUser] = useState({ name: "", pic: "", username: "" });
 	const { userId } = useContext(Context);
 	async function getUser() {
@@ -25,7 +26,9 @@ export default function ProfilePage({ navigation }) {
 	}
 
 	useEffect(() => {
+		setLoading(true);
 		getUser();
+		setLoading(false);
 	}, [userId]);
 
 	return (
@@ -38,7 +41,8 @@ export default function ProfilePage({ navigation }) {
 					flexDirection: "column",
 					alignItems: "center",
 					justifyContent: "center",
-				}}>
+				}}
+			>
 				<View
 					style={{
 						position: "relative",
@@ -46,7 +50,8 @@ export default function ProfilePage({ navigation }) {
 						width: 150,
 						borderRadius: 75,
 						marginBottom: 10,
-					}}>
+					}}
+				>
 					<Avatar pic={user.pic} size={150} id={userId} />
 
 					<TouchableOpacity
@@ -58,15 +63,17 @@ export default function ProfilePage({ navigation }) {
 							backgroundColor: Colors.background,
 							padding: 4,
 							borderRadius: 20,
-						}}>
-						<Icon name="account-edit" type={"MaterialCommunity"} size={30} />
+						}}
+					>
+						<Icon name='account-edit' type={"MaterialCommunity"} size={30} />
 					</TouchableOpacity>
 				</View>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize,
-					}}>
+					}}
+				>
 					{user.name}
 				</Text>
 				<Text
@@ -74,7 +81,8 @@ export default function ProfilePage({ navigation }) {
 						fontFamily: Fonts.button.fontFamily,
 						fontSize: Fonts.button.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					@{user.username}
 				</Text>
 			</View>
@@ -85,7 +93,8 @@ export default function ProfilePage({ navigation }) {
 					alignItems: "center",
 					gap: 5,
 					marginVertical: 20,
-				}}>
+				}}
+			>
 				<TouchableOpacity
 					onPress={() => {
 						// TODO: open the app store page!
@@ -93,8 +102,9 @@ export default function ProfilePage({ navigation }) {
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.primaryLight,
-					}}>
-					<Icon name="star" type={"Feather"} size={30} />
+					}}
+				>
+					<Icon name='star' type={"Feather"} size={30} />
 					<Text>Rate Us!</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -104,14 +114,16 @@ export default function ProfilePage({ navigation }) {
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.secondaryLight,
-					}}>
-					<Icon name="edit" type={"Feather"} size={30} />
+					}}
+				>
+					<Icon name='edit' type={"Feather"} size={30} />
 					<Text>Edit Profile</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => navigation.navigate("Settings")}
-					style={{ ...styles.optionButton, backgroundColor: Colors.border }}>
-					<Icon name="settings" type={"Feather"} size={30} />
+					style={{ ...styles.optionButton, backgroundColor: Colors.border }}
+				>
+					<Icon name='settings' type={"Feather"} size={30} />
 					<Text>Settings</Text>
 				</TouchableOpacity>
 			</View>

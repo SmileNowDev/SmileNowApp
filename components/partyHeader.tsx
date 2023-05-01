@@ -8,14 +8,21 @@ interface HeaderProps {
 	title: string;
 	eventId: string;
 	name: string;
+	isHost?: boolean;
 }
-export default function PartyHeader({ title, eventId, name }: HeaderProps) {
+export default function PartyHeader({
+	title,
+	eventId,
+	name,
+	isHost,
+}: HeaderProps) {
 	const navigation = useNavigation();
 	return (
 		<View
 			style={{
 				...GlobalStyles.header,
-			}}>
+			}}
+		>
 			<TouchableOpacity onPress={() => navigation.goBack()}>
 				<Icon name={"chevron-left"} size={30} />
 			</TouchableOpacity>
@@ -26,38 +33,47 @@ export default function PartyHeader({ title, eventId, name }: HeaderProps) {
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
 					overflow: "hidden",
-				}}>
-				{title ? title : "SmileNow"}
+				}}
+			>
+				{title ? title : "Smile Now"}
 			</Text>
-			<View
-				style={{
-					flexDirection: "row",
-					justifyContent: "flex-end",
-					alignItems: "center",
-					gap: 15,
-				}}>
-				<TouchableOpacity
-					onPress={() =>
-						navigation.navigate("InviteToParty", { eventId, name })
-					}>
-					<Icon
-						name="person-add-alt-1"
-						size={25}
-						color={Colors.textSecondary}
-					/>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() =>
-						navigation.navigate("PartyDetails", { eventId, name })
-					}>
-					<Icon
-						name="settings"
-						type="Feather"
-						size={25}
-						color={Colors.textSecondary}
-					/>
-				</TouchableOpacity>
-			</View>
+			{isHost ? (
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "flex-end",
+						alignItems: "center",
+						gap: 15,
+					}}
+				>
+					<TouchableOpacity
+						onPress={() =>
+							// @ts-expect-error
+							navigation.navigate("InviteToParty", { eventId, name, isHost })
+						}
+					>
+						<Icon
+							name='person-add-alt-1'
+							size={25}
+							color={Colors.textSecondary}
+						/>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() =>
+							navigation.navigate("PartyDetails", { eventId, name })
+						}
+					>
+						<Icon
+							name='settings'
+							type='Feather'
+							size={25}
+							color={Colors.textSecondary}
+						/>
+					</TouchableOpacity>
+				</View>
+			) : (
+				<></>
+			)}
 		</View>
 	);
 }

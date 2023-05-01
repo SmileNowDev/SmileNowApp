@@ -5,13 +5,15 @@ import {
 	Text,
 	TouchableOpacity,
 	View,
+	Alert,
 } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
 import Icon from "../components/icons";
 import Header from "../components/header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../providers/provider";
-export default function Settings(params) {
+import authApi from "../api/user/auth";
+export default function Settings({ navigation }) {
 	type SettingsButtonProps = {
 		icon: React.ReactNode;
 		text: string;
@@ -39,18 +41,52 @@ export default function Settings(params) {
 		);
 	}
 	const { setUserId, setLoggedIn } = useContext(Context);
+
 	async function logout() {
 		await AsyncStorage.removeItem("access-token");
 		await AsyncStorage.removeItem("refresh-token");
 		setUserId("");
 		setLoggedIn(false);
-		params.navigation.navigate("SignUp");
+		navigation.navigate("SignUp");
+	}
+	async function deleteAccount() {
+		const result = await authApi.deleteAccount();
+		if (result.ok) {
+			await logout();
+		}
+	}
+	function handleConfirmDelete() {
+		Alert.alert(
+			"Are you sure you want to delete your account?",
+			"This action is irreversible!",
+			[
+				{
+					text: "Yes - Delete",
+					onPress: () => deleteAccount(),
+				},
+				{
+					text: "Cancel - Don't Delete",
+					onPress: () => Alert.alert("Pheww, glad to see you stay!"),
+				},
+			],
+			{ cancelable: true }
+		);
 	}
 	const buttons = [
 		{
-			icon: <Icon name="logout" type="MaterialCommunity" />,
+			icon: <Icon name='logout' type='MaterialCommunity' />,
 			text: "Logout",
 			onPress: () => logout(),
+		},
+		{
+			icon: <Icon name='block' />,
+			text: "Blocked List",
+			onPress: () => navigation.navigate("Blocked"),
+		},
+		{
+			icon: <Icon name='delete' type='MaterialCommunity' />,
+			text: "Delete Account",
+			onPress: () => handleConfirmDelete(),
 		},
 	];
 	return (

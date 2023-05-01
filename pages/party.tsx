@@ -14,13 +14,19 @@ import { Colors } from "../styles/theme";
 import { ButtonStyles, Dim } from "../styles/styles";
 import eventApi from "../api/post/event";
 import postApi from "../api/post/post";
+import ScreenWrapper from "../components/core/screenWrapper";
 
 export default function PartyPage({ route, navigation }) {
 	const { eventId } = route.params;
-	const [refreshing, setRefreshing] = useState(false);
 	const [canPost, setCanPost] = useState(false);
 	const [name, setName] = useState("");
 	const [posts, setPosts] = useState([]);
+	const [isHost, setIsHost] = useState(false);
+	const [refreshing, setRefreshing] = useState(false);
+	const [page, setPage] = useState(1); // Add this state
+	const [hasMore, setHasMore] = useState(true); // Add this state
+	const [loading, setLoading] = useState(false); // Add this state
+	const [bottomLoading, setBottomLoading] = useState(false);
 
 	async function getPosts() {
 		const result = await postApi.getPosts({ eventId, page: 1 });
@@ -28,6 +34,28 @@ export default function PartyPage({ route, navigation }) {
 			//@ts-expect-error
 			setPosts(result.data);
 		}
+	}
+	async function loadMoreEvents() {
+		if (!hasMore) {
+			return;
+		}
+
+		setBottomLoading(true);
+		const nextPage = page + 1;
+		const result = await postApi.getPosts({ eventId, page: nextPage });
+
+		if (result.ok) {
+			// @ts-expect-error
+			if (result.data.length > 0) {
+				//@ts-expect-error
+				setPosts((prevEvents) => [...prevEvents, ...result.data]);
+				setPage(nextPage);
+			} else {
+				setHasMore(false);
+			}
+		}
+
+		setBottomLoading(false);
 	}
 
 	async function getEvent() {
@@ -37,6 +65,8 @@ export default function PartyPage({ route, navigation }) {
 			setName(result.data.event.title);
 			// @ts-expect-error
 			setCanPost(result.data.canPost);
+			// @ts-expect-error
+			setIsHost(result.data.isHost);
 		}
 	}
 	function onRefresh() {
@@ -46,32 +76,15 @@ export default function PartyPage({ route, navigation }) {
 		setRefreshing(false);
 	}
 	useEffect(() => {
+		setLoading(true);
 		getPosts();
 		getEvent();
+		setLoading(false);
 	}, [eventId]);
-	const example = {
-		__v: 0,
-		_id: "644e201b186318238334ab45",
-		caption: "Eyyyyy",
-		createdAt: "2023-04-30T08:00:27.776Z",
-		event: "644e03f57652a02e8555681a",
-		updatedAt: "2023-04-30T08:00:27.776Z",
-		user: {
-			__v: 0,
-			_id: "644df848a4b583b8c90f88d2",
-			bio: "Add a bio...",
-			createdAt: "2023-04-30T05:10:32.319Z",
-			expoNotificationToken: "ExponentPushToken[3rdlrUHzjJMyai6BATw_Fo]",
-			name: "Sam",
-			password: "$2b$10$F5Fs6zwB0hBp73xnUsdCYugIKsflG5lrxSJAaCA1Vqq2G80LxjfxG",
-			phone: "1241231234",
-			updatedAt: "2023-04-30T08:07:06.821Z",
-			username: "Sam",
-		},
-	};
+
 	return (
 		<SafeAreaView>
-			<PartyHeader title={name} eventId={eventId} name={name} />
+			<PartyHeader title={name} eventId={eventId} name={name} isHost={isHost} />
 			{canPost ? (
 				<View
 					style={{
@@ -80,34 +93,40 @@ export default function PartyPage({ route, navigation }) {
 						zIndex: 10,
 						left: 20,
 						right: 20,
-					}}>
+					}}
+				>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Camera", { eventId })}
-						style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}>
+						style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}
+					>
 						<Icon
-							name="camera"
+							name='camera'
 							size={30}
-							type="Feather"
+							type='Feather'
 							color={Colors.background}
 						/>
 						<Text
-							style={{ ...ButtonStyles.buttonText, color: Colors.background }}>
+							style={{ ...ButtonStyles.buttonText, color: Colors.background }}
+						>
 							Take a Photo!
 						</Text>
 					</TouchableOpacity>
 				</View>
 			) : null}
-			<ScrollView
-				style={{ width: "100%", padding: 10 }}
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}>
+			<ScreenWrapper
+				onRefresh={onRefresh}
+				scrollEnabled={true}
+				loading={loading}
+				onBottomScroll={loadMoreEvents}
+				bottomLoading={bottomLoading}
+			>
 				{posts.map(function (photo: any, index) {
 					return (
 						<TouchableOpacity
 							onPress={() => {
 								navigation.navigate("Post", { postId: photo._id });
-							}}>
+							}}
+						>
 							<Photo
 								postId={photo._id}
 								image={photo.src}
@@ -127,7 +146,7 @@ export default function PartyPage({ route, navigation }) {
 					);
 				})}
 				<View style={{ height: Dim.height / 2 }} />
-			</ScrollView>
+			</ScreenWrapper>
 			{/* header that lets you access party details */}
 			{/* list of pictures */}
 			{/* if they can, let them take a photo */}

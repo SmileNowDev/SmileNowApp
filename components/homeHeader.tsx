@@ -11,7 +11,8 @@ export default function HomeHeader() {
 		<View
 			style={{
 				...GlobalStyles.header,
-			}}>
+			}}
+		>
 			<TouchableOpacity onPress={() => navigation.navigate("Friends")}>
 				<Icon name={"people"} size={30} />
 			</TouchableOpacity>
@@ -21,11 +22,12 @@ export default function HomeHeader() {
 					textAlign: "center",
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
-				}}>
-				SmileNow
+				}}
+			>
+				Smile Now
 			</Text>
 			<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-				<Icon name="person" size={30} />
+				<Icon name='person' size={30} />
 			</TouchableOpacity>
 			{/* profile button */}
 		</View>

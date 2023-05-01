@@ -18,6 +18,8 @@ const forgotPassword = ({ phone }) =>
 const newPassword = ({ phone, code, password }) =>
 	client.post(`${endpoint}/new-password`, { phone, code });
 
+const deleteAccount = () => client.delete(`${endpoint}`);
+
 const authApi = {
 	login,
 	cache,
@@ -25,5 +27,6 @@ const authApi = {
 	logout,
 	forgotPassword,
 	newPassword,
+	deleteAccount,
 };
 export default authApi;

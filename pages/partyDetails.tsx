@@ -6,16 +6,19 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Alert,
+	ActivityIndicator,
 } from "react-native";
 import Header from "../components/header";
 import EmojiTextInput from "../components/emojiTextInput";
-import { ButtonStyles, GlobalStyles } from "../styles/styles";
+import { ButtonStyles, GlobalStyles, Dim } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import Icon from "../components/icons";
 
 import eventApi from "../api/post/event";
 export default function PartyDetailsPage({ route, navigation }) {
 	const { eventId, name } = route.params;
+	const [loading, setLoading] = useState(false);
 	const [newName, setNewName] = useState(name);
 	const [newDescription, setNewDescription] = useState("");
 	const [notificationStatus, setNotificationStatus] = useState(false);
@@ -28,15 +31,19 @@ export default function PartyDetailsPage({ route, navigation }) {
 	}
 	async function save() {
 		// save the new name to the database
+		setLoading(true);
 		const result = await eventApi.updateEvent({
 			eventId,
 			title: newName,
 			description: newDescription,
 		});
 		if (result.ok) {
+			Alert.alert("Success", "Your party has been updated");
+
 			navigation.goBack();
+		} else {
+			Alert.alert("Error", "Something went wrong");
 		}
-		// then navigate back to the home page
 	}
 	function cancel() {
 		// navigate back to the home page
@@ -53,11 +60,28 @@ export default function PartyDetailsPage({ route, navigation }) {
 	}
 
 	useEffect(() => {
+		setLoading(true);
 		getEvent();
+		setLoading(false);
 	}, [eventId]);
 	return (
 		<SafeAreaView>
 			<Header goBack title={"Party Details"} />
+			{loading ? (
+				<ActivityIndicator
+					size={"large"}
+					color={Colors.primary}
+					style={{
+						height: Dim.width - 20,
+						width: Dim.width - 20,
+						position: "absolute",
+						top: Dim.width / 2,
+						zIndex: 100,
+					}}
+				/>
+			) : (
+				<></>
+			)}
 			<View
 				style={{
 					gap: 5,
@@ -66,9 +90,10 @@ export default function PartyDetailsPage({ route, navigation }) {
 					alignItems: "center",
 					justifyContent: "flex-start",
 					padding: 10,
-				}}>
+				}}
+			>
 				<Icon
-					name="notifications"
+					name='notifications'
 					size={20}
 					color={notificationStatus ? Colors.primary : Colors.textSecondary}
 				/>
@@ -77,7 +102,8 @@ export default function PartyDetailsPage({ route, navigation }) {
 						flex: 1,
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}>
+					}}
+				>
 					Notifications Are {notificationStatus ? "On" : "Off"}
 				</Text>
 				<Switch
@@ -91,14 +117,15 @@ export default function PartyDetailsPage({ route, navigation }) {
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Name:
 				</Text>
 				<TextInput
 					value={newName}
-					placeholder="Enter a party Name"
+					placeholder='Enter a party Name'
 					onChangeText={setNewName}
-					clearButtonMode="always"
+					clearButtonMode='always'
 					style={{
 						...GlobalStyles.textInput,
 					}}
@@ -109,15 +136,16 @@ export default function PartyDetailsPage({ route, navigation }) {
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
 						marginTop: 20,
-					}}>
+					}}
+				>
 					Description:
 				</Text>
 				<TextInput
 					multiline
 					numberOfLines={4}
-					clearButtonMode="always"
+					clearButtonMode='always'
 					value={newDescription}
-					placeholder="Enter a party Name"
+					placeholder='Enter a party Name'
 					onChangeText={setNewDescription}
 					style={{
 						...GlobalStyles.textInput,
@@ -132,17 +160,20 @@ export default function PartyDetailsPage({ route, navigation }) {
 						gap: 5,
 						paddingVertical: 5,
 						marginTop: 20,
-					}}>
+					}}
+				>
 					<TouchableOpacity
 						onPress={() => cancel()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}
+					>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Cancel Changes
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => save()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
+					>
 						<Text style={{ ...ButtonStyles.buttonText }}>Save Changes</Text>
 					</TouchableOpacity>
 				</View>

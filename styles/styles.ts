@@ -91,6 +91,12 @@ export const ButtonStyles = StyleSheet.create({
 		borderWidth: 1,
 		borderStyle: "solid",
 	},
+	secondaryOutlined: {
+		backgroundColor: "transparent",
+		borderColor: Colors.secondary,
+		borderWidth: 1,
+		borderStyle: "solid",
+	},
 });
 export const GlobalStyles = StyleSheet.create({
 	ScreenContainer: {
@@ -130,5 +136,19 @@ export const GlobalStyles = StyleSheet.create({
 		shadowRadius: 8,
 		shadowColor: "rgba(0, 0, 0, 0.25)",
 		elevation: -2,
+	},
+	shadow: {
+		shadowOffset: { width: 0, height: 2 },
+		shadowRadius: 8,
+		shadowColor: "black",
+		elevation: 3,
+	},
+	tabScreenContainer: {
+		padding: 10,
+	},
+	tabScreenTitle: {
+		fontFamily: Fonts.subTitle.fontFamily,
+		fontSize: Fonts.subTitle.fontSize,
+		color: Colors.textSecondary,
 	},
 });

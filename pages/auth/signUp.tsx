@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
 	Button,
@@ -15,6 +15,7 @@ import LogoWhite from "../../assets/logo_white.png";
 import { ButtonStyles, Dim } from "../../styles/styles";
 import Icon from "../../components/icons";
 import authApi from "../../api/user/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function SignUpPage({ navigation }) {
 	const [phone, setPhone] = useState("");
 	function handleNext() {
@@ -29,6 +30,16 @@ export default function SignUpPage({ navigation }) {
 			Alert.alert("User Already Exists");
 		}
 	}
+	const checkReadTerms = async () => {
+		let read = await AsyncStorage.getItem("readTerms");
+		if (!read) {
+			navigation.navigate("Terms");
+		}
+	};
+
+	useEffect(() => {
+		checkReadTerms();
+	}, []);
 	return (
 		<View
 			style={{
@@ -38,7 +49,8 @@ export default function SignUpPage({ navigation }) {
 				paddingTop: 100,
 				display: "flex",
 				alignItems: "center",
-			}}>
+			}}
+		>
 			{/* LOGO */}
 			<Text
 				style={{
@@ -46,8 +58,9 @@ export default function SignUpPage({ navigation }) {
 					fontFamily: Fonts.subTitle.fontFamily,
 					fontSize: Fonts.subTitle.fontSize,
 					color: Colors.background,
-				}}>
-				Welcome to SmileNow
+				}}
+			>
+				Welcome to Smile Now
 			</Text>
 			<Image
 				source={LogoWhite}
@@ -67,12 +80,13 @@ export default function SignUpPage({ navigation }) {
 					fontFamily: Fonts.subTitle.fontFamily,
 					fontSize: Fonts.subTitle.fontSize,
 					color: Colors.background,
-				}}>
+				}}
+			>
 				Sign Up
 			</Text>
 			<TextInput
-				placeholder="Enter your Phone Number"
-				keyboardType="phone-pad"
+				placeholder='Enter your Phone Number'
+				keyboardType='phone-pad'
 				value={phone}
 				onChangeText={setPhone}
 				placeholderTextColor={Colors.border}
@@ -98,7 +112,8 @@ export default function SignUpPage({ navigation }) {
 					borderRadius: 5,
 					opacity: phone.length < 10 ? 0.5 : 1,
 					width: "100%",
-				}}>
+				}}
+			>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Next</Text>
 			</TouchableOpacity>
 			<TouchableOpacity
@@ -106,7 +121,8 @@ export default function SignUpPage({ navigation }) {
 				style={{
 					...ButtonStyles.button,
 					marginTop: 10,
-				}}>
+				}}
+			>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
 			</TouchableOpacity>
 

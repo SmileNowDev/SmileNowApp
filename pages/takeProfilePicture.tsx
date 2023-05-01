@@ -11,6 +11,7 @@ import {
 	Touchable,
 	TouchableOpacity,
 	View,
+	ActivityIndicator,
 	Platform,
 } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
@@ -21,6 +22,7 @@ import postApi from "../api/post/post";
 import userApi from "../api/user/user";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
+	const [loading, setLoading] = useState(false);
 	const [permission, requestPermission] = Camera.useCameraPermissions();
 	const cameraType = CameraType.front;
 	const [flashMode, setFlashMode] = useState(FlashMode.off);
@@ -61,15 +63,24 @@ export default function CameraPage({ route, navigation }) {
 		let formData = createFormData(photo);
 		const result = await postApi.uploadImage({ formData, postId });
 		if (result.ok) {
-			navigation.goBack();
+			Alert.alert("Image Uploaded Successfully");
+			setLoading(false);
+			navigation.navigate("Home");
 		}
 	}
 	async function handleSave() {
+		setLoading(true);
 		let formData = createFormData(photo);
 		const result = await userApi.uploadAvatar({ formData });
 		if (result.ok) {
 			//@ts-expect-error
 			uploadImage(result.data._id);
+		} else {
+			Alert.alert(
+				"Image Upload Failed",
+				"Oops, something went wrong, please try again later."
+			);
+			setLoading(false);
 		}
 	}
 	useEffect(() => {
@@ -86,7 +97,8 @@ export default function CameraPage({ route, navigation }) {
 			style={{
 				flex: 1,
 				alignItems: "center",
-			}}>
+			}}
+		>
 			{!isPreviewing ? (
 				<>
 					<View style={{ height: 100, marginTop: 30 }}>
@@ -94,8 +106,9 @@ export default function CameraPage({ route, navigation }) {
 							style={{
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: 40,
-							}}>
-							SmileNow!
+							}}
+						>
+							Smile Now!
 						</Text>
 					</View>
 					<Camera
@@ -110,12 +123,13 @@ export default function CameraPage({ route, navigation }) {
 						}}
 						type={cameraType}
 						flashMode={flashMode}
-						ref={cameraRef}></Camera>
+						ref={cameraRef}
+					></Camera>
 
 					<View style={styles.footer}>
 						<TouchableOpacity onPress={() => toggleFlashMode()}>
 							<Icon
-								name="flash"
+								name='flash'
 								size={30}
 								type={"Ion"}
 								color={
@@ -127,11 +141,12 @@ export default function CameraPage({ route, navigation }) {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={styles.shutter}
-							onPress={() => takePhoto()}>
+							onPress={() => takePhoto()}
+						>
 							<View style={styles.innerShutter} />
 						</TouchableOpacity>
 						<View style={{ opacity: 0 }}>
-							<Icon name="" size={30} />
+							<Icon name='' size={30} />
 						</View>
 					</View>
 				</>
@@ -142,10 +157,26 @@ export default function CameraPage({ route, navigation }) {
 							style={{
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: 40,
-							}}>
+							}}
+						>
 							Looks Great!
 						</Text>
 					</View>
+					{loading ? (
+						<ActivityIndicator
+							size={"large"}
+							color={Colors.primary}
+							style={{
+								height: width - 20,
+								width: width - 20,
+								position: "absolute",
+								top: width / 2,
+								zIndex: 100,
+							}}
+						/>
+					) : (
+						<></>
+					)}
 					<Image
 						source={{ uri: photo?.uri }}
 						style={{
@@ -162,9 +193,10 @@ export default function CameraPage({ route, navigation }) {
 							style={{
 								...ButtonStyles.button,
 								...ButtonStyles.primaryOutlined,
-							}}>
+							}}
+						>
 							<Icon
-								name="image-remove"
+								name='image-remove'
 								size={20}
 								type={"MaterialCommunity"}
 								color={Colors.primary}
@@ -173,7 +205,8 @@ export default function CameraPage({ route, navigation }) {
 								style={{
 									...ButtonStyles.buttonText,
 									color: Colors.primary,
-								}}>
+								}}
+							>
 								Retake
 							</Text>
 						</TouchableOpacity>
@@ -185,7 +218,8 @@ export default function CameraPage({ route, navigation }) {
 								...ButtonStyles.button,
 								...ButtonStyles.primary,
 							}}
-							onPress={() => handleSave()}>
+							onPress={() => handleSave()}
+						>
 							<Text style={{ ...ButtonStyles.buttonTextLarge }}>
 								Save Photo
 							</Text>

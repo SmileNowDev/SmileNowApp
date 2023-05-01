@@ -9,7 +9,8 @@ const toggleHost = ({ eventId, userId }) =>
 const deleteAttendee = ({ eventId, userId }) =>
 	client.delete(`${endpoint}`, { eventId, userId });
 
-const getAttendees = ({ eventId }) => client.get(`${endpoint}/${eventId}`);
+const getAttendees = ({ eventId, page }) =>
+	client.get(`${endpoint}/${eventId}/${page}`);
 
 const attendeeApi = {
 	join,

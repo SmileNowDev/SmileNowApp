@@ -3,7 +3,7 @@ import { Image, View, Text, TouchableOpacity } from "react-native";
 import { Fonts, Colors } from "../styles/theme";
 import Avatar from "./avatar";
 import Icon from "./icons";
-
+import DefaultOptions from "./defaultOptions";
 interface Comment {
 	pic: string;
 	name: string;
@@ -53,9 +53,7 @@ export default function Comment({
 					{comment}
 				</Text>
 			</View>
-			<TouchableOpacity style={{ padding: 10 }}>
-				<Icon name='more-vert' size={20} color={Colors.textSecondary} />
-			</TouchableOpacity>
+			<DefaultOptions type={"comment"} id={commentId} size={20} />
 		</View>
 	);
 }

@@ -11,6 +11,7 @@ import {
 	Touchable,
 	TouchableOpacity,
 	View,
+	ActivityIndicator,
 	Platform,
 } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
@@ -21,6 +22,7 @@ import postApi from "../api/post/post";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
 	const { eventId } = route.params;
+	const [loading, setLoading] = useState(false);
 	const [caption, setCaption] = useState("");
 	const [permission, requestPermission] = Camera.useCameraPermissions();
 	const [cameraType, setCameraType] = useState(CameraType.back);
@@ -67,15 +69,19 @@ export default function CameraPage({ route, navigation }) {
 		let formData = createFormData(photo);
 		const result = await postApi.uploadImage({ formData, postId });
 		if (result.ok) {
+			setLoading(false);
 			navigation.navigate("Party", { eventId });
 		}
 	}
 	async function handlePost() {
+		setLoading(true);
 		const result = await postApi.create({ eventId, caption });
 		if (result.ok) {
 			//@ts-expect-error
-
 			uploadImage(result.data._id);
+		} else {
+			setLoading(false);
+			Alert.alert("Error", "Something went wrong, please try again later.");
 		}
 	}
 	useEffect(() => {
@@ -92,7 +98,8 @@ export default function CameraPage({ route, navigation }) {
 			style={{
 				flex: 1,
 				alignItems: "center",
-			}}>
+			}}
+		>
 			{!isPreviewing ? (
 				<>
 					<View style={{ height: 100, marginTop: 30 }}>
@@ -100,8 +107,9 @@ export default function CameraPage({ route, navigation }) {
 							style={{
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: 40,
-							}}>
-							SmileNow!
+							}}
+						>
+							Smile Now!
 						</Text>
 					</View>
 					<Camera
@@ -114,12 +122,13 @@ export default function CameraPage({ route, navigation }) {
 						}}
 						type={cameraType}
 						flashMode={flashMode}
-						ref={cameraRef}></Camera>
+						ref={cameraRef}
+					></Camera>
 
 					<View style={styles.footer}>
 						<TouchableOpacity onPress={() => toggleFlashMode()}>
 							<Icon
-								name="flash"
+								name='flash'
 								size={30}
 								type={"Ion"}
 								color={
@@ -131,12 +140,13 @@ export default function CameraPage({ route, navigation }) {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={styles.shutter}
-							onPress={() => takePhoto()}>
+							onPress={() => takePhoto()}
+						>
 							<View style={styles.innerShutter} />
 						</TouchableOpacity>
 						<TouchableOpacity onPress={() => toggleCameraType()}>
 							<Icon
-								name="ios-camera-reverse"
+								name='ios-camera-reverse'
 								size={30}
 								type={"Ion"}
 								color={Colors.textSecondary}
@@ -154,7 +164,7 @@ export default function CameraPage({ route, navigation }) {
 							width: width - 20,
 							height: 100,
 						}}
-						placeholder="Caption Your Photo"
+						placeholder='Caption Your Photo'
 						value={caption}
 						onChangeText={setCaption}
 					/>
@@ -164,7 +174,23 @@ export default function CameraPage({ route, navigation }) {
 							height: width - 20,
 							width: width - 20,
 							marginTop: 20,
-						}}>
+						}}
+					>
+						{loading ? (
+							<ActivityIndicator
+								size={"large"}
+								color={Colors.primary}
+								style={{
+									height: width - 20,
+									width: width - 20,
+									position: "absolute",
+									top: (width - 20) / 2,
+									zIndex: 100,
+								}}
+							/>
+						) : (
+							<></>
+						)}
 						<Image
 							source={{ uri: photo?.uri }}
 							style={{ width: "100%", height: "100%", borderRadius: 10 }}
@@ -177,9 +203,10 @@ export default function CameraPage({ route, navigation }) {
 								left: 20,
 								...ButtonStyles.buttonSmall,
 								backgroundColor: Colors.foreground,
-							}}>
+							}}
+						>
 							<Icon
-								name="image-remove"
+								name='image-remove'
 								size={20}
 								type={"MaterialCommunity"}
 								color={Colors.textSecondary}
@@ -188,7 +215,8 @@ export default function CameraPage({ route, navigation }) {
 								style={{
 									...ButtonStyles.buttonTextSmall,
 									color: Colors.textSecondary,
-								}}>
+								}}
+							>
 								Retake
 							</Text>
 						</TouchableOpacity>
@@ -201,7 +229,8 @@ export default function CameraPage({ route, navigation }) {
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
 						}}
-						onPress={() => handlePost()}>
+						onPress={() => handlePost()}
+					>
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Post</Text>
 					</TouchableOpacity>
 				</>

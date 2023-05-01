@@ -7,7 +7,7 @@ const accept = ({ userId }) => client.put(`${endpoint}/${userId}`);
 
 const deleteFriend = ({ userId }) => client.delete(`${endpoint}/${userId}`);
 
-const getMyFriends = ({ page }) => client.get(`${endpoint}/MyFriends/${page}`);
+const getMyFriends = ({ page }) => client.get(`${endpoint}/myFriends/${page}`);
 
 const getMyRequests = ({ page }) =>
 	client.get(`${endpoint}/myRequests/${page}`);

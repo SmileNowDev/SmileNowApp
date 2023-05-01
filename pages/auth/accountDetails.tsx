@@ -15,9 +15,6 @@ import userApi from "../../api/user/user";
 export default function AccountDetailsScreen({ navigation }) {
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
-	function handleNext() {
-		navigation.navigate("Home");
-	}
 
 	async function uploadDetails() {
 		const result = await userApi.updateUser({
@@ -26,7 +23,7 @@ export default function AccountDetailsScreen({ navigation }) {
 			bio: "Add a bio...",
 		});
 		if (result.ok) {
-			handleNext();
+			navigation.navigate("Home");
 		}
 	}
 
@@ -37,18 +34,11 @@ export default function AccountDetailsScreen({ navigation }) {
 				flex: 1,
 				display: "flex",
 				alignItems: "center",
-			}}>
+			}}
+		>
 			<View style={GlobalStyles.ScreenContainer}>
-				<TouchableOpacity
-					style={{ padding: 50 }}
-					onPress={() => {
-						navigation.navigate("TakeProfilePicture");
-					}}>
-					<Text>Take a profile Picture</Text>
-				</TouchableOpacity>
-
 				<TextInput
-					placeholder="Name"
+					placeholder='Name'
 					onChangeText={setName}
 					placeholderTextColor={Colors.border}
 					style={{
@@ -64,7 +54,7 @@ export default function AccountDetailsScreen({ navigation }) {
 					}}
 				/>
 				<TextInput
-					placeholder="username"
+					placeholder='username'
 					onChangeText={setUsername}
 					placeholderTextColor={Colors.border}
 					style={{
@@ -91,7 +81,8 @@ export default function AccountDetailsScreen({ navigation }) {
 						...ButtonStyles.outlinedWhite,
 						opacity: name.length < 1 && username.length < 5 ? 0.5 : 1,
 						marginTop: 40,
-					}}>
+					}}
+				>
 					<Text style={{ color: Colors.background, fontSize: 20 }}>
 						Complete Profile
 					</Text>

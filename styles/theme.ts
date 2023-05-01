@@ -11,7 +11,7 @@ export const Colors = {
 	urgent: "#ed7286",
 	success: "#4caf50",
 	background: "#FAFAFA",
-	foreground: "#EEEEEE",
+	foreground: "#EBEBEB",
 	text: "#1F1F1F",
 	textSecondary: "#767676",
 	border: "#E5E5E5",

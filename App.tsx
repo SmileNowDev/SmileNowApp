@@ -46,6 +46,9 @@ import Post from "./pages/post";
 import PostPage from "./pages/post";
 import EditProfile from "./pages/editProfile";
 import EditProfilePage from "./pages/editProfile";
+import ReportPage from "./pages/report";
+import BlockedUsersPage from "./pages/settings/blockedUsers";
+import TermsAndConditions from "./pages/terms";
 
 type RootStackParamList = {
 	Splash: undefined;
@@ -54,7 +57,7 @@ type RootStackParamList = {
 	Post: { postId: string };
 	CreateParty: undefined;
 	JoinParty: undefined;
-	InviteToParty: { joinCode: string; eventId: string };
+	InviteToParty: { joinCode: string; eventId: string; isHost: boolean };
 	Friends: undefined;
 	PartyDetails: { partyId: string };
 	Camera: { partyId: string };
@@ -66,6 +69,8 @@ type RootStackParamList = {
 	VerifyPhone: { phone: string };
 	AccountDetails: undefined;
 	Settings: undefined;
+	Report: { type: string; id: string };
+	Blocked: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -94,45 +99,49 @@ export default function App() {
 	} else {
 		return (
 			<MyProvider>
-				<StatusBar style="auto" />
+				<StatusBar style='auto' />
 				<NavigationContainer>
 					<Stack.Navigator
 						screenOptions={{ headerShown: false }}
-						initialRouteName={"Splash"}>
-						<Stack.Screen name="Splash" component={SplashPage} />
+						initialRouteName={"Splash"}
+					>
+						<Stack.Screen name='Splash' component={SplashPage} />
 						<Stack.Screen
-							name="Home"
+							name='Home'
 							component={HomePage}
 							options={{ gestureEnabled: false }}
 						/>
+						<Stack.Screen name='Terms' component={TermsAndConditions} />
 
-						<Stack.Screen name="Party" component={PartyPage} />
-						<Stack.Screen name="Post" component={PostPage} />
-						<Stack.Screen name="JoinParty" component={JoinPartyPage} />
-						<Stack.Screen name="CreateParty" component={CreatePartyPage} />
-						<Stack.Screen name="InviteToParty" component={InviteToParty} />
-						<Stack.Screen name="Friends" component={FriendsPage} />
-						<Stack.Screen name="PartyDetails" component={PartyDetailsPage} />
-						<Stack.Screen name="Camera" component={CameraPage} />
-						<Stack.Screen name="Profile" component={ProfilePage} />
-						<Stack.Screen name="EditProfile" component={EditProfilePage} />
+						<Stack.Screen name='Party' component={PartyPage} />
+						<Stack.Screen name='Post' component={PostPage} />
+						<Stack.Screen name='JoinParty' component={JoinPartyPage} />
+						<Stack.Screen name='CreateParty' component={CreatePartyPage} />
+						<Stack.Screen name='InviteToParty' component={InviteToParty} />
+						<Stack.Screen name='Friends' component={FriendsPage} />
+						<Stack.Screen name='PartyDetails' component={PartyDetailsPage} />
+						<Stack.Screen name='Camera' component={CameraPage} />
+						<Stack.Screen name='Profile' component={ProfilePage} />
+						<Stack.Screen name='EditProfile' component={EditProfilePage} />
 						<Stack.Screen
-							name="TakeProfilePicture"
+							name='TakeProfilePicture'
 							component={TakeProfilePicture}
 						/>
 
 						<Stack.Screen
-							name="SignUp"
+							name='SignUp'
 							component={SignUpPage}
 							options={{ gestureEnabled: false }}
 						/>
-						<Stack.Screen name="Login" component={LoginPage} />
-						<Stack.Screen name="VerifyPhone" component={VerifyPhonePage} />
+						<Stack.Screen name='Login' component={LoginPage} />
+						<Stack.Screen name='VerifyPhone' component={VerifyPhonePage} />
 						<Stack.Screen
-							name="AccountDetails"
+							name='AccountDetails'
 							component={AccountDetailsScreen}
 						/>
-						<Stack.Screen name="Settings" component={Settings} />
+						<Stack.Screen name='Report' component={ReportPage} />
+						<Stack.Screen name='Settings' component={Settings} />
+						<Stack.Screen name='Blocked' component={BlockedUsersPage} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</MyProvider>

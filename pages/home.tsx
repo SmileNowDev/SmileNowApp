@@ -20,23 +20,49 @@ import * as Notifications from "expo-notifications";
 import userApi from "../api/user/user";
 import * as Device from "expo-device";
 import { getInitials } from "./friends";
+import ScreenWrapper from "../components/core/screenWrapper";
 export default function HomePage({ navigation }) {
 	const [events, setEvents] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
-	async function createEvent() {
-		const result = await eventApi.create();
-		if (result.ok) {
-			//@ts-expect-error
-			navigation.navigate("CreateParty", { eventId: result.data._id });
-		}
-	}
+	const [page, setPage] = useState(1); // Add this state
+	const [hasMore, setHasMore] = useState(true); // Add this state
+	const [loading, setLoading] = useState(false); // Add this state
+	const [bottomLoading, setBottomLoading] = useState(false); // Add this state
+
+	// ... (other functions)
 
 	async function getEvents() {
+		setLoading(true);
 		const result = await eventApi.getEvents({ page: 1 });
 		if (result.ok) {
 			// @ts-expect-error
 			setEvents(result.data);
 		}
+		setLoading(false);
+	}
+
+	// Add this function
+	async function loadMoreEvents() {
+		if (!hasMore) {
+			return;
+		}
+
+		setBottomLoading(true);
+		const nextPage = page + 1;
+		const result = await eventApi.getEvents({ page: nextPage });
+
+		if (result.ok) {
+			// @ts-expect-error
+			if (result.data.length > 0) {
+				//@ts-expect-error
+				setEvents((prevEvents) => [...prevEvents, ...result.data]);
+				setPage(nextPage);
+			} else {
+				setHasMore(false);
+			}
+		}
+
+		setBottomLoading(false);
 	}
 
 	const uploadToken = async (expoNotificationToken: string) => {
@@ -75,6 +101,13 @@ export default function HomePage({ navigation }) {
 
 		return token;
 	}
+	async function createEvent() {
+		const result = await eventApi.create();
+		if (result.ok) {
+			//@ts-expect-error
+			navigation.navigate("CreateParty", { eventId: result.data._id });
+		}
+	}
 	function onRefresh() {
 		getEvents();
 	}
@@ -105,10 +138,12 @@ export default function HomePage({ navigation }) {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />
-			<ScrollView
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
+			<ScreenWrapper
+				onRefresh={onRefresh}
+				scrollEnabled={true}
+				loading={loading}
+				onBottomScroll={loadMoreEvents}
+				bottomLoading={bottomLoading}
 			>
 				<Text
 					style={{
@@ -133,8 +168,10 @@ export default function HomePage({ navigation }) {
 							canPost={item.canPost}
 						/>
 					)}
+					onEndReached={() => setPage((prevPage) => prevPage + 1)}
+					onEndReachedThreshold={0.1}
 				/>
-			</ScrollView>
+			</ScreenWrapper>
 
 			<View
 				style={{

@@ -14,10 +14,13 @@ export default function Header({ goBack = false, title }: HeaderProps) {
 		<View
 			style={{
 				...GlobalStyles.header,
-			}}>
-			<TouchableOpacity onPress={() => navigation.goBack()}>
-				<Icon name={"chevron-left"} size={30} />
-			</TouchableOpacity>
+			}}
+		>
+			{goBack && (
+				<TouchableOpacity onPress={() => navigation.goBack()}>
+					<Icon name={"chevron-left"} size={30} />
+				</TouchableOpacity>
+			)}
 
 			<Text
 				style={{
@@ -25,10 +28,11 @@ export default function Header({ goBack = false, title }: HeaderProps) {
 					textAlign: "center",
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
-				}}>
-				{title ? title : "SmileNow"}
+				}}
+			>
+				{title ? title : "Smile Now"}
 			</Text>
-			<View style={{ width: 30 }} />
+			{goBack && <View style={{ width: 30 }} />}
 		</View>
 	);
 }

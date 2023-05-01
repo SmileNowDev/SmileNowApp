@@ -32,7 +32,6 @@ export default function EditProfilePage({ navigation }) {
 	}
 	async function save() {
 		const result = await userApi.updateUser({ name, username });
-		console.log("result: ", result);
 		if (result.ok) {
 			navigation.goBack();
 		} else {

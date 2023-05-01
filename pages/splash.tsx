@@ -16,7 +16,7 @@ export default function SplashPage({ navigation }) {
 			navigation.navigate("Home");
 			setUserId(userId);
 		} else {
-			navigation.navigate("Login");
+			navigation.navigate("SignUp");
 		}
 	}
 	// @ts-expect-error
@@ -29,8 +29,9 @@ export default function SplashPage({ navigation }) {
 				style={{
 					fontStyle: Fonts.title.fontFamily,
 					fontSize: Fonts.title.fontSize,
-				}}>
-				SmileNow
+				}}
+			>
+				Smile Now
 			</Text>
 		</SafeAreaView>
 	);
