@@ -22,7 +22,7 @@ export const Fonts = {
 		fontSize: 30,
 	},
 	subTitle: {
-		fontFamily: "Exo_500Medium",
+		fontFamily: "Exo_400Regular",
 		fontSize: 24,
 	},
 	button: {

@@ -21,6 +21,7 @@ import userApi from "../api/user/user";
 import * as Device from "expo-device";
 import { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
+import WelcomeMessage from "../components/info/welcomeMessage";
 export default function HomePage({ navigation }) {
 	const [events, setEvents] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
@@ -143,34 +144,38 @@ export default function HomePage({ navigation }) {
 				scrollEnabled={true}
 				loading={loading}
 				onBottomScroll={loadMoreEvents}
-				bottomLoading={bottomLoading}
-			>
-				<Text
-					style={{
-						fontFamily: Fonts.title.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-						padding: 10,
-					}}
-				>
-					My Parties
-				</Text>
-				<FlatList
-					data={events}
-					keyExtractor={(item) => item.event._id}
-					renderItem={({ item }) => (
-						<PartyListItem
-							icon={getInitials(
-								item.event.title.split(" ")[0],
-								item.event.title.split(" ")[1]
+				bottomLoading={bottomLoading}>
+				{events.length === 0 ? (
+					<WelcomeMessage />
+				) : (
+					<>
+						<Text
+							style={{
+								fontFamily: Fonts.title.fontFamily,
+								fontSize: Fonts.subTitle.fontSize,
+								padding: 10,
+							}}>
+							My Parties
+						</Text>
+						<FlatList
+							data={events}
+							keyExtractor={(item) => item.event._id}
+							renderItem={({ item }) => (
+								<PartyListItem
+									icon={getInitials(
+										item.event.title.split(" ")[0],
+										item.event.title.split(" ")[1]
+									)}
+									name={item.event.title}
+									eventId={item.event._id}
+									canPost={item.canPost}
+								/>
 							)}
-							name={item.event.title}
-							eventId={item.event._id}
-							canPost={item.canPost}
+							onEndReached={() => setPage((prevPage) => prevPage + 1)}
+							onEndReachedThreshold={0.1}
 						/>
-					)}
-					onEndReached={() => setPage((prevPage) => prevPage + 1)}
-					onEndReachedThreshold={0.1}
-				/>
+					</>
+				)}
 			</ScreenWrapper>
 
 			<View
@@ -187,18 +192,15 @@ export default function HomePage({ navigation }) {
 					...GlobalStyles.Container,
 
 					flex: 0,
-				}}
-			>
+				}}>
 				<TouchableOpacity
 					onPress={() => navigation.navigate("JoinParty")}
-					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}
-				>
+					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={createEvent}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}
-				>
+					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
 				</TouchableOpacity>
 			</View>

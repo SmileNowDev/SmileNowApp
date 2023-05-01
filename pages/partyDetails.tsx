@@ -14,9 +14,18 @@ import EmojiTextInput from "../components/emojiTextInput";
 import { ButtonStyles, GlobalStyles, Dim } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import Icon from "../components/icons";
-
 import eventApi from "../api/post/event";
-export default function PartyDetailsPage({ route, navigation }) {
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../App";
+type PartyDetailsRouteProps = StackScreenProps<
+	RootStackParamList,
+	"PartyDetails"
+>;
+
+export default function PartyDetailsPage({
+	route,
+	navigation,
+}: PartyDetailsRouteProps) {
 	const { eventId, name } = route.params;
 	const [loading, setLoading] = useState(false);
 	const [newName, setNewName] = useState(name);
@@ -38,7 +47,7 @@ export default function PartyDetailsPage({ route, navigation }) {
 			description: newDescription,
 		});
 		if (result.ok) {
-			Alert.alert("Success", "Your party has been updated");
+			Alert.alert("Your party has been updated", "Refresh to see your changes");
 
 			navigation.goBack();
 		} else {
@@ -90,10 +99,9 @@ export default function PartyDetailsPage({ route, navigation }) {
 					alignItems: "center",
 					justifyContent: "flex-start",
 					padding: 10,
-				}}
-			>
+				}}>
 				<Icon
-					name='notifications'
+					name="notifications"
 					size={20}
 					color={notificationStatus ? Colors.primary : Colors.textSecondary}
 				/>
@@ -102,8 +110,7 @@ export default function PartyDetailsPage({ route, navigation }) {
 						flex: 1,
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}
-				>
+					}}>
 					Notifications Are {notificationStatus ? "On" : "Off"}
 				</Text>
 				<Switch
@@ -117,15 +124,14 @@ export default function PartyDetailsPage({ route, navigation }) {
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					Name:
 				</Text>
 				<TextInput
 					value={newName}
-					placeholder='Enter a party Name'
+					placeholder="Enter a party Name"
 					onChangeText={setNewName}
-					clearButtonMode='always'
+					clearButtonMode="always"
 					style={{
 						...GlobalStyles.textInput,
 					}}
@@ -136,16 +142,15 @@ export default function PartyDetailsPage({ route, navigation }) {
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
 						marginTop: 20,
-					}}
-				>
+					}}>
 					Description:
 				</Text>
 				<TextInput
 					multiline
 					numberOfLines={4}
-					clearButtonMode='always'
+					clearButtonMode="always"
 					value={newDescription}
-					placeholder='Enter a party Name'
+					placeholder="Enter a party Name"
 					onChangeText={setNewDescription}
 					style={{
 						...GlobalStyles.textInput,
@@ -160,20 +165,17 @@ export default function PartyDetailsPage({ route, navigation }) {
 						gap: 5,
 						paddingVertical: 5,
 						marginTop: 20,
-					}}
-				>
+					}}>
 					<TouchableOpacity
 						onPress={() => cancel()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}
-					>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Cancel Changes
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => save()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
-					>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
 						<Text style={{ ...ButtonStyles.buttonText }}>Save Changes</Text>
 					</TouchableOpacity>
 				</View>

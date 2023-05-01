@@ -4,6 +4,7 @@ import Icon from "./icons";
 import { Colors, Fonts } from "../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../styles/styles";
+import { RootStackParamList } from "../App";
 interface HeaderProps {
 	title: string;
 	eventId: string;
@@ -21,22 +22,29 @@ export default function PartyHeader({
 		<View
 			style={{
 				...GlobalStyles.header,
-			}}
-		>
-			<TouchableOpacity onPress={() => navigation.goBack()}>
+			}}>
+			<TouchableOpacity
+				// @ts-expect-error
+				onPress={() => navigation.navigate("Home")}
+				style={{
+					display: "flex",
+					justifyContent: "flex-start",
+					flexDirection: "row",
+					alignItems: "center",
+					gap: 10,
+				}}>
 				<Icon name={"chevron-left"} size={30} />
+
+				<Text
+					style={{
+						fontFamily: Fonts.title.fontFamily,
+						fontSize: 20,
+						overflow: "hidden",
+					}}>
+					{title ? title : "Smile Now"}
+				</Text>
 			</TouchableOpacity>
 
-			<Text
-				style={{
-					flex: 1,
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: 20,
-					overflow: "hidden",
-				}}
-			>
-				{title ? title : "Smile Now"}
-			</Text>
 			{isHost ? (
 				<View
 					style={{
@@ -44,28 +52,26 @@ export default function PartyHeader({
 						justifyContent: "flex-end",
 						alignItems: "center",
 						gap: 15,
-					}}
-				>
+					}}>
 					<TouchableOpacity
 						onPress={() =>
 							// @ts-expect-error
 							navigation.navigate("InviteToParty", { eventId, name, isHost })
-						}
-					>
+						}>
 						<Icon
-							name='person-add-alt-1'
+							name="person-add-alt-1"
 							size={25}
 							color={Colors.textSecondary}
 						/>
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() =>
+							// @ts-expect-error
 							navigation.navigate("PartyDetails", { eventId, name })
-						}
-					>
+						}>
 						<Icon
-							name='settings'
-							type='Feather'
+							name="settings"
+							type="Feather"
 							size={25}
 							color={Colors.textSecondary}
 						/>
