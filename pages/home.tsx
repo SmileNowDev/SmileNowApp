@@ -214,8 +214,6 @@ export default function HomePage({ navigation }) {
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
 				</TouchableOpacity>
 			</View>
-
-			{/* list of parties you've been to */}
 		</SafeAreaView>
 	);
 }
