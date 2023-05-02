@@ -7,7 +7,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 } from "react-native";
-import { Dim } from "../styles/styles";
+import { Dim, GlobalStyles } from "../styles/styles";
 import QRCode from "react-native-qrcode-svg";
 import { Colors, Fonts } from "../styles/theme";
 import Header from "../components/header";
@@ -95,11 +95,9 @@ export default function InviteToParty({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonSmall,
 						...ButtonStyles.primaryOutlined,
-					}}
-				>
+					}}>
 					<Text
-						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}
-					>
+						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}>
 						Demote to Member
 					</Text>
 				</TouchableOpacity>
@@ -111,11 +109,12 @@ export default function InviteToParty({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonSmall,
 						...ButtonStyles.secondaryOutlined,
-					}}
-				>
+					}}>
 					<Text
-						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.secondary }}
-					>
+						style={{
+							...ButtonStyles.buttonTextSmall,
+							color: Colors.secondary,
+						}}>
 						Promote to Host
 					</Text>
 				</TouchableOpacity>
@@ -130,28 +129,32 @@ export default function InviteToParty({ route, navigation }) {
 					getAttendees();
 					getEvent();
 				}}
+				style={{ width: "100%", backgroundColor: "white" }}
 				scrollEnabled={true}
 				loading={loading}
 				onBottomScroll={loadMore}
-				bottomLoading={bottomLoading}
-			>
-				<>
+				bottomLoading={bottomLoading}>
+				<View style={{ width: "100%", backgroundColor: "white" }}>
 					{isHost ? (
 						<View
 							style={{
 								alignItems: "center",
-								marginVertical: 40,
-							}}
-						>
-							<QRCode value={joinCode} size={Dim.width - 60} />
-							{/* QR Code goes here*/}
+								marginVertical: 20,
+							}}>
+							<View
+								style={{
+									...GlobalStyles.Container,
+									backgroundColor: Colors.background,
+								}}>
+								<QRCode value={joinCode} size={Dim.width - 60} />
+							</View>
 
 							<Text
 								style={{
+									marginTop: 20,
 									fontFamily: Fonts.body.fontFamily,
 									fontSize: Fonts.body.fontSize,
-								}}
-							>
+								}}>
 								Tell friends to join with
 							</Text>
 							<Text
@@ -160,8 +163,7 @@ export default function InviteToParty({ route, navigation }) {
 									fontSize: Fonts.title.fontSize + 10,
 									color: Colors.primary,
 									textAlign: "center",
-								}}
-							>
+								}}>
 								{joinCode}
 							</Text>
 						</View>
@@ -172,13 +174,15 @@ export default function InviteToParty({ route, navigation }) {
 						style={{
 							fontFamily: Fonts.title.fontFamily,
 							fontSize: Fonts.title.fontSize,
-							marginVertical: 20,
-							textAlign: "center",
-						}}
-					>
+							marginVertical: 5,
+							marginLeft: 15,
+							textAlign: "left",
+							width: "100%",
+						}}>
 						Attendees
 					</Text>
 					<FlatList
+						style={{ width: "100%", paddingHorizontal: 10 }}
 						data={attendees}
 						renderItem={({ item }) => (
 							<UserCard
@@ -197,7 +201,7 @@ export default function InviteToParty({ route, navigation }) {
 					/>
 
 					<View style={{ height: Dim.height / 2 }}></View>
-				</>
+				</View>
 			</ScreenWrapper>
 		</SafeAreaView>
 	);

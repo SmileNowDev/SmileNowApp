@@ -29,8 +29,8 @@ export default function Comment({
 				paddingVertical: 5,
 				paddingHorizontal: 10,
 				gap: 10,
-			}}
-		>
+				marginBottom: 5,
+			}}>
 			<View>
 				<Avatar pic={pic} size={30} id={userId} />
 			</View>
@@ -40,20 +40,18 @@ export default function Comment({
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					{name}
 				</Text>
 				<Text
 					style={{
-						fontFamily: Fonts.handWriting.fontFamily,
+						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}
-				>
+					}}>
 					{comment}
 				</Text>
 			</View>
-			<DefaultOptions type={"comment"} id={commentId} size={20} />
+			<DefaultOptions type={"comment"} id={commentId} size={20} horizontal />
 		</View>
 	);
 }

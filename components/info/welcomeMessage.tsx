@@ -4,77 +4,80 @@ import { GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 export default function WelcomeMessage() {
 	return (
-		<View style={styles.container}>
-			<Text
-				style={{
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: Fonts.title.fontSize,
-				}}>
-				Welcome to Smile Now!
-			</Text>
-			<Text
-				style={{
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.subTitle.fontSize,
-				}}>
-				Here's how it all works:
-			</Text>
-			<View style={styles.stepsContainer}>
-				<View style={styles.step}>
-					<Text
-						style={{
-							fontFamily: Fonts.button.fontFamily,
-							fontSize: Fonts.button.fontSize,
-						}}>
-						1.
-					</Text>
-					<Text style={styles.description}>
-						Create a party with just 1 click
-					</Text>
-				</View>
-				<View style={styles.step}>
-					<Text
-						style={{
-							fontFamily: Fonts.button.fontFamily,
-							fontSize: Fonts.button.fontSize,
-						}}>
-						2.
-					</Text>
-					<Text style={styles.description}>Invite your friends to join</Text>
-				</View>
-				<View style={styles.step}>
-					<Text
-						style={{
-							...styles.description,
-							color: Colors.textSecondary,
-							marginLeft: 25,
-						}}>
-						We send notifications to people one at a time
-					</Text>
-				</View>
-				<View style={styles.step}>
-					<Text
-						style={{
-							fontFamily: Fonts.button.fontFamily,
-							fontSize: Fonts.button.fontSize,
-						}}>
-						3.
-					</Text>
-					<Text style={styles.description}>
-						When its your turn, get notified to take a photo
-					</Text>
-				</View>
-				<View style={styles.step}>
-					<Text
-						style={{
-							fontFamily: Fonts.button.fontFamily,
-							fontSize: Fonts.button.fontSize,
-						}}>
-						4.
-					</Text>
-					<Text style={styles.description}>
-						Never forget to take photos with your friends again!
-					</Text>
+		<View style={{ padding: 10 }}>
+			<View style={styles.container}>
+				<Text
+					style={{
+						fontFamily: Fonts.title.fontFamily,
+						fontSize: Fonts.title.fontSize,
+					}}>
+					Welcome to Smile Now!
+				</Text>
+				<Text
+					style={{
+						fontFamily: Fonts.subTitle.fontFamily,
+						fontSize: Fonts.subTitle.fontSize,
+					}}>
+					Here's how it all works:
+				</Text>
+				<View style={styles.stepsContainer}>
+					<View style={styles.step}>
+						<Text
+							style={{
+								fontFamily: Fonts.button.fontFamily,
+								fontSize: Fonts.button.fontSize,
+							}}>
+							1.
+						</Text>
+						<Text style={styles.description}>
+							Create a party with just 1 click
+						</Text>
+					</View>
+					<View style={styles.step}>
+						<Text
+							style={{
+								fontFamily: Fonts.button.fontFamily,
+								fontSize: Fonts.button.fontSize,
+							}}>
+							2.
+						</Text>
+						<Text style={styles.description}>Invite your friends to join</Text>
+					</View>
+
+					<View style={styles.step}>
+						<Text
+							style={{
+								fontFamily: Fonts.button.fontFamily,
+								fontSize: Fonts.button.fontSize,
+							}}>
+							3.
+						</Text>
+						<Text style={styles.description}>
+							When its your turn, get notified to take a photo
+						</Text>
+					</View>
+					<View style={styles.step}>
+						<Text
+							style={{
+								...styles.description,
+								color: Colors.textSecondary,
+								marginLeft: 25,
+							}}>
+							We send notifications to people one at a time
+						</Text>
+					</View>
+					<View style={styles.step}>
+						<Text
+							style={{
+								fontFamily: Fonts.button.fontFamily,
+								fontSize: Fonts.button.fontSize,
+							}}>
+							4.
+						</Text>
+						<Text style={styles.description}>
+							Never forget to capture a moment again!
+						</Text>
+					</View>
 				</View>
 			</View>
 		</View>

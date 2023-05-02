@@ -20,6 +20,7 @@ interface DefaultOptionsProps {
 	id: string;
 	size?: number;
 	onPress?: () => void;
+	horizontal?: boolean;
 }
 
 export default function DefaultOptions({
@@ -27,6 +28,7 @@ export default function DefaultOptions({
 	id,
 	size = 20,
 	onPress,
+	horizontal = false,
 }: DefaultOptionsProps) {
 	const navigation = useNavigation();
 	const [modalVisible, setModalVisible] = useState(false);
@@ -41,17 +43,19 @@ export default function DefaultOptions({
 		<>
 			<TouchableOpacity
 				style={styles.reaction}
-				onPress={() => setModalVisible(true)}
-			>
-				<Icon name='more-vert' size={25} color={Colors.textSecondary} />
+				onPress={() => setModalVisible(true)}>
+				<Icon
+					name={horizontal ? "more-horiz" : "more-vert"}
+					size={size}
+					color={Colors.textSecondary}
+				/>
 			</TouchableOpacity>
 			<ModalWrapper
 				visible={modalVisible}
 				setVisible={setModalVisible}
 				fullHeight={false}
 				scrollable={false}
-				noSwipe={false}
-			>
+				noSwipe={false}>
 				{/* subtitle text */}
 				<Text
 					style={{
@@ -59,8 +63,7 @@ export default function DefaultOptions({
 						fontSize: Fonts.subTitle.fontSize,
 						textAlign: "left",
 						marginBottom: 20,
-					}}
-				>
+					}}>
 					Options
 				</Text>
 				<TouchableOpacity
@@ -70,16 +73,14 @@ export default function DefaultOptions({
 						setModalVisible(false);
 						// @ts-expect-error
 						navigation.navigate("Report", { type: "post", id });
-					}}
-				>
-					<Icon name='flag' size={25} color={Colors.urgent} />
+					}}>
+					<Icon name="flag" size={25} color={Colors.urgent} />
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: 20,
 							textAlign: "left",
-						}}
-					>
+						}}>
 						Report {type.substring(0, 1).toUpperCase() + type.substring(1)}
 					</Text>
 				</TouchableOpacity>
@@ -89,16 +90,14 @@ export default function DefaultOptions({
 						onPress={() => {
 							if (onPress) onPress();
 							block();
-						}}
-					>
-						<Icon name='block' size={25} color={Colors.urgent} />
+						}}>
+						<Icon name="block" size={25} color={Colors.urgent} />
 						<Text
 							style={{
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: 20,
 								textAlign: "left",
-							}}
-						>
+							}}>
 							Block {type.substring(0, 1).toUpperCase() + type.substring(1)}
 						</Text>
 					</TouchableOpacity>
@@ -124,8 +123,7 @@ export default function DefaultOptions({
 						...ButtonStyles.button,
 						...ButtonStyles.outlined,
 						marginTop: 50,
-					}}
-				>
+					}}>
 					<Text>Close</Text>
 				</TouchableOpacity>
 			</ModalWrapper>

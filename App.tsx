@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Context, Provider as MyProvider } from "./providers/provider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
+import { TransitionSpecs } from "@react-navigation/stack";
 import {
 	useFonts,
 	LibreFranklin_300Light,
@@ -118,7 +119,28 @@ export default function App() {
 						<Stack.Screen name="JoinParty" component={JoinPartyPage} />
 						<Stack.Screen name="CreateParty" component={CreatePartyPage} />
 						<Stack.Screen name="InviteToParty" component={InviteToParty} />
-						<Stack.Screen name="Friends" component={FriendsPage} />
+						<Stack.Screen
+							name="Friends"
+							component={FriendsPage}
+							options={{
+								transitionSpec: {
+									open: TransitionSpecs.TransitionIOSSpec,
+									close: TransitionSpecs.TransitionIOSSpec,
+								},
+								cardStyleInterpolator: ({ current: { progress } }) => ({
+									cardStyle: {
+										transform: [
+											{
+												translateX: progress.interpolate({
+													inputRange: [0, 1],
+													outputRange: [-1000, 0],
+												}),
+											},
+										],
+									},
+								}),
+							}}
+						/>
 						<Stack.Screen name="PartyDetails" component={PartyDetailsPage} />
 						<Stack.Screen name="Camera" component={CameraPage} />
 						<Stack.Screen name="Profile" component={ProfilePage} />

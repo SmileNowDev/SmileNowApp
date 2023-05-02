@@ -8,6 +8,7 @@ import {
 	View,
 	Alert,
 	ActivityIndicator,
+	StyleSheet,
 } from "react-native";
 import Header from "../components/header";
 import EmojiTextInput from "../components/emojiTextInput";
@@ -21,6 +22,7 @@ type PartyDetailsRouteProps = StackScreenProps<
 	RootStackParamList,
 	"PartyDetails"
 >;
+type NotificationFrequencyType = "slow" | "normal" | "fast";
 
 export default function PartyDetailsPage({
 	route,
@@ -30,6 +32,8 @@ export default function PartyDetailsPage({
 	const [loading, setLoading] = useState(false);
 	const [newName, setNewName] = useState(name);
 	const [newDescription, setNewDescription] = useState("");
+	const [notificationFrequency, setNotificationFrequency] =
+		useState<NotificationFrequencyType>("normal");
 	const [notificationStatus, setNotificationStatus] = useState(false);
 	async function handleNotificationStatusChange() {
 		// api to switch notification status
@@ -45,6 +49,9 @@ export default function PartyDetailsPage({
 			eventId,
 			title: newName,
 			description: newDescription,
+			settings: {
+				notificationFrequency,
+			},
 		});
 		if (result.ok) {
 			Alert.alert("Your party has been updated", "Refresh to see your changes");
@@ -65,6 +72,10 @@ export default function PartyDetailsPage({
 			setNotificationStatus(result.data.event.started);
 			// @ts-expect-error
 			setNewDescription(result.data.event.description);
+			setNotificationFrequency(
+				// @ts-expect-error
+				result.data.event.settings.notificationFrequency
+			);
 		}
 	}
 
@@ -91,6 +102,7 @@ export default function PartyDetailsPage({
 			) : (
 				<></>
 			)}
+			{/* Notification State */}
 			<View
 				style={{
 					gap: 5,
@@ -118,6 +130,124 @@ export default function PartyDetailsPage({
 					onValueChange={handleNotificationStatusChange}
 				/>
 			</View>
+			{/* Notification Frequency */}
+			<Text
+				style={{
+					fontFamily: Fonts.subTitle.fontFamily,
+					fontSize: Fonts.button.fontSize,
+					width: "100%",
+					textAlign: "center",
+				}}>
+				Notification Frequency
+			</Text>
+			<View style={styles.frequencyContainer}>
+				<TouchableOpacity
+					onPress={() => setNotificationFrequency("slow")}
+					style={{
+						...styles.frequencyOption,
+						backgroundColor:
+							notificationFrequency === "slow"
+								? Colors.secondaryLight + "50"
+								: "transparent",
+						borderColor:
+							notificationFrequency === "slow"
+								? Colors.secondary
+								: Colors.border,
+					}}>
+					<Icon
+						name="tortoise"
+						size={30}
+						color={
+							notificationFrequency === "slow"
+								? Colors.secondaryDark
+								: Colors.textSecondary
+						}
+						type="MaterialCommunity"
+					/>
+					<Text
+						style={{
+							...styles.frequencyOptionText,
+							color:
+								notificationFrequency === "slow"
+									? Colors.text
+									: Colors.textSecondary,
+						}}>
+						Slow
+					</Text>
+					<Text style={styles.frequencyOptionSubtext}>Every 30-60 Minute</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => setNotificationFrequency("normal")}
+					style={{
+						...styles.frequencyOption,
+						backgroundColor:
+							notificationFrequency === "normal"
+								? Colors.primaryLight + "50"
+								: "transparent",
+						borderColor:
+							notificationFrequency === "normal"
+								? Colors.primary
+								: Colors.border,
+					}}>
+					<Icon
+						name="face"
+						size={30}
+						color={
+							notificationFrequency === "normal"
+								? Colors.primaryDark
+								: Colors.textSecondary
+						}
+					/>
+					<Text
+						style={{
+							...styles.frequencyOptionText,
+
+							color:
+								notificationFrequency === "normal"
+									? Colors.text
+									: Colors.textSecondary,
+						}}>
+						Normal
+					</Text>
+					<Text style={styles.frequencyOptionSubtext}>Every 15-30 Minutes</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => setNotificationFrequency("fast")}
+					style={{
+						...styles.frequencyOption,
+						backgroundColor:
+							notificationFrequency === "fast"
+								? Colors.tertiary + "50"
+								: "transparent",
+						borderColor:
+							notificationFrequency === "fast"
+								? Colors.tertiary
+								: Colors.border,
+					}}>
+					<Icon
+						name="rabbit"
+						size={30}
+						color={
+							notificationFrequency === "fast"
+								? Colors.tertiaryDark
+								: Colors.textSecondary
+						}
+						type="MaterialCommunity"
+					/>
+					<Text
+						style={{
+							...styles.frequencyOptionText,
+							color:
+								notificationFrequency === "fast"
+									? Colors.text
+									: Colors.textSecondary,
+						}}>
+						Fast
+					</Text>
+					<Text style={styles.frequencyOptionSubtext}>Every 5-10 Minutes</Text>
+				</TouchableOpacity>
+			</View>
+			{/* Name and Description */}
 			<View style={{ padding: 10 }}>
 				<Text
 					style={{
@@ -183,3 +313,39 @@ export default function PartyDetailsPage({
 		</SafeAreaView>
 	);
 }
+const styles = StyleSheet.create({
+	frequencyContainer: {
+		gap: 5,
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		padding: 10,
+	},
+	frequencyOption: {
+		width: Dim.width / 3 - 10,
+		height: Dim.width / 3 - 10,
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 2,
+		borderWidth: 1,
+		borderColor: Colors.textSecondary,
+		borderRadius: 10,
+		padding: 3,
+	},
+	frequencyOptionText: {
+		marginTop: 10,
+		fontFamily: Fonts.body.fontFamily,
+		fontSize: Fonts.body.fontSize,
+		color: Colors.textSecondary,
+	},
+	frequencyOptionSubtext: {
+		fontFamily: Fonts.body.fontFamily,
+		fontSize: Fonts.small.fontSize,
+		color: Colors.textSecondary,
+		textAlign: "center",
+		width: Dim.width / 3 - 30,
+	},
+});

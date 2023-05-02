@@ -106,7 +106,7 @@ export default function PartyPage({ route, navigation }) {
 		);
 	} else {
 		return (
-			<SafeAreaView>
+			<SafeAreaView style={{ flex: 1 }}>
 				<PartyHeader
 					title={name}
 					eventId={eventId}
@@ -170,7 +170,7 @@ export default function PartyPage({ route, navigation }) {
 														picture: item.user.src,
 														id: item.user._id,
 													}}
-													date={item.updatedAt}
+													date={item.createdAt}
 													likes={item.likes || 0}
 													isLiked={item.isLiked}
 													comments={item.comments || 0}

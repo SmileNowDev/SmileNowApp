@@ -21,9 +21,9 @@ export default function ModalWrapper({
 	visible,
 	setVisible,
 	children,
-	fullHeight,
-	scrollable,
-	noSwipe,
+	fullHeight = false,
+	scrollable = false,
+	noSwipe = false,
 }) {
 	const containerStyle = {
 		paddingHorizontal: 20,
@@ -31,13 +31,17 @@ export default function ModalWrapper({
 		backgroundColor: Colors.background,
 		alignContent: "center",
 		justifyContent: "center",
+		position: "absolute",
+		bottom: 0,
+		left: 0,
+		right: 0,
 	};
 
 	return (
 		<Modal
 			animationIn={"slideInUp"}
 			hasBackdrop={true}
-			backdropColor={Colors.background}
+			backdropColor={Colors.textSecondary}
 			backdropOpacity={0.7}
 			animationInTiming={300}
 			animationOutTiming={300}
@@ -54,12 +58,11 @@ export default function ModalWrapper({
 			}}
 			propagateSwipe={noSwipe ? false : true}
 			style={{
-				padding: 0,
 				margin: 0,
 				left: 0,
 				height: Dim.height,
-			}}
-		>
+			}}>
+			{/* @ts-expect-error */}
 			<View style={containerStyle}>
 				{scrollable ? (
 					<ScrollView>

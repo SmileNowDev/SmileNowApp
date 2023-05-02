@@ -17,7 +17,7 @@ interface AvatarProps {
 }
 
 export function Picture({ size, pic }) {
-	if (!pic) {
+	if (!pic || pic === "") {
 		return (
 			<Image
 				source={require("../assets/logo_color.png")}
@@ -30,14 +30,24 @@ export function Picture({ size, pic }) {
 		);
 	} else {
 		return (
-			<Image
-				source={{ uri: pic }}
+			<View
 				style={{
-					width: size,
-					height: size,
+					shadowOpacity: 0.25,
+					shadowOffset: { width: 0, height: 0 },
+					shadowRadius: 5,
+					elevation: 2,
+					backgroundColor: Colors.background,
 					borderRadius: size / 2,
-				}}
-			/>
+				}}>
+				<Image
+					source={{ uri: pic }}
+					style={{
+						width: size,
+						height: size,
+						borderRadius: size / 2,
+					}}
+				/>
+			</View>
 		);
 	}
 }
@@ -65,16 +75,14 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 				setVisible={setModalVisible}
 				fullHeight={false}
 				scrollable={false}
-				noSwipe={false}
-			>
+				noSwipe={false}>
 				<View
 					style={{
 						position: "absolute",
 						right: 0,
 						top: 0,
 						zIndex: 100,
-					}}
-				>
+					}}>
 					<DefaultOptions
 						type={"user"}
 						id={id}
@@ -89,8 +97,7 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 						...ButtonStyles.button,
 						...ButtonStyles.outlined,
 						marginTop: 50,
-					}}
-				>
+					}}>
 					<Text>Close</Text>
 				</TouchableOpacity>
 			</ModalWrapper>

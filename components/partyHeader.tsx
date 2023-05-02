@@ -45,25 +45,21 @@ export default function PartyHeader({
 				</Text>
 			</TouchableOpacity>
 
-			{isHost ? (
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "flex-end",
-						alignItems: "center",
-						gap: 15,
-					}}>
-					<TouchableOpacity
-						onPress={() =>
-							// @ts-expect-error
-							navigation.navigate("InviteToParty", { eventId, name, isHost })
-						}>
-						<Icon
-							name="person-add-alt-1"
-							size={25}
-							color={Colors.textSecondary}
-						/>
-					</TouchableOpacity>
+			<View
+				style={{
+					flexDirection: "row",
+					justifyContent: "flex-end",
+					alignItems: "center",
+					gap: 15,
+				}}>
+				<TouchableOpacity
+					onPress={() =>
+						// @ts-expect-error
+						navigation.navigate("InviteToParty", { eventId, name, isHost })
+					}>
+					<Icon name="people" size={25} color={Colors.textSecondary} />
+				</TouchableOpacity>
+				{isHost ? (
 					<TouchableOpacity
 						onPress={() =>
 							// @ts-expect-error
@@ -76,10 +72,10 @@ export default function PartyHeader({
 							color={Colors.textSecondary}
 						/>
 					</TouchableOpacity>
-				</View>
-			) : (
-				<></>
-			)}
+				) : (
+					<></>
+				)}
+			</View>
 		</View>
 	);
 }

@@ -77,21 +77,17 @@ export default function ScreenWrapper({
 								borderRadius: 10,
 								paddingHorizontal: 8,
 						  }
-				}
-			>
+				}>
 				<View style={{ alignItems: "center" }}>
 					{loading ? (
 						<ActivityIndicator />
 					) : (
 						<View
 							style={{
-								maxWidth: 500,
-
 								flex: 1,
 								width: "100%",
 								zIndex: 1,
-							}}
-						>
+							}}>
 							{children}
 						</View>
 					)}

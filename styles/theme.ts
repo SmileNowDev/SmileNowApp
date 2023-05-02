@@ -2,11 +2,14 @@ export const Colors = {
 	// primary: "#6840D9",
 	primary: "#F05365",
 	primaryLight: "#FFD1DC",
-	// BLUE
-	tertiary: "#F2D398",
-	// PINK
+	primaryDark: "#d1384a",
+	// blue
 	secondary: "#9EA8FF",
 	secondaryLight: "#D1D6FF",
+	secondaryDark: "#5965d4",
+	// yellow
+	tertiary: "#F2D398",
+	tertiaryDark: "#e3b96b",
 	//Others
 	urgent: "#ed7286",
 	success: "#4caf50",

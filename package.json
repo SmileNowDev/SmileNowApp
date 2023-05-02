@@ -20,6 +20,7 @@
     "@types/react": "~18.0.27",
     "apisauce": "^3.0.0",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.7",
     "emoji-picker-react": "^4.4.9",
     "expo": "~48.0.15",
     "expo-app-loading": "^2.1.1",

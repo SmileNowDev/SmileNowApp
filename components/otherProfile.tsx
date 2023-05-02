@@ -25,6 +25,8 @@ export default function OtherProfile({ id }) {
 			setName(response.data.name);
 			// @ts-expect-error
 			setFriendStatus(response.data.friendStatus);
+			// @ts-expect-error
+			setPicture(response.data.pic);
 		}
 	}
 	async function sendFriendRequest() {
@@ -50,9 +52,8 @@ export default function OtherProfile({ id }) {
 			return (
 				<TouchableOpacity
 					onPress={() => sendFriendRequest()}
-					style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
-				>
-					<Icon name='person-add' size={20} color='white' />
+					style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
+					<Icon name="person-add" size={20} color="white" />
 					<Text style={{ ...ButtonStyles.buttonText }}>
 						Send Friend Request
 					</Text>
@@ -67,15 +68,13 @@ export default function OtherProfile({ id }) {
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						{name} wants to be friends!
 					</Text>
 					<TouchableOpacity
 						onPress={() => acceptFriendRequest()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.success }}
-					>
-						<Icon name='person-add' size={20} color='white' />
+						style={{ ...ButtonStyles.button, ...ButtonStyles.success }}>
+						<Icon name="person-add" size={20} color="white" />
 						<Text style={{ ...ButtonStyles.buttonText }}>
 							Accept Friend Request
 						</Text>
@@ -92,14 +91,12 @@ export default function OtherProfile({ id }) {
 							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 							textAlign: "center",
-						}}
-					>
+						}}>
 						Still waiting for {name} to add you back
 					</Text>
 					<TouchableOpacity
 						onPress={() => removeFriend()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}
-					>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Friend Request Pending
 						</Text>
@@ -115,15 +112,13 @@ export default function OtherProfile({ id }) {
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						You're friends with {name}
 					</Text>
 					<TouchableOpacity
 						onPress={() => removeFriend()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}
-					>
-						<Icon name='person-remove' size={20} color={Colors.text} />
+						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}>
+						<Icon name="person-remove" size={20} color={Colors.text} />
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Remove Friend
 						</Text>
@@ -141,8 +136,7 @@ export default function OtherProfile({ id }) {
 				flexDirection: "column",
 				alignItems: "center",
 				justifyContent: "flex-start",
-			}}
-		>
+			}}>
 			<Picture size={80} pic={picture} />
 			<Text
 				style={{
@@ -150,8 +144,7 @@ export default function OtherProfile({ id }) {
 					marginBottom: 5,
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: Fonts.title.fontSize,
-				}}
-			>
+				}}>
 				{name}
 			</Text>
 			<Text
@@ -159,8 +152,7 @@ export default function OtherProfile({ id }) {
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: Fonts.button.fontSize,
 					color: Colors.textSecondary,
-				}}
-			>
+				}}>
 				@{userName}
 			</Text>
 			<View style={{ paddingVertical: 30 }}>

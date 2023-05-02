@@ -5,8 +5,8 @@ const create = () => client.post(`${endpoint}`);
 
 const start = ({ eventId }) => client.post(`${endpoint}/start/${eventId}`);
 
-const updateEvent = ({ eventId, title, description }) =>
-	client.put(`${endpoint}/${eventId}`, { title, description });
+const updateEvent = ({ eventId, title, description, settings }) =>
+	client.put(`${endpoint}/${eventId}`, { title, description, settings });
 
 const getEvent = ({ eventId }) => client.get(`${endpoint}/${eventId}`);
 
