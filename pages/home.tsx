@@ -144,7 +144,8 @@ export default function HomePage({ navigation }) {
 				scrollEnabled={true}
 				loading={loading}
 				onBottomScroll={loadMoreEvents}
-				bottomLoading={bottomLoading}>
+				bottomLoading={bottomLoading}
+				style={{ paddingHorizontal: 0 }}>
 				{events.length === 0 ? (
 					<WelcomeMessage />
 				) : (
@@ -160,16 +161,25 @@ export default function HomePage({ navigation }) {
 						<FlatList
 							data={events}
 							keyExtractor={(item) => item.event._id}
-							renderItem={({ item }) => (
-								<PartyListItem
-									icon={getInitials(
-										item.event.title.split(" ")[0],
-										item.event.title.split(" ")[1]
-									)}
-									name={item.event.title}
-									eventId={item.event._id}
-									canPost={item.canPost}
-								/>
+							renderItem={({ item, index }) => (
+								<View
+									style={{
+										paddingHorizontal: 10,
+										backgroundColor:
+											index % 2 === 0
+												? Colors.background
+												: Colors.border + "01",
+									}}>
+									<PartyListItem
+										icon={getInitials(
+											item.event.title.split(" ")[0],
+											item.event.title.split(" ")[1]
+										)}
+										name={item.event.title}
+										eventId={item.event._id}
+										canPost={item.canPost}
+									/>
+								</View>
 							)}
 							onEndReached={() => setPage((prevPage) => prevPage + 1)}
 							onEndReachedThreshold={0.1}

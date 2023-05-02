@@ -131,11 +131,10 @@ export const GlobalStyles = StyleSheet.create({
 		paddingVertical: 10,
 		paddingHorizontal: 10,
 		backgroundColor: Colors.background,
-
+		shadowOpacity: 0.125,
 		shadowOffset: { width: 0, height: 2 },
 		shadowRadius: 8,
-		shadowColor: "rgba(0, 0, 0, 0.25)",
-		elevation: -2,
+		elevation: 2,
 	},
 	shadow: {
 		shadowOffset: { width: 0, height: 2 },
