@@ -38,7 +38,8 @@ export function Picture({ size, pic }) {
 					elevation: 2,
 					backgroundColor: Colors.background,
 					borderRadius: size / 2,
-				}}>
+				}}
+			>
 				<Image
 					source={{ uri: pic }}
 					style={{
@@ -75,14 +76,16 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 				setVisible={setModalVisible}
 				fullHeight={false}
 				scrollable={false}
-				noSwipe={false}>
+				noSwipe={false}
+			>
 				<View
 					style={{
 						position: "absolute",
 						right: 0,
 						top: 0,
 						zIndex: 100,
-					}}>
+					}}
+				>
 					<DefaultOptions
 						type={"user"}
 						id={id}
@@ -97,7 +100,8 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 						...ButtonStyles.button,
 						...ButtonStyles.outlined,
 						marginTop: 50,
-					}}>
+					}}
+				>
 					<Text>Close</Text>
 				</TouchableOpacity>
 			</ModalWrapper>

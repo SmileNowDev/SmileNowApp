@@ -19,6 +19,7 @@ type ScreenWrapperProps = {
 	children?: any;
 	bottomLoading?: any;
 	style?: any;
+	keyboardShouldPersistTaps?: "always" | "never" | "handled";
 };
 
 export default function ScreenWrapper({
@@ -29,6 +30,7 @@ export default function ScreenWrapper({
 	children,
 	bottomLoading,
 	style,
+	keyboardShouldPersistTaps = "handled",
 }: ScreenWrapperProps) {
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -77,7 +79,9 @@ export default function ScreenWrapper({
 								borderRadius: 10,
 								paddingHorizontal: 8,
 						  }
-				}>
+				}
+				keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+			>
 				<View style={{ alignItems: "center" }}>
 					{loading ? (
 						<ActivityIndicator />
@@ -87,7 +91,8 @@ export default function ScreenWrapper({
 								flex: 1,
 								width: "100%",
 								zIndex: 1,
-							}}>
+							}}
+						>
 							{children}
 						</View>
 					)}

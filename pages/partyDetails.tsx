@@ -54,7 +54,7 @@ export default function PartyDetailsPage({
 			},
 		});
 		if (result.ok) {
-			Alert.alert("Your party has been updated", "Refresh to see your changes");
+			Alert.alert("Your event has been updated", "Refresh to see your changes");
 
 			navigation.goBack();
 		} else {
@@ -111,9 +111,10 @@ export default function PartyDetailsPage({
 					alignItems: "center",
 					justifyContent: "flex-start",
 					padding: 10,
-				}}>
+				}}
+			>
 				<Icon
-					name="notifications"
+					name='notifications'
 					size={20}
 					color={notificationStatus ? Colors.primary : Colors.textSecondary}
 				/>
@@ -122,7 +123,8 @@ export default function PartyDetailsPage({
 						flex: 1,
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}>
+					}}
+				>
 					Notifications Are {notificationStatus ? "On" : "Off"}
 				</Text>
 				<Switch
@@ -137,45 +139,49 @@ export default function PartyDetailsPage({
 					fontSize: Fonts.button.fontSize,
 					width: "100%",
 					textAlign: "center",
-				}}>
+				}}
+			>
 				Notification Frequency
 			</Text>
 			<View style={styles.frequencyContainer}>
 				<TouchableOpacity
-					onPress={() => setNotificationFrequency("slow")}
+					onPress={() => setNotificationFrequency("fast")}
 					style={{
 						...styles.frequencyOption,
 						backgroundColor:
-							notificationFrequency === "slow"
-								? Colors.secondaryLight + "50"
+							notificationFrequency === "fast"
+								? Colors.tertiary + "50"
 								: "transparent",
 						borderColor:
-							notificationFrequency === "slow"
-								? Colors.secondary
+							notificationFrequency === "fast"
+								? Colors.tertiary
 								: Colors.border,
-					}}>
+					}}
+				>
 					<Icon
-						name="tortoise"
+						name='rabbit'
 						size={30}
 						color={
-							notificationFrequency === "slow"
-								? Colors.secondaryDark
+							notificationFrequency === "fast"
+								? Colors.tertiaryDark
 								: Colors.textSecondary
 						}
-						type="MaterialCommunity"
+						type='MaterialCommunity'
 					/>
 					<Text
 						style={{
 							...styles.frequencyOptionText,
 							color:
-								notificationFrequency === "slow"
+								notificationFrequency === "fast"
 									? Colors.text
 									: Colors.textSecondary,
-						}}>
-						Slow
+						}}
+					>
+						Fast
 					</Text>
-					<Text style={styles.frequencyOptionSubtext}>Every 30-60 Minute</Text>
+					<Text style={styles.frequencyOptionSubtext}>Every 5-10 Minutes</Text>
 				</TouchableOpacity>
+
 				<TouchableOpacity
 					onPress={() => setNotificationFrequency("normal")}
 					style={{
@@ -188,9 +194,10 @@ export default function PartyDetailsPage({
 							notificationFrequency === "normal"
 								? Colors.primary
 								: Colors.border,
-					}}>
+					}}
+				>
 					<Icon
-						name="face"
+						name='face'
 						size={30}
 						color={
 							notificationFrequency === "normal"
@@ -206,45 +213,48 @@ export default function PartyDetailsPage({
 								notificationFrequency === "normal"
 									? Colors.text
 									: Colors.textSecondary,
-						}}>
+						}}
+					>
 						Normal
 					</Text>
 					<Text style={styles.frequencyOptionSubtext}>Every 15-30 Minutes</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={() => setNotificationFrequency("fast")}
+					onPress={() => setNotificationFrequency("slow")}
 					style={{
 						...styles.frequencyOption,
 						backgroundColor:
-							notificationFrequency === "fast"
-								? Colors.tertiary + "50"
+							notificationFrequency === "slow"
+								? Colors.secondaryLight + "50"
 								: "transparent",
 						borderColor:
-							notificationFrequency === "fast"
-								? Colors.tertiary
+							notificationFrequency === "slow"
+								? Colors.secondary
 								: Colors.border,
-					}}>
+					}}
+				>
 					<Icon
-						name="rabbit"
+						name='tortoise'
 						size={30}
 						color={
-							notificationFrequency === "fast"
-								? Colors.tertiaryDark
+							notificationFrequency === "slow"
+								? Colors.secondaryDark
 								: Colors.textSecondary
 						}
-						type="MaterialCommunity"
+						type='MaterialCommunity'
 					/>
 					<Text
 						style={{
 							...styles.frequencyOptionText,
 							color:
-								notificationFrequency === "fast"
+								notificationFrequency === "slow"
 									? Colors.text
 									: Colors.textSecondary,
-						}}>
-						Fast
+						}}
+					>
+						Slow
 					</Text>
-					<Text style={styles.frequencyOptionSubtext}>Every 5-10 Minutes</Text>
+					<Text style={styles.frequencyOptionSubtext}>Every 30-60 Minute</Text>
 				</TouchableOpacity>
 			</View>
 			{/* Name and Description */}
@@ -254,14 +264,15 @@ export default function PartyDetailsPage({
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Name:
 				</Text>
 				<TextInput
 					value={newName}
-					placeholder="Enter a party Name"
+					placeholder='Enter a party Name'
 					onChangeText={setNewName}
-					clearButtonMode="always"
+					clearButtonMode='always'
 					style={{
 						...GlobalStyles.textInput,
 					}}
@@ -272,15 +283,16 @@ export default function PartyDetailsPage({
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
 						marginTop: 20,
-					}}>
+					}}
+				>
 					Description:
 				</Text>
 				<TextInput
 					multiline
 					numberOfLines={4}
-					clearButtonMode="always"
+					clearButtonMode='always'
 					value={newDescription}
-					placeholder="Enter a party Name"
+					placeholder='Enter a party Name'
 					onChangeText={setNewDescription}
 					style={{
 						...GlobalStyles.textInput,
@@ -295,17 +307,20 @@ export default function PartyDetailsPage({
 						gap: 5,
 						paddingVertical: 5,
 						marginTop: 20,
-					}}>
+					}}
+				>
 					<TouchableOpacity
 						onPress={() => cancel()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}
+					>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Cancel Changes
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => save()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
+					>
 						<Text style={{ ...ButtonStyles.buttonText }}>Save Changes</Text>
 					</TouchableOpacity>
 				</View>

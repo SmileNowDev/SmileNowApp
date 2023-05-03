@@ -150,5 +150,7 @@ export const GlobalStyles = StyleSheet.create({
 		fontFamily: Fonts.subTitle.fontFamily,
 		fontSize: Fonts.subTitle.fontSize,
 		color: Colors.textSecondary,
+		marginVertical: 10,
+		marginLeft: 5,
 	},
 });

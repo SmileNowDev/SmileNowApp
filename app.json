@@ -1,6 +1,6 @@
 {
 	"expo": {
-		"name": "smileNowApp",
+		"name": "Smile Now",
 		"slug": "smileNowApp",
 		"version": "1.0.0",
 		"orientation": "portrait",
@@ -15,18 +15,26 @@
 		"ios": {
 			"supportsTablet": true,
 			"infoPlist": {
-				"NSCameraUsageDescription": "This app uses the camera to upload images for group pics and profile pics and scanning QR codes.",
+				"NSCameraUsageDescription": "Allow SmileNow to access camera.",
 				"NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library for group pics and profile pics.",
 				"NSPhotoLibraryAddUsageDescription": "Smile Now would like to save photos to your library to share posts.",
-				"NSContactsUsageDescription": "This app uses your contacts to show you who is already on our platform for you to add as friends and for you to invite. We do not store your contacts anywhere.",
-				"UIRequiresFullScreen": true
-			}
+				"NSContactsUsageDescription": "Allow SmileNow to access your contacts. ",
+				"UIRequiresFullScreen": true,
+				"NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
+			},
+			"bundleIdentifier": "com.samuelschmitt.smile-now"
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
-			}
+				"backgroundColor": "#F05365"
+			},
+			"permissions": [
+				"android.permission.CAMERA",
+				"android.permission.RECORD_AUDIO",
+				"android.permission.READ_CONTACTS",
+				"android.permission.WRITE_CONTACTS"
+			]
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
@@ -50,6 +58,11 @@
 					"cameraPermission": "Allow SmileNow to access camera."
 				}
 			]
-		]
+		],
+		"extra": {
+			"eas": {
+				"projectId": "7eb0eedd-b864-441e-90e8-b70693bfd2cc"
+			}
+		}
 	}
 }

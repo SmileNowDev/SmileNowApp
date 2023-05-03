@@ -47,11 +47,11 @@ export default function BlockedUsersPage({}) {
 							name={item.blocked.name}
 							username={item.blocked.username}
 							id={item.blocked._id}
-							rightElement={
-								<TouchableOpacity onPress={() => unBlock()}>
-									<Text>Unblock</Text>
-								</TouchableOpacity>
-							}
+							// rightElement={
+							// 	<TouchableOpacity onPress={() => unBlock()}>
+							// 		<Text>Unblock</Text>
+							// 	</TouchableOpacity>
+							// }
 						/>
 					)}
 				/>
