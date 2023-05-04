@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import {
 	View,
@@ -14,6 +14,8 @@ import ModalWrapper from "./core/modalWrapper";
 import OtherProfile from "./otherProfile";
 import { ButtonStyles } from "../styles/styles";
 import DefaultOptions from "./defaultOptions";
+import { Context } from "../providers/provider";
+import { useNavigation } from "@react-navigation/native";
 
 interface UserCardProps {
 	profilePicture: string;
@@ -31,9 +33,13 @@ export default function UserCard({
 	onPress,
 	rightElement,
 }: UserCardProps) {
+	const navigation = useNavigation();
+	const { userId } = useContext(Context);
 	const [modalVisible, setModalVisible] = useState(false);
 	function handlePress() {
-		if (!onPress) setModalVisible(true);
+		if (id === userId) {
+			navigation.navigate("Profile");
+		} else if (!onPress) setModalVisible(true);
 		else onPress();
 	}
 	return (

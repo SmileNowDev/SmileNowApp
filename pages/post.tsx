@@ -9,6 +9,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Alert,
 } from "react-native";
 import Header from "../components/header";
 import postApi from "../api/post/post";
@@ -71,10 +72,14 @@ export default function PostPage({ route, navigation }) {
 		setBottomLoading(false);
 	}
 	async function handleComment() {
-		const result = await commentApi.create({ postId, text: comment });
-		if (result.ok) {
-			setComment("");
-			await getComments();
+		if (!comment || comment.trim().length == 0) {
+			Alert.alert("Comment cannot be empty");
+		} else {
+			const result = await commentApi.create({ postId, text: comment });
+			if (result.ok) {
+				setComment("");
+				await getComments();
+			}
 		}
 	}
 	async function onRefresh() {
@@ -96,7 +101,9 @@ export default function PostPage({ route, navigation }) {
 					scrollEnabled={true}
 					loading={loading}
 					onBottomScroll={loadMore}
-					bottomLoading={bottomLoading}>
+					bottomLoading={bottomLoading}
+					keyboardShouldPersistTaps='handled'
+				>
 					{!loading ? (
 						<Photo
 							postId={postId}
@@ -123,7 +130,8 @@ export default function PostPage({ route, navigation }) {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-						}}>
+						}}
+					>
 						<TextInput
 							numberOfLines={2}
 							style={{
@@ -132,7 +140,7 @@ export default function PostPage({ route, navigation }) {
 								flex: 1,
 								height: 50,
 							}}
-							placeholder="Comment"
+							placeholder='Comment'
 							value={comment}
 							onChangeText={setComment}
 						/>
@@ -147,8 +155,9 @@ export default function PostPage({ route, navigation }) {
 								alignItems: "center",
 								alignSelf: "flex-end",
 								marginLeft: 10,
-							}}>
-							<Icon name="send" size={30} color={Colors.background} />
+							}}
+						>
+							<Icon name='send' size={30} color={Colors.background} />
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}
@@ -161,7 +170,8 @@ export default function PostPage({ route, navigation }) {
 										index % 2 == 0 ? Colors.background : Colors.foreground,
 									marginVertical: 4,
 									borderRadius: 10,
-								}}>
+								}}
+							>
 								<Comment
 									commentId={item._id}
 									pic={item.user.src}

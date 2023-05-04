@@ -16,6 +16,11 @@ import { ButtonStyles, Dim } from "../../styles/styles";
 import Icon from "../../components/icons";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// todo - make sure button is disabled if phone number is not 10 digits and code is not entered
+// todo - make sure phone number is only numbers
+// todo - loading indicator on "next" press
+// todo - eyeball on password input
+
 export default function SignUpPage({ navigation }) {
 	const [phone, setPhone] = useState("");
 	function handleNext() {
@@ -125,10 +130,6 @@ export default function SignUpPage({ navigation }) {
 			>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
 			</TouchableOpacity>
-
-			{/* header that lets you access party details */}
-			{/* list of pictures */}
-			{/* if they can, let them take a photo */}
 		</View>
 	);
 }

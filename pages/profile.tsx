@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
 	Image,
+	Linking,
 	SafeAreaView,
 	StyleSheet,
 	Text,
@@ -98,14 +99,15 @@ export default function ProfilePage({ navigation }) {
 				<TouchableOpacity
 					onPress={() => {
 						// TODO: open the app store page!
+						Linking.openURL("https://smile.samschmitt.net");
 					}}
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.primaryLight,
 					}}
 				>
-					<Icon name='star' type={"Feather"} size={30} />
-					<Text>Rate Us!</Text>
+					<Icon name='info' type={"Feather"} size={30} />
+					<Text>Learn More</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => {

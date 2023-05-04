@@ -18,6 +18,7 @@ export default function JoinPartyPage({ navigation }) {
 
 	async function joinEvent(joinCode: string) {
 		const result = await attendeeApi.join({ code: joinCode });
+		console.log({ result });
 		if (result.ok) {
 			//@ts-expect-error
 			navigation.navigate("Party", { eventId: result.data.event });
@@ -54,7 +55,7 @@ export default function JoinPartyPage({ navigation }) {
 				<Text>Enter the join code</Text>
 				<TextInput
 					value={joinCode}
-					placeholder="Code"
+					placeholder='Code'
 					onChangeText={setJoinCode}
 					style={{
 						fontSize: 40,
@@ -82,7 +83,8 @@ export default function JoinPartyPage({ navigation }) {
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Or Scan the QR Code
 				</Text>
 				{joinCode.length === 4 ? (
@@ -92,7 +94,8 @@ export default function JoinPartyPage({ navigation }) {
 							marginTop: 50,
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
-						}}>
+						}}
+					>
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>
 							Join With Code
 						</Text>

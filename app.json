@@ -1,8 +1,8 @@
 {
 	"expo": {
-		"name": "smileNowApp",
+		"name": "Smile Now",
 		"slug": "smileNowApp",
-		"version": "1.0.0",
+		"version": "1.0.2",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
@@ -15,18 +15,25 @@
 		"ios": {
 			"supportsTablet": true,
 			"infoPlist": {
-				"NSCameraUsageDescription": "This app uses the camera to upload images for group pics and profile pics and scanning QR codes.",
-				"NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library for group pics and profile pics.",
-				"NSPhotoLibraryAddUsageDescription": "Smile Now would like to save photos to your library to share posts.",
-				"NSContactsUsageDescription": "This app uses your contacts to show you who is already on our platform for you to add as friends and for you to invite. We do not store your contacts anywhere.",
+				"NSCameraUsageDescription": "Allow SmileNow to access camera in order to change your profile picture and share posts.",
+				"NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library for profile pics.",
+				"NSPhotoLibraryAddUsageDescription": "Smile Now would like to save photos to your library to share posts from your feed.",
+				"NSContactsUsageDescription": "Allow SmileNow to access your contacts so that you can add friends from your contacts list.",
 				"UIRequiresFullScreen": true
-			}
+			},
+			"bundleIdentifier": "com.samuelschmitt.smile-now"
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
-			}
+				"backgroundColor": "#F05365"
+			},
+			"permissions": [
+				"android.permission.CAMERA",
+				"android.permission.RECORD_AUDIO",
+				"android.permission.READ_CONTACTS",
+				"android.permission.WRITE_CONTACTS"
+			]
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
@@ -50,6 +57,11 @@
 					"cameraPermission": "Allow SmileNow to access camera."
 				}
 			]
-		]
+		],
+		"extra": {
+			"eas": {
+				"projectId": "7eb0eedd-b864-441e-90e8-b70693bfd2cc"
+			}
+		}
 	}
 }

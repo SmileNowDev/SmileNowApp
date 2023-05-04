@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Image,
 	StyleSheet,
@@ -14,6 +14,7 @@ import { ButtonStyles } from "../styles/styles";
 import { useNavigation } from "@react-navigation/native";
 import { Colors, Fonts } from "../styles/theme";
 import blockApi from "../api/user/block";
+import userApi from "../api/user/user";
 
 interface DefaultOptionsProps {
 	type: string;
@@ -39,11 +40,33 @@ export default function DefaultOptions({
 			setModalVisible(false);
 		}
 	}
+
+	async function unblock() {
+		const result = await blockApi.deleteBlocks({ userId: id });
+		console.log({ result });
+		if (result.ok) {
+			Alert.alert("Unblock Successful", "You have unblocked this user");
+			setModalVisible(false);
+		}
+	}
+	const [blockedStatus, setBlockedStatus] = useState(false);
+	async function getUser() {
+		const result = await userApi.get({ userId: id });
+		if (result.ok) {
+			//@ts-expect-error
+			setBlockedStatus(result.data.blockedStatus);
+		}
+	}
+	useEffect(() => {
+		getUser();
+	}, [id]);
+
 	return (
 		<>
 			<TouchableOpacity
 				style={styles.reaction}
-				onPress={() => setModalVisible(true)}>
+				onPress={() => setModalVisible(true)}
+			>
 				<Icon
 					name={horizontal ? "more-horiz" : "more-vert"}
 					size={size}
@@ -55,7 +78,8 @@ export default function DefaultOptions({
 				setVisible={setModalVisible}
 				fullHeight={false}
 				scrollable={false}
-				noSwipe={false}>
+				noSwipe={false}
+			>
 				{/* subtitle text */}
 				<Text
 					style={{
@@ -63,7 +87,8 @@ export default function DefaultOptions({
 						fontSize: Fonts.subTitle.fontSize,
 						textAlign: "left",
 						marginBottom: 20,
-					}}>
+					}}
+				>
 					Options
 				</Text>
 				<TouchableOpacity
@@ -73,32 +98,42 @@ export default function DefaultOptions({
 						setModalVisible(false);
 						// @ts-expect-error
 						navigation.navigate("Report", { type: "post", id });
-					}}>
-					<Icon name="flag" size={25} color={Colors.urgent} />
+					}}
+				>
+					<Icon name='flag' size={25} color={Colors.urgent} />
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: 20,
 							textAlign: "left",
-						}}>
+						}}
+					>
 						Report {type.substring(0, 1).toUpperCase() + type.substring(1)}
 					</Text>
 				</TouchableOpacity>
 				{type === "user" ? (
+					// todo: alert feedback after block
 					<TouchableOpacity
 						style={styles.optionButton}
 						onPress={() => {
 							if (onPress) onPress();
-							block();
-						}}>
-						<Icon name="block" size={25} color={Colors.urgent} />
+							if (blockedStatus) {
+								unblock();
+							} else {
+								block();
+							}
+						}}
+					>
+						<Icon name='block' size={25} color={Colors.urgent} />
 						<Text
 							style={{
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: 20,
 								textAlign: "left",
-							}}>
-							Block {type.substring(0, 1).toUpperCase() + type.substring(1)}
+							}}
+						>
+							{!blockedStatus ? "Block" : "Unblock"}{" "}
+							{type.substring(0, 1).toUpperCase() + type.substring(1)}
 						</Text>
 					</TouchableOpacity>
 				) : (
@@ -123,7 +158,8 @@ export default function DefaultOptions({
 						...ButtonStyles.button,
 						...ButtonStyles.outlined,
 						marginTop: 50,
-					}}>
+					}}
+				>
 					<Text>Close</Text>
 				</TouchableOpacity>
 			</ModalWrapper>
