@@ -1,18 +1,9 @@
-// import {BeansThemeType, BeansColorsType, BeansFontType, BeansComponentType} from "rn-beans-ui";
-type BeansThemeType = {
-	any: any;
-};
-type BeansColorsType = {};
-type BeansFontType = {
-	[key: string]: string;
-};
-type BeansComponentType = {
-	[key: string]:
-		| string
-		| {
-				[key: string]: string;
-		  };
-};
+import {
+	BeansThemeType,
+	BeansColorsType,
+	BeansFontType,
+	BeansComponentType,
+} from "rn-beans-ui";
 
 const customColors: BeansColorsType = {
 	StaticColors: {
@@ -32,4 +23,8 @@ const Fonts: BeansFontType = {
 		default: "Exo_400Regular",
 		bold: "Exo_600SemiBold",
 	},
+};
+export const myCustomTheme = {
+	Colors: customColors,
+	Fonts: Fonts,
 };
