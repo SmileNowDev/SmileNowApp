@@ -87,6 +87,7 @@ export default function WelcomeMessage() {
 const styles = StyleSheet.create({
 	container: {
 		...GlobalStyles.Container,
+		
 		marginTop: 50,
 	},
 	stepsContainer: {
