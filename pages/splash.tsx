@@ -19,7 +19,6 @@ export default function SplashPage({ navigation }) {
 			navigation.navigate("SignUp");
 		}
 	}
-	// @ts-expect-error
 	useEffect(() => {
 		init();
 	}, []);
@@ -27,10 +26,9 @@ export default function SplashPage({ navigation }) {
 		<SafeAreaView>
 			<Text
 				style={{
-					fontStyle: Fonts.title.fontFamily,
+					fontFamily: Fonts.title.fontFamily,
 					fontSize: Fonts.title.fontSize,
-				}}
-			>
+				}}>
 				Smile Now
 			</Text>
 		</SafeAreaView>

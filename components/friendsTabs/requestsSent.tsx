@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text } from "react-native";
+import { FlatList, ScrollView, Text } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
@@ -43,18 +43,23 @@ export default function RequestsSentTab(params) {
 		getList();
 	}, []);
 	return (
-		<ScreenWrapper>
+		<ScreenWrapper scrollEnabled={true} onRefresh={getList}>
 			<Text style={GlobalStyles.tabScreenTitle}>Requests Sent</Text>
-			{list.map(function (item, index) {
-				return (
+			<FlatList
+				style={{ padding: 10 }}
+				data={list}
+				renderItem={({ item }) => (
 					<UserCard
 						profilePicture={item.recipient.src}
 						name={item.recipient.name}
 						username={item.recipient.username}
 						id={item.recipient._id}
 					/>
-				);
-			})}
+				)}
+				keyExtractor={(item) => item._id}
+				onEndReached={loadMore}
+				onEndReachedThreshold={0.5}
+			/>
 		</ScreenWrapper>
 	);
 }

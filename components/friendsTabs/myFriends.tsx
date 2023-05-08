@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, Text } from "react-native";
+import { FlatList, Text } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
 import { Context } from "../../providers/provider";
-export default function MyFriendsTab(params) {
+export default function MyFriendsTab() {
 	const [list, setList] = useState([]);
 	const [page, setPage] = useState(1); // Add this state
 	const [hasMore, setHasMore] = useState(true); // Add this state
@@ -46,35 +46,44 @@ export default function MyFriendsTab(params) {
 	}, []);
 	return (
 		<ScreenWrapper
-			style={GlobalStyles.tabScreenContainer}
 			onRefresh={getList}
 			scrollEnabled={true}
 			loading={loading}
 			onBottomScroll={loadMore}
-			bottomLoading={bottomLoading}
-		>
+			bottomLoading={bottomLoading}>
 			<Text style={GlobalStyles.tabScreenTitle}>My Friends</Text>
-			{list.map(function (item, index) {
-				if (item.recipient._id === userId) {
-					return (
-						<UserCard
-							profilePicture={item.src}
-							name={item.requester.name}
-							username={item.requester.username}
-							id={item.requester._id}
-						/>
-					);
-				} else {
-					return (
-						<UserCard
-							profilePicture={item.src}
-							name={item.recipient.name}
-							username={item.recipient.username}
-							id={item.recipient._id}
-						/>
-					);
-				}
-			})}
+			<FlatList
+				style={{ padding: 10 }}
+				data={list}
+				renderItem={({ item }) => {
+					if (item.recipient._id === userId) {
+						return (
+							<UserCard
+								profilePicture={item.src}
+								name={item.requester.name}
+								username={item.requester.username}
+								id={item.requester._id}
+							/>
+						);
+					} else {
+						return (
+							<UserCard
+								profilePicture={item.src}
+								name={item.recipient.name}
+								username={item.recipient.username}
+								id={item.recipient._id}
+							/>
+						);
+					}
+				}}
+				keyExtractor={(item) => {
+					if (item.recipient._id === userId) {
+						return item.requester._id;
+					} else {
+						return item.recipient._id;
+					}
+				}}
+			/>
 		</ScreenWrapper>
 	);
 }

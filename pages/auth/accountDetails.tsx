@@ -15,7 +15,15 @@ import userApi from "../../api/user/user";
 export default function AccountDetailsScreen({ navigation }) {
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
-
+	function handleSetUsername(newName) {
+		//blocked characters
+		const blocked = [" ", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
+		// if username is too long, don't update
+		if (username.length > 15) return;
+		// if username contains blocked characters, don't update
+		if (blocked.includes(newName[newName.length - 1])) return;
+		setUsername(newName);
+	}
 	async function uploadDetails() {
 		const result = await userApi.updateUser({
 			name,
@@ -25,6 +33,8 @@ export default function AccountDetailsScreen({ navigation }) {
 		if (result.ok) {
 			navigation.navigate("Home");
 		}
+		// todo: if !result.ok, show error message with an alert
+		// todo: if username is taken, or invalid
 	}
 
 	return (
@@ -34,11 +44,10 @@ export default function AccountDetailsScreen({ navigation }) {
 				flex: 1,
 				display: "flex",
 				alignItems: "center",
-			}}
-		>
+			}}>
 			<View style={GlobalStyles.ScreenContainer}>
 				<TextInput
-					placeholder='Name'
+					placeholder="Name"
 					onChangeText={setName}
 					placeholderTextColor={Colors.border}
 					style={{
@@ -54,8 +63,8 @@ export default function AccountDetailsScreen({ navigation }) {
 					}}
 				/>
 				<TextInput
-					placeholder='username'
-					onChangeText={setUsername}
+					placeholder="username"
+					onChangeText={(newName) => handleSetUsername(newName)}
 					placeholderTextColor={Colors.border}
 					style={{
 						width: "100%",
@@ -71,7 +80,7 @@ export default function AccountDetailsScreen({ navigation }) {
 					}}
 				/>
 				<Text style={{ color: Colors.foreground, textAlign: "center" }}>
-					(hint: at least 5 characters)
+					(Must be at least 5-15 characters)
 				</Text>
 				<TouchableOpacity
 					onPress={uploadDetails}
@@ -81,8 +90,7 @@ export default function AccountDetailsScreen({ navigation }) {
 						...ButtonStyles.outlinedWhite,
 						opacity: name.length < 1 && username.length < 5 ? 0.5 : 1,
 						marginTop: 40,
-					}}
-				>
+					}}>
 					<Text style={{ color: Colors.background, fontSize: 20 }}>
 						Complete Profile
 					</Text>

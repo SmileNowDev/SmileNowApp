@@ -45,8 +45,7 @@ export default function UserCard({
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
-						}}
-					>
+						}}>
 						{name}
 					</Text>
 					<Text
@@ -54,8 +53,7 @@ export default function UserCard({
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize - 2,
 							color: Colors.textSecondary,
-						}}
-					>
+						}}>
 						@{username}
 					</Text>
 				</View>
@@ -66,16 +64,14 @@ export default function UserCard({
 				setVisible={setModalVisible}
 				fullHeight={false}
 				scrollable={false}
-				noSwipe={false}
-			>
+				noSwipe={false}>
 				<View
 					style={{
 						position: "absolute",
 						right: 0,
 						top: 0,
 						zIndex: 100,
-					}}
-				>
+					}}>
 					<DefaultOptions
 						type={"user"}
 						id={id}
@@ -91,8 +87,7 @@ export default function UserCard({
 						...ButtonStyles.button,
 						...ButtonStyles.outlined,
 						marginTop: 50,
-					}}
-				>
+					}}>
 					<Text>Close</Text>
 				</TouchableOpacity>
 			</ModalWrapper>

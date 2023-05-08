@@ -144,9 +144,11 @@ export const GlobalStyles = StyleSheet.create({
 		elevation: 3,
 	},
 	tabScreenContainer: {
-		padding: 10,
+		padding: 0,
 	},
 	tabScreenTitle: {
+		paddingLeft: 10,
+		paddingTop: 10,
 		fontFamily: Fonts.subTitle.fontFamily,
 		fontSize: Fonts.subTitle.fontSize,
 		color: Colors.textSecondary,

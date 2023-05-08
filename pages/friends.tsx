@@ -50,9 +50,8 @@ export default function FriendsPage({ navigation }) {
 					borderWidth: 1,
 					borderColor: Colors.border,
 					borderStyle: "solid",
-				}}
-			>
-				<Icon name='home' size={50} color={Colors.text} />
+				}}>
+				<Icon name="home" size={50} color={Colors.text} />
 			</TouchableOpacity>
 			<Tab.Navigator
 				style={{ paddingTop: 70 }}
@@ -64,28 +63,24 @@ export default function FriendsPage({ navigation }) {
 					tabBarIndicatorStyle: {
 						backgroundColor: Colors.primary,
 					},
-				}}
-				// @ts-expect-error
-				tabBarOptions={{
-					labelStyle: { textTransform: "none" },
-				}}
-			>
+					tabBarLabelStyle: { textTransform: "none" },
+				}}>
 				<Tab.Screen
-					name='Add Friends'
+					name="Add Friends"
 					component={AddFriendsTab}
 					options={{
 						tabBarIcon: () => (
-							<Icon name='add' size={20} color={Colors.textSecondary} />
+							<Icon name="add" size={20} color={Colors.textSecondary} />
 						),
 					}}
 				/>
 				<Tab.Screen
-					name='Friend Requests'
+					name="Friend Requests"
 					component={RequestsTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name='move-to-inbox'
+								name="move-to-inbox"
 								size={20}
 								color={Colors.textSecondary}
 							/>
@@ -93,12 +88,12 @@ export default function FriendsPage({ navigation }) {
 					}}
 				/>
 				<Tab.Screen
-					name='My Friends'
+					name="My Friends"
 					component={MyFriendsTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name='account-heart'
+								name="account-heart"
 								type={"MaterialCommunity"}
 								size={20}
 								color={Colors.textSecondary}
@@ -107,14 +102,14 @@ export default function FriendsPage({ navigation }) {
 					}}
 				/>
 				<Tab.Screen
-					name='Requests Sent'
+					name="Requests Sent"
 					component={RequestsSentTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name='send'
+								name="send"
 								size={20}
-								type='FontAwesome'
+								type="FontAwesome"
 								color={Colors.textSecondary}
 							/>
 						),

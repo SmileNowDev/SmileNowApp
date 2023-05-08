@@ -5,7 +5,7 @@
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
+		"userInterfaceStyle": "automatic",
 		"splash": {
 			"image": "./assets/splash.png",
 			"resizeMode": "contain",
@@ -20,13 +20,15 @@
 				"NSPhotoLibraryAddUsageDescription": "Smile Now would like to save photos to your library to share posts.",
 				"NSContactsUsageDescription": "This app uses your contacts to show you who is already on our platform for you to add as friends and for you to invite. We do not store your contacts anywhere.",
 				"UIRequiresFullScreen": true
-			}
+			},
+			"userInterfaceStyle": "automatic"
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
-			}
+			},
+			"userInterfaceStyle": "automatic"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
