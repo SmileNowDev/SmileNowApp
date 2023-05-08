@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	Text,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
@@ -42,8 +43,7 @@ export default function ProfilePage({ navigation }) {
 					flexDirection: "column",
 					alignItems: "center",
 					justifyContent: "center",
-				}}
-			>
+				}}>
 				<View
 					style={{
 						position: "relative",
@@ -51,10 +51,8 @@ export default function ProfilePage({ navigation }) {
 						width: 150,
 						borderRadius: 75,
 						marginBottom: 10,
-					}}
-				>
+					}}>
 					<Avatar pic={user.pic} size={150} id={userId} />
-
 					<TouchableOpacity
 						onPress={() => navigation.navigate("TakeProfilePicture")}
 						style={{
@@ -64,17 +62,15 @@ export default function ProfilePage({ navigation }) {
 							backgroundColor: Colors.background,
 							padding: 4,
 							borderRadius: 20,
-						}}
-					>
-						<Icon name='account-edit' type={"MaterialCommunity"} size={30} />
+						}}>
+						<Icon name="account-edit" type={"MaterialCommunity"} size={30} />
 					</TouchableOpacity>
 				</View>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize,
-					}}
-				>
+					}}>
 					{user.name}
 				</Text>
 				<Text
@@ -82,8 +78,7 @@ export default function ProfilePage({ navigation }) {
 						fontFamily: Fonts.button.fontFamily,
 						fontSize: Fonts.button.fontSize,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					@{user.username}
 				</Text>
 			</View>
@@ -94,8 +89,7 @@ export default function ProfilePage({ navigation }) {
 					alignItems: "center",
 					gap: 5,
 					marginVertical: 20,
-				}}
-			>
+				}}>
 				<TouchableOpacity
 					onPress={() => {
 						// TODO: open the app store page!
@@ -104,9 +98,8 @@ export default function ProfilePage({ navigation }) {
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.primaryLight,
-					}}
-				>
-					<Icon name='info' type={"Feather"} size={30} />
+					}}>
+					<Icon name="info" type={"Feather"} size={30} />
 					<Text>Learn More</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -116,16 +109,14 @@ export default function ProfilePage({ navigation }) {
 					style={{
 						...styles.optionButton,
 						backgroundColor: Colors.secondaryLight,
-					}}
-				>
-					<Icon name='edit' type={"Feather"} size={30} />
+					}}>
+					<Icon name="edit" type={"Feather"} size={30} />
 					<Text>Edit Profile</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => navigation.navigate("Settings")}
-					style={{ ...styles.optionButton, backgroundColor: Colors.border }}
-				>
-					<Icon name='settings' type={"Feather"} size={30} />
+					style={{ ...styles.optionButton, backgroundColor: Colors.border }}>
+					<Icon name="settings" type={"Feather"} size={30} />
 					<Text>Settings</Text>
 				</TouchableOpacity>
 			</View>

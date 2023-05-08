@@ -4,12 +4,11 @@ import { Context } from "../providers/provider";
 import { useNavigation } from "@react-navigation/native";
 import ModalWrapper from "./core/modalWrapper";
 import { ButtonStyles } from "../styles/styles";
-import userApi from "../api/user/user";
-import Icon from "./icons";
 import { Fonts, Colors } from "../styles/theme";
 import friendApi from "../api/user/friend";
 import OtherProfile from "./otherProfile";
 import DefaultOptions from "./defaultOptions";
+import Icon from "./icons";
 interface AvatarProps {
 	pic: string;
 	size: number;
@@ -17,17 +16,8 @@ interface AvatarProps {
 }
 
 export function Picture({ size, pic }) {
-	if (!pic || pic === "") {
-		return (
-			<Image
-				source={require("../assets/logo_color.png")}
-				style={{
-					width: size,
-					height: size,
-					borderRadius: size / 2,
-				}}
-			/>
-		);
+	if (!pic) {
+		return <Icon name="person" size={size} color={Colors.textSecondary} />;
 	} else {
 		return (
 			<View

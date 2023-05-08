@@ -5,12 +5,9 @@ import {
 	TouchableOpacity,
 	View,
 	Platform,
-	Alert,
-	ScrollView,
-	RefreshControl,
 	FlatList,
 } from "react-native";
-import { Colors, Fonts } from "../styles/theme";
+import { Fonts, Colors } from "../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../styles/styles";
 import PartyListItem from "../components/partyListItem";
 import HomeHeader from "../components/homeHeader";
@@ -23,6 +20,7 @@ import { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
 import WelcomeMessage from "../components/info/welcomeMessage";
 export default function HomePage({ navigation }) {
+	//todo: give events a type
 	const [events, setEvents] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1); // Add this state
@@ -147,7 +145,9 @@ export default function HomePage({ navigation }) {
 				bottomLoading={bottomLoading}
 				style={{ paddingHorizontal: 0 }}>
 				{events.length === 0 ? (
-					<WelcomeMessage />
+					<>
+						<WelcomeMessage />
+					</>
 				) : (
 					<>
 						<Text
@@ -166,9 +166,7 @@ export default function HomePage({ navigation }) {
 									style={{
 										paddingHorizontal: 10,
 										backgroundColor:
-											index % 2 === 0
-												? Colors.background
-												: Colors.border + "01",
+											index % 2 === 0 ? Colors.background : Colors.border,
 									}}>
 									<PartyListItem
 										icon={getInitials(

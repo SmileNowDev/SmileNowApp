@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import UserCard from "../userCard";
 import * as Contacts from "expo-contacts";
@@ -52,20 +52,20 @@ export default function AddFriendsTab(params) {
 	}
 
 	return (
-		<ScrollView style={GlobalStyles.tabScreenContainer}>
+		<ScrollView>
 			<Text style={GlobalStyles.tabScreenTitle}>Add Friends</Text>
-			{list.map(function (item, index) {
-				return (
-					<View key={item._id}>
-						<UserCard
-							profilePicture={item.src}
-							name={item.name}
-							username={item.username}
-							id={item._id}
-						/>
-					</View>
-				);
-			})}
+			<FlatList
+				style={{ padding: 10 }}
+				data={list}
+				renderItem={({ item }) => (
+					<UserCard
+						profilePicture={item.src}
+						name={item.name}
+						username={item.username}
+						id={item._id}
+					/>
+				)}
+			/>
 		</ScrollView>
 	);
 }

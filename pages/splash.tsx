@@ -28,8 +28,7 @@ export default function SplashPage({ navigation }) {
 				style={{
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: Fonts.title.fontSize,
-				}}
-			>
+				}}>
 				Smile Now
 			</Text>
 		</SafeAreaView>

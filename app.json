@@ -5,7 +5,7 @@
 		"version": "1.0.2",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
+		"userInterfaceStyle": "automatic",
 		"splash": {
 			"image": "./assets/splash.png",
 			"resizeMode": "contain",
@@ -21,7 +21,8 @@
 				"NSContactsUsageDescription": "Allow SmileNow to access your contacts so that you can add friends from your contacts list.",
 				"UIRequiresFullScreen": true
 			},
-			"bundleIdentifier": "com.samuelschmitt.smile-now"
+			"bundleIdentifier": "com.samuelschmitt.smile-now",
+			"userInterfaceStyle": "automatic"
 		},
 		"android": {
 			"adaptiveIcon": {
@@ -33,35 +34,36 @@
 				"android.permission.RECORD_AUDIO",
 				"android.permission.READ_CONTACTS",
 				"android.permission.WRITE_CONTACTS"
-			]
-		},
-		"web": {
-			"favicon": "./assets/favicon.png"
-		},
-		"plugins": [
-			[
-				"expo-camera",
-				{
-					"cameraPermission": "Allow SmileNow to access your camera."
-				}
 			],
-			[
-				"expo-contacts",
-				{
-					"contactsPermission": "Allow SmileNow to access your contacts. "
-				}
-			],
-			[
-				"expo-barcode-scanner",
-				{
-					"cameraPermission": "Allow SmileNow to access camera."
-				}
-			]
-		],
-		"extra": {
-			"eas": {
-				"projectId": "7eb0eedd-b864-441e-90e8-b70693bfd2cc"
+			"backgroundColor": "#ffffff"
+		}
+	},
+	"web": {
+		"favicon": "./assets/favicon.png"
+	},
+	"plugins": [
+		[
+			"expo-camera",
+			{
+				"cameraPermission": "Allow SmileNow to access your camera."
 			}
+		],
+		[
+			"expo-contacts",
+			{
+				"contactsPermission": "Allow SmileNow to access your contacts. "
+			}
+		],
+		[
+			"expo-barcode-scanner",
+			{
+				"cameraPermission": "Allow SmileNow to access camera."
+			}
+		]
+	],
+	"extra": {
+		"eas": {
+			"projectId": "7eb0eedd-b864-441e-90e8-b70693bfd2cc"
 		}
 	}
 }
