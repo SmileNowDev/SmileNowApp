@@ -5,13 +5,9 @@ import {
 	TouchableOpacity,
 	View,
 	Platform,
-	Alert,
-	ScrollView,
-	RefreshControl,
 	FlatList,
-	useColorScheme,
 } from "react-native";
-import { Fonts } from "../styles/theme";
+import { Fonts, Colors } from "../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../styles/styles";
 import PartyListItem from "../components/partyListItem";
 import HomeHeader from "../components/homeHeader";
@@ -23,12 +19,8 @@ import * as Device from "expo-device";
 import { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
 import WelcomeMessage from "../components/info/welcomeMessage";
-import { useColors, useFonts } from "rn-beans-ui";
 export default function HomePage({ navigation }) {
-	const colorScheme = useColorScheme();
-	const Colors = useColors();
-	const Fonts = useFonts();
-	// console.log(Colors);
+	//todo: give events a type
 	const [events, setEvents] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1); // Add this state
