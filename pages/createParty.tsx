@@ -7,10 +7,10 @@ import {
 	TouchableOpacity,
 	ScrollView,
 } from "react-native";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
-import Icon from "../components/icons";
+import Icon from "../components/core/icons";
 import eventApi from "../api/post/event";
 import QRCode from "react-native-qrcode-svg";
 

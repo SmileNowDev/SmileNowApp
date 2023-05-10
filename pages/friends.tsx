@@ -10,12 +10,12 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 } from "react-native";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 import { Dim, GlobalStyles } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import UserCard from "../components/userCard";
 import * as Contacts from "expo-contacts";
-import ContactCard from "../components/contactCard";
+import ContactCard from "../components/friendsTabs/contactCard";
 import { debounce } from "lodash";
 import userApi from "../api/user/user";
 import friendApi from "../api/user/friend";
@@ -24,7 +24,7 @@ import AddFriendsTab from "../components/friendsTabs/addFriends";
 import RequestsSentTab from "../components/friendsTabs/requestsSent";
 import RequestsTab from "../components/friendsTabs/myRequests";
 import MyFriendsTab from "../components/friendsTabs/myFriends";
-import Icon from "../components/icons";
+import Icon from "../components/core/icons";
 // notes -
 // pull to refresh on requests sent and my friends
 // "add friend" button to the right of contacts that aren't friends yet

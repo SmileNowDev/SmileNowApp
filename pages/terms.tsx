@@ -13,7 +13,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ScreenWrapper from "../components/core/screenWrapper";
 import { ButtonStyles } from "../styles/styles";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 
 export default function TermsAndConditions({ navigation }) {
 	// Functions
@@ -289,8 +289,7 @@ export default function TermsAndConditions({ navigation }) {
 
 				<TouchableOpacity
 					onPress={close}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}
-				>
+					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Accept</Text>
 				</TouchableOpacity>
 				<View style={{ height: 100 }} />

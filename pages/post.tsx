@@ -11,14 +11,14 @@ import {
 	View,
 	Alert,
 } from "react-native";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 import postApi from "../api/post/post";
-import Photo, { PhotoProps } from "../components/photo";
+import Photo, { PhotoProps } from "../components/post/photo";
 import commentApi from "../api/interaction/comment";
-import Icon from "../components/icons";
+import Icon from "../components/core/icons";
 import { Colors } from "../styles/theme";
 import { Dim, GlobalStyles } from "../styles/styles";
-import Comment from "../components/comment";
+import Comment from "../components/post/comment";
 import ScreenWrapper from "../components/core/screenWrapper";
 
 export default function PostPage({ route, navigation }) {
@@ -102,8 +102,7 @@ export default function PostPage({ route, navigation }) {
 					loading={loading}
 					onBottomScroll={loadMore}
 					bottomLoading={bottomLoading}
-					keyboardShouldPersistTaps='handled'
-				>
+					keyboardShouldPersistTaps="handled">
 					{!loading ? (
 						<Photo
 							postId={postId}
@@ -130,8 +129,7 @@ export default function PostPage({ route, navigation }) {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-						}}
-					>
+						}}>
 						<TextInput
 							numberOfLines={2}
 							style={{
@@ -140,7 +138,7 @@ export default function PostPage({ route, navigation }) {
 								flex: 1,
 								height: 50,
 							}}
-							placeholder='Comment'
+							placeholder="Comment"
 							value={comment}
 							onChangeText={setComment}
 						/>
@@ -155,9 +153,8 @@ export default function PostPage({ route, navigation }) {
 								alignItems: "center",
 								alignSelf: "flex-end",
 								marginLeft: 10,
-							}}
-						>
-							<Icon name='send' size={30} color={Colors.background} />
+							}}>
+							<Icon name="send" size={30} color={Colors.background} />
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}
@@ -170,14 +167,13 @@ export default function PostPage({ route, navigation }) {
 										index % 2 == 0 ? Colors.background : Colors.foreground,
 									marginVertical: 4,
 									borderRadius: 10,
-								}}
-							>
+								}}>
 								<Comment
 									commentId={item._id}
 									pic={item.user.src}
 									name={item.user.name}
 									comment={item.text}
-									date={item.updatedAd}
+									date={item.createdAt}
 									userId={item.user._id}
 								/>
 							</View>

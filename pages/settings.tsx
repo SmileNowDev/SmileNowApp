@@ -8,8 +8,8 @@ import {
 	Alert,
 } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
-import Icon from "../components/icons";
-import Header from "../components/header";
+import Icon from "../components/core/icons";
+import Header from "../components/layout/header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../providers/provider";
 import authApi from "../api/user/auth";
@@ -74,17 +74,17 @@ export default function Settings({ navigation }) {
 	}
 	const buttons = [
 		{
-			icon: <Icon name='logout' type='MaterialCommunity' />,
+			icon: <Icon name="logout" type="MaterialCommunity" />,
 			text: "Logout",
 			onPress: () => logout(),
 		},
 		{
-			icon: <Icon name='block' />,
+			icon: <Icon name="block" />,
 			text: "Blocked List",
 			onPress: () => navigation.navigate("Blocked"),
 		},
 		{
-			icon: <Icon name='delete' type='MaterialCommunity' />,
+			icon: <Icon name="delete" type="MaterialCommunity" />,
 			text: "Delete Account",
 			onPress: () => handleConfirmDelete(),
 		},

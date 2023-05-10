@@ -13,7 +13,7 @@ import { Picture } from "./avatar";
 import ModalWrapper from "./core/modalWrapper";
 import OtherProfile from "./otherProfile";
 import { ButtonStyles } from "../styles/styles";
-import DefaultOptions from "./defaultOptions";
+import DefaultOptions from "./core/defaultOptions";
 import { Context } from "../providers/provider";
 import { useNavigation } from "@react-navigation/native";
 

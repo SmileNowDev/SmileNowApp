@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
-import Icon from "../../components/icons";
+import Icon from "../../components/core/icons";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../../providers/provider";
@@ -62,8 +62,7 @@ export default function VerifyPhonePage({ route, navigation }) {
 				padding: 20,
 				display: "flex",
 				alignItems: "center",
-			}}
-		>
+			}}>
 			<View style={GlobalStyles.ScreenContainer}>
 				<Text
 					style={{
@@ -73,20 +72,18 @@ export default function VerifyPhonePage({ route, navigation }) {
 						fontSize: Fonts.body.fontSize,
 						marginBottom: 20,
 						color: Colors.background,
-					}}
-				>
+					}}>
 					Enter the code we just texted you
 				</Text>
 				<Text
 					style={{
 						color: Colors.background,
-					}}
-				>
+					}}>
 					{errorText}
 				</Text>
 
 				<TextInput
-					placeholder='Code'
+					placeholder="Code"
 					onChangeText={setCode}
 					autoFocus={true}
 					placeholderTextColor={Colors.border}
@@ -103,7 +100,7 @@ export default function VerifyPhonePage({ route, navigation }) {
 					}}
 				/>
 				<TextInput
-					placeholder='Create a Password'
+					placeholder="Create a Password"
 					secureTextEntry={true}
 					onChangeText={setPassword}
 					placeholderTextColor={Colors.border}
@@ -125,8 +122,7 @@ export default function VerifyPhonePage({ route, navigation }) {
 						color: Colors.foreground,
 						marginTop: 5,
 						textAlign: "center",
-					}}
-				>
+					}}>
 					(Password must be at least 8 characters)
 				</Text>
 				<TouchableOpacity
@@ -137,8 +133,7 @@ export default function VerifyPhonePage({ route, navigation }) {
 						...ButtonStyles.outlinedWhite,
 						marginTop: 40,
 						opacity: code.length < 5 && password.length < 8 ? 0.5 : 1,
-					}}
-				>
+					}}>
 					<Text style={{ color: Colors.background, fontSize: 20 }}>
 						Create Account
 					</Text>

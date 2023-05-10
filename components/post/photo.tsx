@@ -9,15 +9,15 @@ import {
 	Platform,
 	Alert,
 } from "react-native";
-import Icon from "./icons";
-import { Colors, Fonts } from "../styles/theme";
-import likeApi from "../api/interaction/like";
-import Avatar from "./avatar";
-import DefaultOptions from "./defaultOptions";
+import Icon from "../core/icons";
+import { Colors, Fonts } from "../../styles/theme";
+import likeApi from "../../api/interaction/like";
+import Avatar from "../avatar";
+import DefaultOptions from "../core/defaultOptions";
 const { width, height } = Dimensions.get("window");
 import { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from "expo-media-library";
-import ModalWrapper from "./core/modalWrapper";
+import ModalWrapper from "../core/modalWrapper";
 import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
 // todo - add zoom functionality with pinch
@@ -113,8 +113,7 @@ export default function Photo({
 							marginTop: 10,
 							fontFamily: Fonts.handWriting.fontFamily,
 							fontSize: Fonts.handWriting.fontSize,
-						}}
-					>
+						}}>
 						{caption}
 					</Text>
 					<View style={styles.footer}>
@@ -123,40 +122,37 @@ export default function Photo({
 
 							<Text
 								style={{
-									fontFamily: Fonts.handWriting.fontFamily,
-								}}
-							>
+									fontFamily: Fonts.button.fontFamily,
+									fontSize: Fonts.button.fontSize,
+								}}>
 								{owner.name}
 							</Text>
 						</View>
 						<View style={styles.reactionContainer}>
 							<TouchableOpacity style={styles.reaction} onPress={handleLike}>
 								<Icon
-									name='heart'
-									type='Ion'
+									name="heart"
+									type="Ion"
 									size={25}
 									color={liked ? Colors.primary : Colors.textSecondary}
 								/>
 								<Text
-									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}
-								>
+									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}>
 									{likesCount}
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity style={styles.reaction} disabled>
-								<Icon name='message' size={25} color={Colors.textSecondary} />
+								<Icon name="message" size={25} color={Colors.textSecondary} />
 								<Text
-									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}
-								>
+									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}>
 									{comments}
 								</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={styles.reaction}
-								onPress={() => setDownloadModalVisible(true)}
-							>
+								onPress={() => setDownloadModalVisible(true)}>
 								<Icon
-									name='download'
+									name="download"
 									size={25}
 									color={Colors.textSecondary}
 									type={"Feather"}
@@ -167,11 +163,20 @@ export default function Photo({
 					</View>
 				</View>
 			</View>
+			<Text
+				style={{
+					fontFamily: Fonts.small.fontFamily,
+					fontSize: Fonts.small.fontSize,
+					color: Colors.textSecondary,
+					textAlign: "right",
+					paddingTop: 5,
+				}}>
+				{dayjs(date).format("DD MMM YYYY")} at {dayjs(date).format("HH:mm")}
+			</Text>
 			<ModalWrapper
 				visible={downloadModalVisible}
 				setVisible={setDownloadModalVisible}
-				fullHeight={false}
-			>
+				fullHeight={false}>
 				<DownloadPost
 					image={image}
 					caption={caption}

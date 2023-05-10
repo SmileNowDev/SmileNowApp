@@ -13,7 +13,7 @@ import { Colors, Fonts } from "../../styles/theme";
 // @ts-expect-error
 import LogoWhite from "../../assets/logo_white.png";
 import { ButtonStyles, Dim } from "../../styles/styles";
-import Icon from "../../components/icons";
+import Icon from "../../components/core/icons";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // todo - make sure button is disabled if phone number is not 10 digits and code is not entered
@@ -54,8 +54,7 @@ export default function SignUpPage({ navigation }) {
 				paddingTop: 100,
 				display: "flex",
 				alignItems: "center",
-			}}
-		>
+			}}>
 			{/* LOGO */}
 			<Text
 				style={{
@@ -63,8 +62,7 @@ export default function SignUpPage({ navigation }) {
 					fontFamily: Fonts.subTitle.fontFamily,
 					fontSize: Fonts.subTitle.fontSize,
 					color: Colors.background,
-				}}
-			>
+				}}>
 				Welcome to Smile Now
 			</Text>
 			<Image
@@ -85,13 +83,12 @@ export default function SignUpPage({ navigation }) {
 					fontFamily: Fonts.subTitle.fontFamily,
 					fontSize: Fonts.subTitle.fontSize,
 					color: Colors.background,
-				}}
-			>
+				}}>
 				Sign Up
 			</Text>
 			<TextInput
-				placeholder='Enter your Phone Number'
-				keyboardType='phone-pad'
+				placeholder="Enter your Phone Number"
+				keyboardType="phone-pad"
 				value={phone}
 				onChangeText={setPhone}
 				placeholderTextColor={Colors.border}
@@ -117,8 +114,7 @@ export default function SignUpPage({ navigation }) {
 					borderRadius: 5,
 					opacity: phone.length < 10 ? 0.5 : 1,
 					width: "100%",
-				}}
-			>
+				}}>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Next</Text>
 			</TouchableOpacity>
 			<TouchableOpacity
@@ -126,8 +122,7 @@ export default function SignUpPage({ navigation }) {
 				style={{
 					...ButtonStyles.button,
 					marginTop: 10,
-				}}
-			>
+				}}>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
 			</TouchableOpacity>
 		</View>

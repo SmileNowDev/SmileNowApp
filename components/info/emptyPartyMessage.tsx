@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
-import Icon from "../icons";
+import Icon from "../core/icons";
 
 export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 	if (isHost) {

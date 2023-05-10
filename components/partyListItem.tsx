@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import Icon from "./icons";
+import Icon from "./core/icons";
 import { Colors, Fonts } from "../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { generateColorFromLetters } from "../utils/colorGenerator";

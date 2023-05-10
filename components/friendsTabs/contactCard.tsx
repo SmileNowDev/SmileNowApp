@@ -9,9 +9,9 @@ import {
 	TouchableOpacity,
 	Linking,
 } from "react-native";
-import { Colors, Fonts } from "../styles/theme";
-import Icon from "./icons";
-import { ButtonStyles } from "../styles/styles";
+import { Colors, Fonts } from "../../styles/theme";
+import Icon from "../core/icons";
+import { ButtonStyles } from "../../styles/styles";
 import * as SMS from "expo-sms";
 
 interface ContactCardProps {
@@ -52,8 +52,7 @@ export default function ContactCard({
 		<TouchableOpacity
 			style={styles.container}
 			onPress={() => sendText()}
-			key={id}
-		>
+			key={id}>
 			<View
 				style={{
 					height: 40,
@@ -62,15 +61,13 @@ export default function ContactCard({
 					backgroundColor: Colors.border,
 					alignItems: "center",
 					justifyContent: "center",
-				}}
-			>
+				}}>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize - 2,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					{initials}
 				</Text>
 			</View>
@@ -79,8 +76,7 @@ export default function ContactCard({
 					style={{
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}
-				>
+					}}>
 					{name}
 				</Text>
 			</View>
@@ -89,15 +85,13 @@ export default function ContactCard({
 				style={{
 					...ButtonStyles.buttonSmall,
 					...ButtonStyles.primaryOutlined,
-				}}
-			>
-				<Icon name='add' size={20} color={Colors.primary} />
+				}}>
+				<Icon name="add" size={20} color={Colors.primary} />
 				<Text
 					style={{
 						...ButtonStyles.buttonTextSmall,
 						color: Colors.primary,
-					}}
-				>
+					}}>
 					Invite
 				</Text>
 			</TouchableOpacity>

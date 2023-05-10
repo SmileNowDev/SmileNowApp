@@ -10,8 +10,8 @@ import {
 	View,
 } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
-import Header from "../components/header";
-import Icon from "../components/icons";
+import Header from "../components/layout/header";
+import Icon from "../components/core/icons";
 import userApi from "../api/user/user";
 import { Context } from "../providers/provider";
 import Avatar from "../components/avatar";

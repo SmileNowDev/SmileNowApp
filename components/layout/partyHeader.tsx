@@ -1,10 +1,9 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import Icon from "./icons";
-import { Colors, Fonts } from "../styles/theme";
+import Icon from "../core/icons";
+import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
-import { GlobalStyles } from "../styles/styles";
-import { RootStackParamList } from "../App";
+import { GlobalStyles } from "../../styles/styles";
 interface HeaderProps {
 	title: string;
 	eventId: string;
@@ -55,26 +54,35 @@ export default function PartyHeader({
 				<TouchableOpacity
 					onPress={() =>
 						// @ts-expect-error
-						navigation.navigate("InviteToParty", { eventId, name, isHost })
+						navigation.navigate("PartyAttendees", { eventId, isHost, name })
 					}>
 					<Icon name="people" size={25} color={Colors.textSecondary} />
 				</TouchableOpacity>
 				{isHost ? (
-					<TouchableOpacity
-						onPress={() =>
-							// @ts-expect-error
-							navigation.navigate("PartyDetails", { eventId, name })
-						}>
-						<Icon
-							name="settings"
-							type="Feather"
-							size={25}
-							color={Colors.textSecondary}
-						/>
-					</TouchableOpacity>
+					<>
+						<TouchableOpacity
+							onPress={() =>
+								// @ts-expect-error
+								navigation.navigate("InviteToParty", { eventId, name, isHost })
+							}>
+							<Icon name="qr-code" size={25} color={Colors.textSecondary} />
+						</TouchableOpacity>
+					</>
 				) : (
 					<></>
 				)}
+				<TouchableOpacity
+					onPress={() =>
+						// @ts-expect-error
+						navigation.navigate("PartySettings", { eventId, name, isHost })
+					}>
+					<Icon
+						name="settings"
+						type="Feather"
+						size={25}
+						color={Colors.textSecondary}
+					/>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);

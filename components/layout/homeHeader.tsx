@@ -1,11 +1,10 @@
 import React from "react";
 import { Text, TouchableOpacity, View, Image } from "react-native";
-import Icon from "./icons";
-import { Colors, Fonts } from "../styles/theme";
+import Icon from "../core/icons";
+import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
-import { GlobalStyles } from "../styles/styles";
-import Avatar from "./avatar";
-import { RootStackParamList } from "../App";
+import { GlobalStyles } from "../../styles/styles";
+import { RootStackParamList } from "../../navigation/rootNavigator";
 
 export default function HomeHeader() {
 	const navigation = useNavigation();
@@ -30,7 +29,7 @@ export default function HomeHeader() {
 					gap: 5,
 				}}>
 				<Image
-					source={require("../assets/logo_color.png")}
+					source={require("../../assets/logo_color.png")}
 					style={{ width: 25, height: 25 }}
 				/>
 				<Text

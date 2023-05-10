@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import {
+	Alert,
 	Button,
 	Image,
 	SafeAreaView,
@@ -24,17 +25,27 @@ export default function AccountDetailsScreen({ navigation }) {
 		if (blocked.includes(newName[newName.length - 1])) return;
 		setUsername(newName);
 	}
+
 	async function uploadDetails() {
-		const result = await userApi.updateUser({
-			name,
-			username,
-			bio: "Add a bio...",
-		});
-		if (result.ok) {
-			navigation.navigate("Home");
+		if (name.length < 1) {
+			Alert.alert("Name cannot be empty");
+			return;
+		} else if (username.length < 5 || username.length > 15) {
+			Alert.alert("Username must be between 5 and 15 characters");
+			return;
+		} else {
+			const result = await userApi.updateUser({
+				name,
+				username,
+				bio: "Add a bio...",
+			});
+			if (result.ok) {
+				navigation.navigate("Home");
+			} else {
+				// @ts-expect-error
+				Alert.alert(result.data.msg);
+			}
 		}
-		// todo: if !result.ok, show error message with an alert
-		// todo: if username is taken, or invalid
 	}
 
 	return (

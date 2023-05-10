@@ -155,4 +155,11 @@ export const GlobalStyles = StyleSheet.create({
 		marginVertical: 10,
 		marginLeft: 5,
 	},
+	hr: {
+		width: "100%",
+		borderBottomColor: Colors.border,
+		borderBottomWidth: 1,
+		borderStyle: "solid",
+		marginVertical: 5,
+	},
 });

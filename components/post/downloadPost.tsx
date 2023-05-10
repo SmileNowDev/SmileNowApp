@@ -1,23 +1,10 @@
-import React, { useRef, useState } from "react";
-import {
-	Image,
-	Text,
-	TouchableOpacity,
-	StyleSheet,
-	View,
-	Dimensions,
-} from "react-native";
-import Icon from "./icons";
-import { Colors, Fonts } from "../styles/theme";
-import likeApi from "../api/interaction/like";
-import Avatar from "./avatar";
-import DefaultOptions from "./defaultOptions";
-const { width, height } = Dimensions.get("window");
-import { captureRef } from "react-native-view-shot";
-import * as MediaLibrary from "expo-media-library";
-import ModalWrapper from "./core/modalWrapper";
+import React, { useRef } from "react";
+import { Image, Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import Icon from "../core/icons";
+import { Colors, Fonts } from "../../styles/theme";
+
 import dayjs from "dayjs";
-import { Dim } from "../styles/styles";
+import { Dim } from "../../styles/styles";
 interface DownloadPostProps {
 	image: string;
 	caption: string;
@@ -41,27 +28,25 @@ export default function DownloadPost({
 				paddingVertical: 20,
 				display: "flex",
 				flexDirection: "column",
-			}}
-		>
+			}}>
 			{/* images to download  */}
 			<View style={styles.imageOffScreen}>
 				<Image
 					ref={imageToSave}
 					source={{ uri: image }}
-					style={{ height: width - 40, width: width - 40 }}
+					style={{ height: Dim.width - 40, width: Dim.width - 40 }}
 				/>
 			</View>
 			{/* <View style={styles.imageWithCaptionOffScreen}> */}
 			<View
 				style={styles.imageWithCaptionOffScreen}
-				ref={imageToSaveWithCaption}
-			>
+				ref={imageToSaveWithCaption}>
 				<View style={{ position: "relative" }}>
 					<Image
 						source={{ uri: image }}
 						style={{
-							height: width - 40,
-							width: width - 40,
+							height: Dim.width - 40,
+							width: Dim.width - 40,
 						}}
 					/>
 					<Text style={{ ...styles.waterMarkText, fontSize: 15 }}>
@@ -75,8 +60,7 @@ export default function DownloadPost({
 						paddingVertical: 10,
 						paddingHorizontal: 5,
 						width: "100%",
-					}}
-				>
+					}}>
 					{caption}
 				</Text>
 				<Text
@@ -87,8 +71,7 @@ export default function DownloadPost({
 						paddingHorizontal: 10,
 						width: "100%",
 						textAlign: "right",
-					}}
-				>
+					}}>
 					{dayjs(date).format("YYYY-MM-DD  hh:mm")}
 				</Text>
 			</View>
@@ -100,18 +83,16 @@ export default function DownloadPost({
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
-				}}
-			>
+				}}>
 				<Text
 					style={{
 						fontFamily: Fonts.title.fontFamily,
 						fontSize: Fonts.title.fontSize,
-					}}
-				>
+					}}>
 					Download Options
 				</Text>
 				<TouchableOpacity onPress={() => setModalVisible(false)}>
-					<Icon name='close' size={30} color={Colors.textSecondary} />
+					<Icon name="close" size={30} color={Colors.textSecondary} />
 				</TouchableOpacity>
 			</View>
 			<View
@@ -122,8 +103,7 @@ export default function DownloadPost({
 					marginTop: 20,
 					gap: 20,
 					flex: 1,
-				}}
-			>
+				}}>
 				<View
 					style={{
 						flex: 1,
@@ -131,17 +111,15 @@ export default function DownloadPost({
 						flexDirection: "column",
 						justifyContent: "space-between",
 						alignItems: "center",
-						height: width / 2 + 100,
-					}}
-				>
+						height: Dim.width / 2 + 100,
+					}}>
 					<View
 						style={{
 							...styles.photoDownload,
 							shadowOpacity: 0,
 							borderColor: "transparent",
 							backgroundColor: "transparent",
-						}}
-					>
+						}}>
 						<TouchableOpacity
 							onPress={() => download(imageToSave)}
 							style={{
@@ -151,11 +129,13 @@ export default function DownloadPost({
 								shadowRadius: 2,
 								elevation: 2,
 								shadowColor: "rgba(0, 0, 0, 0.25)",
-							}}
-						>
+							}}>
 							<Image
 								source={{ uri: image }}
-								style={{ height: width / 2 - 40, width: width / 2 - 40 }}
+								style={{
+									height: Dim.width / 2 - 40,
+									width: Dim.width / 2 - 40,
+								}}
 							/>
 							<Text style={styles.waterMarkText}>Smile Now</Text>
 						</TouchableOpacity>
@@ -168,38 +148,34 @@ export default function DownloadPost({
 							justifyContent: "center",
 							alignItems: "center",
 							gap: 10,
-						}}
-					>
+						}}>
 						<Text
 							style={{
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize,
-							}}
-						>
+							}}>
 							Photo Only
 						</Text>
-						<Icon name={"download"} type='Feather' size={30} />
+						<Icon name={"download"} type="Feather" size={30} />
 					</TouchableOpacity>
 				</View>
 				<View
 					style={{
 						display: "flex",
 						flexDirection: "column",
-						height: width / 2 + 100,
+						height: Dim.width / 2 + 100,
 						justifyContent: "space-between",
 						alignItems: "center",
-					}}
-				>
+					}}>
 					<TouchableOpacity
 						onPress={() => download(imageToSave)}
-						style={styles.photoDownload}
-					>
+						style={styles.photoDownload}>
 						<View style={{ position: "relative" }}>
 							<Image
 								source={{ uri: image }}
 								style={{
-									height: width / 2 - 40,
-									width: width / 2 - 40,
+									height: Dim.width / 2 - 40,
+									width: Dim.width / 2 - 40,
 								}}
 							/>
 							<Text style={styles.waterMarkText}>Smile Now</Text>
@@ -210,9 +186,8 @@ export default function DownloadPost({
 								fontSize: 11,
 								paddingTop: 5,
 								paddingHorizontal: 2,
-								width: width / 2 - 40,
-							}}
-						>
+								width: Dim.width / 2 - 40,
+							}}>
 							{caption}
 						</Text>
 						<Text
@@ -221,10 +196,9 @@ export default function DownloadPost({
 								fontSize: 8,
 								color: Colors.textSecondary,
 								paddingHorizontal: 2,
-								width: width / 2 - 40,
+								width: Dim.width / 2 - 40,
 								textAlign: "right",
-							}}
-						>
+							}}>
 							{dayjs(date).format("YYYY-MM-DD  hh:mm")}
 						</Text>
 					</TouchableOpacity>
@@ -236,17 +210,15 @@ export default function DownloadPost({
 							justifyContent: "center",
 							alignItems: "center",
 							gap: 10,
-						}}
-					>
+						}}>
 						<Text
 							style={{
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize,
-							}}
-						>
+							}}>
 							Photo + Caption
 						</Text>
-						<Icon name={"download"} type='Feather' size={30} />
+						<Icon name={"download"} type="Feather" size={30} />
 					</TouchableOpacity>
 				</View>
 			</View>

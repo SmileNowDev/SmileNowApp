@@ -6,7 +6,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 import { Colors, Fonts } from "../styles/theme";
 import { Camera } from "expo-camera";
 import { ButtonStyles, Dim } from "../styles/styles";
@@ -55,7 +55,7 @@ export default function JoinPartyPage({ navigation }) {
 				<Text>Enter the join code</Text>
 				<TextInput
 					value={joinCode}
-					placeholder='Code'
+					placeholder="Code"
 					onChangeText={setJoinCode}
 					style={{
 						fontSize: 40,
@@ -83,8 +83,7 @@ export default function JoinPartyPage({ navigation }) {
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					Or Scan the QR Code
 				</Text>
 				{joinCode.length === 4 ? (
@@ -94,8 +93,7 @@ export default function JoinPartyPage({ navigation }) {
 							marginTop: 50,
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
-						}}
-					>
+						}}>
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>
 							Join With Code
 						</Text>

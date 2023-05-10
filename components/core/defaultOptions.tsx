@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import Icon from "./icons";
 
-import ModalWrapper from "./core/modalWrapper";
-import { ButtonStyles } from "../styles/styles";
+import ModalWrapper from "./modalWrapper";
+import { ButtonStyles } from "../../styles/styles";
 import { useNavigation } from "@react-navigation/native";
-import { Colors, Fonts } from "../styles/theme";
-import blockApi from "../api/user/block";
-import userApi from "../api/user/user";
+import { Colors, Fonts } from "../../styles/theme";
+import blockApi from "../../api/user/block";
+import userApi from "../../api/user/user";
 
 interface DefaultOptionsProps {
 	type: string;
@@ -65,8 +65,7 @@ export default function DefaultOptions({
 		<>
 			<TouchableOpacity
 				style={styles.reaction}
-				onPress={() => setModalVisible(true)}
-			>
+				onPress={() => setModalVisible(true)}>
 				<Icon
 					name={horizontal ? "more-horiz" : "more-vert"}
 					size={size}
@@ -78,8 +77,7 @@ export default function DefaultOptions({
 				setVisible={setModalVisible}
 				fullHeight={false}
 				scrollable={false}
-				noSwipe={false}
-			>
+				noSwipe={false}>
 				{/* subtitle text */}
 				<Text
 					style={{
@@ -87,8 +85,7 @@ export default function DefaultOptions({
 						fontSize: Fonts.subTitle.fontSize,
 						textAlign: "left",
 						marginBottom: 20,
-					}}
-				>
+					}}>
 					Options
 				</Text>
 				<TouchableOpacity
@@ -98,16 +95,14 @@ export default function DefaultOptions({
 						setModalVisible(false);
 						// @ts-expect-error
 						navigation.navigate("Report", { type: "post", id });
-					}}
-				>
-					<Icon name='flag' size={25} color={Colors.urgent} />
+					}}>
+					<Icon name="flag" size={25} color={Colors.urgent} />
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: 20,
 							textAlign: "left",
-						}}
-					>
+						}}>
 						Report {type.substring(0, 1).toUpperCase() + type.substring(1)}
 					</Text>
 				</TouchableOpacity>
@@ -122,16 +117,14 @@ export default function DefaultOptions({
 							} else {
 								block();
 							}
-						}}
-					>
-						<Icon name='block' size={25} color={Colors.urgent} />
+						}}>
+						<Icon name="block" size={25} color={Colors.urgent} />
 						<Text
 							style={{
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: 20,
 								textAlign: "left",
-							}}
-						>
+							}}>
 							{!blockedStatus ? "Block" : "Unblock"}{" "}
 							{type.substring(0, 1).toUpperCase() + type.substring(1)}
 						</Text>
@@ -158,8 +151,7 @@ export default function DefaultOptions({
 						...ButtonStyles.button,
 						...ButtonStyles.outlined,
 						marginTop: 50,
-					}}
-				>
+					}}>
 					<Text>Close</Text>
 				</TouchableOpacity>
 			</ModalWrapper>

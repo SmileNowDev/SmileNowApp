@@ -8,7 +8,7 @@ import {
 	FontAwesome,
 	FontAwesome5,
 } from "react-native-vector-icons";
-import { Colors } from "../styles/theme";
+import { Colors } from "../../styles/theme";
 
 /* 
 DOCUMENTATION

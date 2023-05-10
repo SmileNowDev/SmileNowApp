@@ -5,16 +5,16 @@ import { Colors } from "../styles/theme";
 
 // ------------- Pages -------------
 import HomePage from "../pages/home";
-import PartyPage from "../pages/party";
+import PartyPage from "../pages/party/party";
 import ProfilePage from "../pages/profile";
 import SignUpPage from "../pages/auth/signUp";
 import VerifyPhonePage from "../pages/auth/verifyPhone";
 import AccountDetailsScreen from "../pages/auth/accountDetails";
-import CameraPage from "../pages/cameraPage";
+import CameraPage from "../pages/party/cameraPage";
 import CreatePartyPage from "../pages/createParty";
 import JoinPartyPage from "../pages/joinParty";
-import InviteToParty from "../pages/inviteToParty";
-import PartyDetailsPage from "../pages/partyDetails";
+import InviteToParty from "../pages/party/inviteToParty";
+import PartyDetailsPage from "../pages/party/partySettings";
 import FriendsPage from "../pages/friends";
 import TakeProfilePicture from "../pages/takeProfilePicture";
 import Settings from "../pages/settings";
@@ -27,6 +27,8 @@ import EditProfilePage from "../pages/editProfile";
 import ReportPage from "../pages/report";
 import BlockedUsersPage from "../pages/settings/blockedUsers";
 import TermsAndConditions from "../pages/terms";
+import PartyAttendees from "../pages/party/partyAttendees";
+import PartySettings from "../pages/party/partySettings";
 export type RootStackParamList = {
 	Splash: undefined;
 	Home: undefined;
@@ -36,8 +38,9 @@ export type RootStackParamList = {
 	CreateParty: undefined;
 	JoinParty: undefined;
 	InviteToParty: { joinCode: string; eventId: string; isHost: boolean };
+	PartyAttendees: { eventId: string; isHost: boolean; name: string };
 	Friends: undefined;
-	PartyDetails: { eventId: string; name: string };
+	PartySettings: { eventId: string; name: string; isHost: boolean };
 	Camera: { partyId: string };
 	TakeProfilePicture: undefined;
 	Profile: undefined;
@@ -67,6 +70,7 @@ export default function RootNavigator() {
 			<Stack.Screen name="Terms" component={TermsAndConditions} />
 
 			<Stack.Screen name="Party" component={PartyPage} />
+			<Stack.Screen name="PartyAttendees" component={PartyAttendees} />
 			<Stack.Screen name="Post" component={PostPage} />
 			<Stack.Screen name="JoinParty" component={JoinPartyPage} />
 			<Stack.Screen name="CreateParty" component={CreatePartyPage} />
@@ -93,7 +97,7 @@ export default function RootNavigator() {
 					}),
 				}}
 			/>
-			<Stack.Screen name="PartyDetails" component={PartyDetailsPage} />
+			<Stack.Screen name="PartySettings" component={PartySettings} />
 			<Stack.Screen name="Camera" component={CameraPage} />
 			<Stack.Screen name="Profile" component={ProfilePage} />
 			<Stack.Screen name="EditProfile" component={EditProfilePage} />

@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 import { Context } from "../providers/provider";
 import userApi from "../api/user/user";
 import { Colors, Fonts } from "../styles/theme";
@@ -17,7 +17,15 @@ export default function EditProfilePage({ navigation }) {
 	const { userId } = useContext(Context);
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
-
+	function handleSetUsername(newName) {
+		//blocked characters
+		const blocked = [" ", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
+		// if username is too long, don't update
+		if (username.length > 15) return;
+		// if username contains blocked characters, don't update
+		if (blocked.includes(newName[newName.length - 1])) return;
+		setUsername(newName);
+	}
 	async function getUser() {
 		const result = await userApi.get({ userId });
 		if (result.ok) {
@@ -31,11 +39,21 @@ export default function EditProfilePage({ navigation }) {
 		navigation.goBack();
 	}
 	async function save() {
-		const result = await userApi.updateUser({ name, username });
-		if (result.ok) {
-			navigation.goBack();
+		if (name.length < 1) {
+			Alert.alert("Name cannot be empty");
+			return;
+		} else if (username.length < 5 || username.length > 15) {
+			Alert.alert("Username must be between 5 and 15 characters");
+			return;
 		} else {
-			Alert.alert("Error updating user");
+			const result = await userApi.updateUser({ name, username });
+			console.log(result);
+			if (result.ok) {
+				navigation.goBack();
+			} else {
+				// @ts-expect-error
+				Alert.alert(result.data.msg);
+			}
 		}
 	}
 	useEffect(() => {
@@ -51,13 +69,13 @@ export default function EditProfilePage({ navigation }) {
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					Name
 				</Text>
 				<TextInput
 					value={name}
 					onChangeText={setName}
+					autoCapitalize={"none"}
 					style={{ ...GlobalStyles.textInput }}
 				/>
 				<Text
@@ -66,13 +84,12 @@ export default function EditProfilePage({ navigation }) {
 						fontFamily: Fonts.small.fontFamily,
 						fontSize: Fonts.small.fontSize,
 						color: Colors.textSecondary,
-					}}
-				>
+					}}>
 					Username
 				</Text>
 				<TextInput
 					value={username}
-					onChangeText={setUsername}
+					onChangeText={handleSetUsername}
 					style={{ ...GlobalStyles.textInput }}
 				/>
 				<View
@@ -83,20 +100,17 @@ export default function EditProfilePage({ navigation }) {
 						gap: 5,
 						paddingVertical: 5,
 						marginTop: 20,
-					}}
-				>
+					}}>
 					<TouchableOpacity
 						onPress={() => cancel()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}
-					>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}>
 						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
 							Cancel Changes
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => save()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}
-					>
+						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
 						<Text style={{ ...ButtonStyles.buttonText }}>Save Changes</Text>
 					</TouchableOpacity>
 				</View>

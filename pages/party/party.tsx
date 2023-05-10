@@ -7,15 +7,15 @@ import {
 	FlatList,
 	ActivityIndicator,
 } from "react-native";
-import PartyHeader from "../components/partyHeader";
-import Photo from "../components/photo";
-import Icon from "../components/icons";
-import { Colors } from "../styles/theme";
-import { ButtonStyles, Dim } from "../styles/styles";
-import eventApi from "../api/post/event";
-import postApi from "../api/post/post";
-import ScreenWrapper from "../components/core/screenWrapper";
-import EmptyPartyMessage from "../components/info/emptyPartyMessage";
+import PartyHeader from "../../components/layout/partyHeader";
+import Photo from "../../components/post/photo";
+import Icon from "../../components/core/icons";
+import { Colors } from "../../styles/theme";
+import { ButtonStyles, Dim } from "../../styles/styles";
+import eventApi from "../../api/post/event";
+import postApi from "../../api/post/post";
+import ScreenWrapper from "../../components/core/screenWrapper";
+import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
 
 export default function PartyPage({ route, navigation }) {
 	const { eventId } = route.params;

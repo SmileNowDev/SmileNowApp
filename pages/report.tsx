@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Colors, Fonts } from "../styles/theme";
 import { GlobalStyles, ButtonStyles, Dim } from "../styles/styles";
 import reportApi from "../api/interaction/report";
-import Header from "../components/header";
+import Header from "../components/layout/header";
 import {
 	View,
 	SafeAreaView,
@@ -42,14 +42,13 @@ export default function ReportPage({ route, navigation }) {
 	}
 	return (
 		<SafeAreaView>
-			<Header goBack title='Report' />
+			<Header goBack title="Report" />
 			<View style={{ padding: 10 }}>
 				<Text
 					style={{
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
-					}}
-				>
+					}}>
 					{" "}
 					Why are you reporting this {type}
 				</Text>
@@ -62,7 +61,7 @@ export default function ReportPage({ route, navigation }) {
 						height: 100,
 					}}
 					multiline
-					placeholder='Give us a brief description of the issue...'
+					placeholder="Give us a brief description of the issue..."
 					value={message}
 					onChangeText={setMessage}
 				/>
@@ -71,8 +70,7 @@ export default function ReportPage({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonLarge,
 						...ButtonStyles.primary,
-					}}
-				>
+					}}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Submit</Text>
 				</TouchableOpacity>
 			</View>

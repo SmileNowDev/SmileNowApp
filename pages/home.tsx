@@ -10,7 +10,7 @@ import {
 import { Fonts, Colors } from "../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../styles/styles";
 import PartyListItem from "../components/partyListItem";
-import HomeHeader from "../components/homeHeader";
+import HomeHeader from "../components/layout/homeHeader";
 import eventApi from "../api/post/event";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
