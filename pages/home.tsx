@@ -19,14 +19,17 @@ import * as Device from "expo-device";
 import { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
 import WelcomeMessage from "../components/info/welcomeMessage";
+import ModalWrapper from "../components/core/modalWrapper";
+import JoinPartyPage from "./joinParty";
 export default function HomePage({ navigation }) {
 	//todo: give events a type
 	const [events, setEvents] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
-	const [page, setPage] = useState(1); // Add this state
-	const [hasMore, setHasMore] = useState(true); // Add this state
-	const [loading, setLoading] = useState(false); // Add this state
-	const [bottomLoading, setBottomLoading] = useState(false); // Add this state
+	const [page, setPage] = useState(1);
+	const [hasMore, setHasMore] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [bottomLoading, setBottomLoading] = useState(false);
+	const [joining, setJoining] = useState(false);
 
 	// ... (other functions)
 
@@ -103,8 +106,11 @@ export default function HomePage({ navigation }) {
 	async function createEvent() {
 		const result = await eventApi.create();
 		if (result.ok) {
-			//@ts-expect-error
-			navigation.navigate("CreateParty", { eventId: result.data._id });
+			navigation.navigate("Party", {
+				// @ts-expect-error
+				eventId: result.data._id,
+				justCreated: true,
+			});
 		}
 	}
 	function onRefresh() {
@@ -123,7 +129,6 @@ export default function HomePage({ navigation }) {
 		notificationListener.current =
 			Notifications.addNotificationReceivedListener((notification) => {});
 		//@ts-expect-error
-
 		responseListener.current =
 			Notifications.addNotificationResponseReceivedListener((response) => {
 				let data = response.notification.request.content.data;
@@ -136,6 +141,9 @@ export default function HomePage({ navigation }) {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<ModalWrapper visible={joining} setVisible={setJoining} fullHeight={true}>
+				<JoinPartyPage setVisible={setJoining} />
+			</ModalWrapper>
 			<HomeHeader />
 			<ScreenWrapper
 				onRefresh={onRefresh}
@@ -143,8 +151,7 @@ export default function HomePage({ navigation }) {
 				loading={loading}
 				onBottomScroll={loadMoreEvents}
 				bottomLoading={bottomLoading}
-				style={{ paddingHorizontal: 0 }}
-			>
+				style={{ paddingHorizontal: 0 }}>
 				{events.length === 0 ? (
 					<>
 						<WelcomeMessage />
@@ -156,8 +163,7 @@ export default function HomePage({ navigation }) {
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: Fonts.subTitle.fontSize,
 								padding: 10,
-							}}
-						>
+							}}>
 							My Parties
 						</Text>
 						<FlatList
@@ -169,10 +175,9 @@ export default function HomePage({ navigation }) {
 										paddingHorizontal: 10,
 										backgroundColor:
 											index % 2 === 0 ? Colors.background : Colors.border,
-									}}
-								>
+									}}>
 									<PartyListItem
-										icon={getInitials(
+										initials={getInitials(
 											item.title.split(" ")[0],
 											item.title.split(" ")[1]
 										)}
@@ -205,18 +210,15 @@ export default function HomePage({ navigation }) {
 					...GlobalStyles.Container,
 
 					flex: 0,
-				}}
-			>
+				}}>
 				<TouchableOpacity
-					onPress={() => navigation.navigate("JoinParty")}
-					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}
-				>
+					onPress={() => setJoining(true)}
+					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={createEvent}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}
-				>
+					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
 				</TouchableOpacity>
 			</View>

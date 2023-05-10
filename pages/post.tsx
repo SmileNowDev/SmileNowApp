@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
 	ActivityIndicator,
 	FlatList,
@@ -17,9 +17,12 @@ import Photo, { PhotoProps } from "../components/post/photo";
 import commentApi from "../api/interaction/comment";
 import Icon from "../components/core/icons";
 import { Colors } from "../styles/theme";
-import { Dim, GlobalStyles } from "../styles/styles";
+import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
 import Comment from "../components/post/comment";
 import ScreenWrapper from "../components/core/screenWrapper";
+import ModalWrapper from "../components/core/modalWrapper";
+import EditCaption from "../components/post/editCaption";
+import { Context } from "../providers/provider";
 
 export default function PostPage({ route, navigation }) {
 	const { postId } = route.params;
@@ -32,6 +35,9 @@ export default function PostPage({ route, navigation }) {
 	const [hasMore, setHasMore] = useState(true); // Add this state
 	const [loading, setLoading] = useState(false); // Add this state
 	const [bottomLoading, setBottomLoading] = useState(false);
+	const [editing, setEditing] = useState(false);
+	const [caption, setCaption] = useState("");
+	const { userId } = useContext(Context);
 
 	async function getPost() {
 		setLoading(true);
@@ -39,6 +45,8 @@ export default function PostPage({ route, navigation }) {
 		const result = await postApi.getPost({ postId });
 		if (result.ok) {
 			setPost(result.data);
+			// @ts-expect-error
+			setCaption(result.data.caption);
 		}
 		setLoading(false);
 	}
@@ -95,7 +103,28 @@ export default function PostPage({ route, navigation }) {
 	if (!loading) {
 		return (
 			<SafeAreaView>
-				<Header goBack />
+				<Header
+					goBack
+					rightContent={
+						post?.user._id === userId ? (
+							<TouchableOpacity
+								onPress={() => setEditing(true)}
+								style={{
+									...ButtonStyles.buttonSmall,
+									...ButtonStyles.outlined,
+								}}>
+								<Icon name="edit" size={20} color={Colors.text} />
+								<Text
+									style={{
+										...ButtonStyles.buttonText,
+										color: Colors.text,
+									}}>
+									Edit
+								</Text>
+							</TouchableOpacity>
+						) : null
+					}
+				/>
 				<ScreenWrapper
 					onRefresh={getComments}
 					scrollEnabled={true}
@@ -107,13 +136,13 @@ export default function PostPage({ route, navigation }) {
 						<Photo
 							postId={postId}
 							image={post?.src}
-							caption={post?.caption}
+							caption={caption}
 							owner={{
 								name: post?.user.name,
 								picture: post?.user.src,
 								id: post?.user._id,
 							}}
-							date={post?.date}
+							date={post?.createdAt}
 							likes={post?.likes}
 							isLiked={post?.isLiked}
 							comments={post?.comments}
@@ -129,6 +158,7 @@ export default function PostPage({ route, navigation }) {
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
+							marginTop: 5,
 						}}>
 						<TextInput
 							numberOfLines={2}
@@ -138,7 +168,8 @@ export default function PostPage({ route, navigation }) {
 								flex: 1,
 								height: 50,
 							}}
-							placeholder="Comment"
+							placeholderTextColor={Colors.textSecondary}
+							placeholder="Leave a comment here"
 							value={comment}
 							onChangeText={setComment}
 						/>
@@ -181,6 +212,17 @@ export default function PostPage({ route, navigation }) {
 					/>
 					<View style={{ height: Dim.height / 2 }}></View>
 				</ScreenWrapper>
+				<ModalWrapper
+					visible={editing}
+					setVisible={setEditing}
+					fullHeight={true}>
+					<EditCaption
+						postId={postId}
+						caption={caption}
+						setCaption={setCaption}
+						setVisible={setEditing}
+					/>
+				</ModalWrapper>
 			</SafeAreaView>
 		);
 	}

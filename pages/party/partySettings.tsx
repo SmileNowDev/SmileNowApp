@@ -24,6 +24,8 @@ import NotificationFrequencyButton from "../../components/party/notificationFreq
 import archiveApi from "../../api/post/archive";
 import attendeeApi from "../../api/post/attendee";
 import { Context } from "../../providers/provider";
+import { PulseIndicator } from "react-native-indicators";
+
 type PartyDetailsRouteProps = StackScreenProps<
 	RootStackParamList,
 	"PartySettings"
@@ -190,20 +192,17 @@ export default function PartySettings({
 					width: "100%",
 					gap: 50,
 					marginVertical: 10,
-				}}
-			>
+				}}>
 				<View
 					style={{
 						flex: 1,
-					}}
-				>
+					}}>
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
 							color: Colors.text,
-						}}
-					>
+						}}>
 						{title}
 					</Text>
 					<Text
@@ -212,8 +211,7 @@ export default function PartySettings({
 							fontSize: Fonts.small.fontSize,
 							color: Colors.textSecondary,
 							flex: 0,
-						}}
-					>
+						}}>
 						{description}
 					</Text>
 				</View>
@@ -221,15 +219,14 @@ export default function PartySettings({
 					onPress={onPress}
 					style={{
 						...ButtonStyles.buttonSmall,
-						...ButtonStyles.primary,
-					}}
-				>
-					<Icon name={icon} size={15} color={Colors.background} />
+						...ButtonStyles.gray,
+					}}>
+					<Icon name={icon} size={15} color={Colors.text} />
 					<Text
 						style={{
 							...ButtonStyles.buttonTextSmall,
-						}}
-					>
+							color: Colors.text,
+						}}>
 						{buttonText}
 					</Text>
 				</TouchableOpacity>
@@ -259,22 +256,19 @@ export default function PartySettings({
 						flex: 0,
 						zIndex: 100,
 						...GlobalStyles.Container,
-					}}
-				>
+					}}>
 					<TouchableOpacity
 						onPress={() => cancel()}
 						style={{
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.secondary,
 							width: Dim.width / 2 - 20,
-						}}
-					>
-						<Icon name='close' size={30} color={Colors.background} />
+						}}>
+						<Icon name="close" size={30} color={Colors.background} />
 						<Text
 							style={{
 								...ButtonStyles.buttonTextLarge,
-							}}
-						>
+							}}>
 							Cancel
 						</Text>
 					</TouchableOpacity>
@@ -284,9 +278,8 @@ export default function PartySettings({
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
 							width: Dim.width / 2 - 20,
-						}}
-					>
-						<Icon name='save' size={30} color={Colors.background} />
+						}}>
+						<Icon name="save" size={30} color={Colors.background} />
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Save</Text>
 					</TouchableOpacity>
 				</View>
@@ -298,8 +291,7 @@ export default function PartySettings({
 			<ScreenWrapper
 				scrollEnabled={true}
 				onRefresh={getEvent}
-				loading={loading}
-			>
+				loading={loading}>
 				{loading ? (
 					<ActivityIndicator
 						size={"large"}
@@ -324,8 +316,7 @@ export default function PartySettings({
 							fontSize: Fonts.button.fontSize,
 							width: "100%",
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						Party Details
 					</Text>
 					<Text
@@ -333,16 +324,15 @@ export default function PartySettings({
 							fontFamily: Fonts.small.fontFamily,
 							fontSize: Fonts.small.fontSize,
 							color: Colors.textSecondary,
-						}}
-					>
+						}}>
 						Name:
 					</Text>
 					{isHost ? (
 						<TextInput
 							value={newName}
-							placeholder='Enter a party Name'
+							placeholder="Enter a party Name"
 							onChangeText={setNewName}
-							clearButtonMode='always'
+							clearButtonMode="always"
 							style={{
 								...GlobalStyles.textInput,
 							}}
@@ -353,8 +343,7 @@ export default function PartySettings({
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize,
 								color: Colors.text,
-							}}
-						>
+							}}>
 							{name}
 						</Text>
 					)}
@@ -365,17 +354,16 @@ export default function PartySettings({
 							fontSize: Fonts.small.fontSize,
 							color: Colors.textSecondary,
 							marginTop: 20,
-						}}
-					>
+						}}>
 						Description:
 					</Text>
 					{isHost ? (
 						<TextInput
 							multiline
 							numberOfLines={4}
-							clearButtonMode='always'
+							clearButtonMode="always"
 							value={newDescription}
-							placeholder='Enter a party Name'
+							placeholder="Enter a party Name"
 							onChangeText={setNewDescription}
 							style={{
 								...GlobalStyles.textInput,
@@ -388,8 +376,7 @@ export default function PartySettings({
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize,
 								color: Colors.text,
-							}}
-						>
+							}}>
 							{description}
 						</Text>
 					)}
@@ -402,8 +389,7 @@ export default function PartySettings({
 						fontSize: Fonts.button.fontSize,
 						width: "100%",
 						marginTop: 5,
-					}}
-				>
+					}}>
 					Notification Settings
 				</Text>
 				<View
@@ -415,22 +401,35 @@ export default function PartySettings({
 						justifyContent: "flex-start",
 						padding: 5,
 						marginTop: 10,
-					}}
-				>
-					<Icon
-						name='notifications'
-						size={20}
-						color={notificationStatus ? Colors.primary : Colors.textSecondary}
-					/>
-					<Text
-						style={{
-							flex: 1,
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}
-					>
-						This party is {notificationStatus ? "active" : "inactive"}
-					</Text>
+					}}>
+					{notificationStatus ? (
+						<View>
+							<PulseIndicator color={Colors.primary} size={20} />
+						</View>
+					) : (
+						<Icon name="circle" size={20} color={Colors.textSecondary} />
+					)}
+					<View style={{ flex: 1 }}>
+						<Text
+							style={{
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+							}}>
+							This party is {notificationStatus ? "active" : "inactive"}
+						</Text>
+						<Text
+							style={{
+								flex: 0,
+								fontFamily: Fonts.small.fontFamily,
+								fontSize: Fonts.small.fontSize,
+								color: Colors.textSecondary,
+							}}>
+							{notificationStatus
+								? "Notifications are being sent out randomly every few minutes"
+								: "No notifications are being sent out right now, activate the party to start notifications"}
+						</Text>
+					</View>
+
 					{isHost ? (
 						<Switch
 							value={notificationStatus}
@@ -440,6 +439,7 @@ export default function PartySettings({
 						<></>
 					)}
 				</View>
+
 				<View
 					style={{
 						gap: 5,
@@ -449,24 +449,35 @@ export default function PartySettings({
 						justifyContent: "flex-start",
 						padding: 5,
 						marginTop: 10,
-					}}
-				>
+					}}>
 					<Icon
 						name={muted ? "notifications-off" : "notifications"}
 						size={20}
-						color={muted ? Colors.textSecondary : Colors.primary}
+						color={muted ? Colors.textSecondary : Colors.secondaryDark}
 					/>
-					<Text
-						style={{
-							flex: 1,
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}
-					>
-						Your notifications are {muted ? "muted" : "on"}
-					</Text>
+					<View style={{ flex: 1 }}>
+						<Text
+							style={{
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+							}}>
+							Your notifications are {muted ? "muted" : "on"}
+						</Text>
+						<Text
+							style={{
+								fontFamily: Fonts.small.fontFamily,
+								fontSize: Fonts.small.fontSize,
+								color: Colors.textSecondary,
+							}}>
+							{muted
+								? "You will not receive any notifications from this party, even if its active"
+								: "You will receive notifications from this party when the party is active"}
+						</Text>
+					</View>
+
 					<Switch value={!muted} onValueChange={handleMuting} />
 				</View>
+
 				<View style={GlobalStyles.hr} />
 
 				{/* Notification Frequency */}
@@ -478,13 +489,12 @@ export default function PartySettings({
 								fontSize: Fonts.button.fontSize,
 								width: "100%",
 								marginTop: 5,
-							}}
-						>
+							}}>
 							Notification Frequency
 						</Text>
 						<View style={styles.frequencyContainer}>
 							<NotificationFrequencyButton
-								mode='fast'
+								mode="fast"
 								notificationFrequency={notificationFrequency}
 								setNotificationFrequency={setNotificationFrequency}
 								color={Colors.tertiary}
@@ -492,19 +502,19 @@ export default function PartySettings({
 								subtext={"Every 5-10 Minutes"}
 								icon={
 									<Icon
-										name='rabbit'
+										name="rabbit"
 										size={30}
 										color={
 											notificationFrequency === "fast"
 												? Colors.tertiaryDark
 												: Colors.textSecondary
 										}
-										type='MaterialCommunity'
+										type="MaterialCommunity"
 									/>
 								}
 							/>
 							<NotificationFrequencyButton
-								mode='normal'
+								mode="normal"
 								notificationFrequency={notificationFrequency}
 								setNotificationFrequency={setNotificationFrequency}
 								color={Colors.primary}
@@ -512,7 +522,7 @@ export default function PartySettings({
 								subtext={"Every 15-30 Minutes"}
 								icon={
 									<Icon
-										name='face'
+										name="face"
 										size={30}
 										color={
 											notificationFrequency === "normal"
@@ -523,7 +533,7 @@ export default function PartySettings({
 								}
 							/>
 							<NotificationFrequencyButton
-								mode='slow'
+								mode="slow"
 								notificationFrequency={notificationFrequency}
 								setNotificationFrequency={setNotificationFrequency}
 								color={Colors.secondary}
@@ -531,14 +541,14 @@ export default function PartySettings({
 								subtext={"Every 30-60 Minutes"}
 								icon={
 									<Icon
-										name='tortoise'
+										name="tortoise"
 										size={30}
 										color={
 											notificationFrequency === "slow"
 												? Colors.secondaryDark
 												: Colors.textSecondary
 										}
-										type='MaterialCommunity'
+										type="MaterialCommunity"
 									/>
 								}
 							/>
@@ -555,37 +565,36 @@ export default function PartySettings({
 						fontSize: Fonts.button.fontSize,
 						width: "100%",
 						marginTop: 5,
-					}}
-				>
+					}}>
 					Party Settings
 				</Text>
 				{!archived ? (
 					<SettingsButton
-						title='Archive Party'
+						title="Archive Party"
 						description={
 							"Archived parties are accessible from your profile, but won't show up on the home page"
 						}
-						icon='archive'
-						buttonText='Archive'
+						icon="archive"
+						buttonText="Archive"
 						onPress={toggleArchive}
 					/>
 				) : (
 					<SettingsButton
-						title='Unarchive Party'
+						title="Unarchive Party"
 						description={"Bring this party back to your home page"}
-						icon='unarchive'
-						buttonText='Unarchive'
+						icon="unarchive"
+						buttonText="Unarchive"
 						onPress={toggleArchive}
 					/>
 				)}
 				{isHost ? (
 					<SettingsButton
-						title='Delete Party'
+						title="Delete Party"
 						description={
 							"This permanently deletes the party and all its pictures"
 						}
-						icon='delete'
-						buttonText='Delete'
+						icon="delete"
+						buttonText="Delete"
 						onPress={deleteParty}
 					/>
 				) : (
@@ -597,10 +606,9 @@ export default function PartySettings({
 						...ButtonStyles.outlined,
 						marginTop: 10,
 					}}
-					onPress={leaveParty}
-				>
+					onPress={leaveParty}>
 					<Icon
-						name='logout'
+						name="logout"
 						size={25}
 						style={{
 							transform: [{ rotate: "180deg" }],
@@ -609,8 +617,7 @@ export default function PartySettings({
 					<Text
 						style={{
 							fontSize: 18,
-						}}
-					>
+						}}>
 						Leave Party
 					</Text>
 				</TouchableOpacity>

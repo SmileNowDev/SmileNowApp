@@ -21,30 +21,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // todo - loading indicator on "next" press
 // todo - eyeball on password input
 
-export default function SignUpPage({ navigation }) {
+export default function ForgotPassPage({ navigation }) {
 	const [phone, setPhone] = useState("");
 	function handleNext() {
-		navigation.navigate("VerifyPhone", { phone });
+		navigation.navigate("VerifyPass", { phone });
 	}
 
-	async function signUp() {
-		const result = await authApi.cache({ phone });
+	async function forgotPassword() {
+		const result = await authApi.forgotPassword({ phone });
 		if (result.ok) {
 			handleNext();
 		} else {
-			Alert.alert("User Already Exists");
+			Alert.alert("Something went wrong");
 		}
 	}
-	const checkReadTerms = async () => {
-		let read = await AsyncStorage.getItem("readTerms");
-		if (!read) {
-			navigation.navigate("Terms");
-		}
-	};
 
-	useEffect(() => {
-		checkReadTerms();
-	}, []);
 	return (
 		<View
 			style={{
@@ -56,6 +47,16 @@ export default function SignUpPage({ navigation }) {
 				alignItems: "center",
 			}}>
 			{/* LOGO */}
+			<TouchableOpacity
+				onPress={() => navigation.goBack()}
+				style={{
+					...ButtonStyles.button,
+					position: "absolute",
+					top: 60,
+					left: 0,
+				}}>
+				<Icon name="arrow-back" color={Colors.background} size={30} />
+			</TouchableOpacity>
 			<Text
 				style={{
 					textAlign: "center",
@@ -63,7 +64,7 @@ export default function SignUpPage({ navigation }) {
 					fontSize: Fonts.subTitle.fontSize,
 					color: Colors.background,
 				}}>
-				Welcome to Smile Now
+				Forgot Password
 			</Text>
 			<Image
 				source={LogoWhite}
@@ -74,18 +75,7 @@ export default function SignUpPage({ navigation }) {
 					marginBottom: 50,
 				}}
 			/>
-			<Text
-				style={{
-					textAlign: "left",
-					paddingHorizontal: 10,
-					width: "100%",
 
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.subTitle.fontSize,
-					color: Colors.background,
-				}}>
-				Sign Up
-			</Text>
 			<TextInput
 				placeholder="Enter your Phone Number"
 				keyboardType="phone-pad"
@@ -106,7 +96,7 @@ export default function SignUpPage({ navigation }) {
 				}}
 			/>
 			<TouchableOpacity
-				onPress={signUp}
+				onPress={forgotPassword}
 				disabled={phone.length < 10}
 				style={{
 					...ButtonStyles.button,
@@ -117,14 +107,6 @@ export default function SignUpPage({ navigation }) {
 					width: "100%",
 				}}>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Next</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				onPress={() => navigation.navigate("Login")}
-				style={{
-					...ButtonStyles.button,
-					marginTop: 10,
-				}}>
-				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
 			</TouchableOpacity>
 		</View>
 	);

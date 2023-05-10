@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	KeyboardAvoidingView,
-	ScrollView,
-	StatusBar,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { ScrollView, View } from "react-native";
 import Modal from "react-native-modal";
 import { Colors } from "../../styles/theme";
 import { Dim } from "../../styles/styles";
@@ -32,9 +26,21 @@ export default function ModalWrapper({
 		alignContent: "center",
 		justifyContent: "center",
 		position: "absolute",
+		borderTopRightRadius: 20,
+		borderTopLeftRadius: 20,
 		bottom: 0,
 		left: 0,
 		right: 0,
+	};
+	const swipeToClose = {
+		width: 150,
+		height: 5,
+		backgroundColor: Colors.textSecondary + "70",
+		borderRadius: 10,
+		alignSelf: "center",
+		marginBottom: 10,
+		position: "absolute",
+		top: 10,
 	};
 
 	return (
@@ -53,6 +59,7 @@ export default function ModalWrapper({
 				setVisible(false);
 			}}
 			swipeDirection={"down"}
+			// @ts-expect-error
 			onRequestClose={() => {
 				setVisible(false);
 			}}
@@ -64,6 +71,8 @@ export default function ModalWrapper({
 			}}>
 			{/* @ts-expect-error */}
 			<View style={containerStyle}>
+				{/* @ts-expect-error */}
+				<View style={swipeToClose} />
 				{scrollable ? (
 					<ScrollView>
 						{children}

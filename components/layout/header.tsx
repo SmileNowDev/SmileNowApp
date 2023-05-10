@@ -3,12 +3,17 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
-import { GlobalStyles } from "../../styles/styles";
+import { Dim, GlobalStyles } from "../../styles/styles";
 interface HeaderProps {
 	goBack?: boolean;
 	title?: string;
+	rightContent?: React.ReactNode;
 }
-export default function Header({ goBack = false, title }: HeaderProps) {
+export default function Header({
+	goBack = false,
+	title,
+	rightContent,
+}: HeaderProps) {
 	const navigation = useNavigation();
 	return (
 		<View
@@ -27,10 +32,12 @@ export default function Header({ goBack = false, title }: HeaderProps) {
 					textAlign: "center",
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
+					width: Dim.width,
 				}}>
 				{title ? title : "Smile Now"}
 			</Text>
-			{goBack && <View style={{ width: 30 }} />}
+			{rightContent ? <View>{rightContent}</View> : <></>}
+			{!rightContent && goBack && <View style={{ width: 30 }} />}
 		</View>
 	);
 }

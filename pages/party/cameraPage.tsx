@@ -30,6 +30,52 @@ export default function CameraPage({ route, navigation }) {
 	const [isPreviewing, setIsPreviewing] = useState(false);
 	const [photo, setPhoto] = useState(null);
 	const cameraRef = useRef(null);
+	const [remainingTime, setRemainingTime] = useState("");
+	const [endTime, setEndTime] = useState("");
+	const [getPostCacheFired, setGetPostCacheFired] = useState(false);
+	const [expired, setExpired] = useState(false);
+	async function getPostCache() {
+		const result = await postApi.getPostCache({ eventId });
+		if (result.ok) {
+			if (result.data) {
+				//@ts-expect-error
+				setEndTime(result.data.endTime);
+			} else {
+				setExpired(true);
+			}
+			setGetPostCacheFired(true);
+		} else {
+			// handle error
+			setExpired(true);
+		}
+	}
+	useEffect(() => {
+		getPostCache();
+	}, [eventId]);
+
+	useEffect(() => {
+		if (endTime && getPostCacheFired) {
+			const interval = setInterval(() => {
+				const now = new Date().getTime();
+				const end = new Date(endTime).getTime();
+				const remaining = end - now;
+				const minutes = Math.floor(
+					(remaining % (1000 * 60 * 60)) / (1000 * 60)
+				);
+				const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+				const remainingTime = `${minutes.toString().padStart(2, "0")}:${seconds
+					.toString()
+					.padStart(2, "0")}`;
+				setRemainingTime(remainingTime);
+				if (remaining <= 0) {
+					setExpired(true);
+					clearInterval(interval);
+				}
+			}, 1000);
+			return () => clearInterval(interval);
+		}
+	}, [endTime, getPostCacheFired]);
+
 	const takePhoto = async () => {
 		if (cameraRef.current) {
 			const result = await cameraRef.current.takePictureAsync({
@@ -99,122 +145,24 @@ export default function CameraPage({ route, navigation }) {
 				flex: 1,
 				alignItems: "center",
 			}}>
-			{!isPreviewing ? (
-				<>
-					<View style={{ height: 100, marginTop: 30 }}>
-						<Text
-							style={{
-								fontFamily: Fonts.title.fontFamily,
-								fontSize: 40,
-							}}>
-							Smile Now!
-						</Text>
-					</View>
-					<Camera
+			{expired ? (
+				<View style={{ justifyContent: "center", height: "100%" }}>
+					<Text
 						style={{
-							height: width - 20,
-							width: width - 20,
-							borderRadius: 20,
-							overflow: "hidden",
-							marginTop: 20,
-						}}
-						type={cameraType}
-						flashMode={flashMode}
-						ref={cameraRef}></Camera>
-
-					<View style={styles.footer}>
-						<TouchableOpacity onPress={() => toggleFlashMode()}>
-							<Icon
-								name="flash"
-								size={30}
-								type={"Ion"}
-								color={
-									flashMode === FlashMode.off
-										? Colors.textSecondary
-										: Colors.primary
-								}
-							/>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={styles.shutter}
-							onPress={() => takePhoto()}>
-							<View style={styles.innerShutter} />
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => toggleCameraType()}>
-							<Icon
-								name="ios-camera-reverse"
-								size={30}
-								type={"Ion"}
-								color={Colors.textSecondary}
-							/>
-						</TouchableOpacity>
-					</View>
-				</>
-			) : (
-				<>
-					<TextInput
-						placeholderTextColor={Colors.textSecondary}
-						style={{
-							...GlobalStyles.textInput,
-							marginTop: 30,
-							width: width - 20,
-							height: 100,
-						}}
-						placeholder="Caption Your Photo"
-						value={caption}
-						onChangeText={setCaption}
-					/>
-					<View
-						style={{
-							position: "relative",
-							height: width - 20,
-							width: width - 20,
-							marginTop: 20,
+							fontFamily: Fonts.title.fontFamily,
+							fontSize: 40,
+							textAlign: "center",
 						}}>
-						{loading ? (
-							<ActivityIndicator
-								size={"large"}
-								color={Colors.primary}
-								style={{
-									height: width - 20,
-									width: width - 20,
-									position: "absolute",
-									top: (width - 20) / 2,
-									zIndex: 100,
-								}}
-							/>
-						) : (
-							<></>
-						)}
-						<Image
-							source={{ uri: photo?.uri }}
-							style={{ width: "100%", height: "100%", borderRadius: 10 }}
-						/>
-						<TouchableOpacity
-							onPress={() => retakePhoto()}
-							style={{
-								position: "absolute",
-								top: 20,
-								left: 20,
-								...ButtonStyles.buttonSmall,
-								backgroundColor: Colors.foreground,
-							}}>
-							<Icon
-								name="image-remove"
-								size={20}
-								type={"MaterialCommunity"}
-								color={Colors.textSecondary}
-							/>
-							<Text
-								style={{
-									...ButtonStyles.buttonTextSmall,
-									color: Colors.textSecondary,
-								}}>
-								Retake
-							</Text>
-						</TouchableOpacity>
-					</View>
-
+						EXPIRED
+					</Text>
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: 20,
+							textAlign: "center",
+						}}>
+						Sorry! You waited to long...
+					</Text>
 					<TouchableOpacity
 						style={{
 							marginTop: 20,
@@ -222,9 +170,166 @@ export default function CameraPage({ route, navigation }) {
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
 						}}
-						onPress={() => handlePost()}>
-						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Post</Text>
+						onPress={() => navigation.goBack()}>
+						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Go Back</Text>
 					</TouchableOpacity>
+				</View>
+			) : (
+				<>
+					{!isPreviewing ? (
+						<>
+							<View style={{ marginTop: 30, marginBottom: 20 }}>
+								<Text
+									style={{
+										fontFamily: Fonts.title.fontFamily,
+										fontSize: 40,
+									}}>
+									Smile Now!
+								</Text>
+							</View>
+
+							<Text
+								style={{
+									fontFamily: Fonts.body.fontFamily,
+									fontSize: Fonts.body.fontSize,
+								}}>
+								Time Remaining
+							</Text>
+							<Text
+								style={{
+									fontFamily: Fonts.title.fontFamily,
+									fontSize: 40,
+								}}>
+								{remainingTime.toString()}
+							</Text>
+							<Camera
+								style={{
+									height: width - 20,
+									width: width - 20,
+									borderRadius: 20,
+									overflow: "hidden",
+									marginTop: 20,
+								}}
+								type={cameraType}
+								flashMode={flashMode}
+								ref={cameraRef}></Camera>
+
+							<View style={styles.footer}>
+								<TouchableOpacity onPress={() => toggleFlashMode()}>
+									<Icon
+										name="flash"
+										size={30}
+										type={"Ion"}
+										color={
+											flashMode === FlashMode.off
+												? Colors.textSecondary
+												: Colors.primary
+										}
+									/>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={styles.shutter}
+									onPress={() => takePhoto()}>
+									<View style={styles.innerShutter} />
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => toggleCameraType()}>
+									<Icon
+										name="ios-camera-reverse"
+										size={30}
+										type={"Ion"}
+										color={Colors.textSecondary}
+									/>
+								</TouchableOpacity>
+							</View>
+						</>
+					) : (
+						<>
+							<Text
+								style={{
+									fontFamily: Fonts.button.fontFamily,
+									fontSize: Fonts.button.fontSize,
+									textAlign: "left",
+									width: width - 20,
+								}}>
+								Time Remaining: {remainingTime.toString()}
+							</Text>
+
+							<TextInput
+								placeholderTextColor={Colors.textSecondary}
+								style={{
+									...GlobalStyles.textInput,
+									marginTop: 10,
+									width: width - 20,
+									height: 60,
+								}}
+								placeholder="Caption Your Photo"
+								value={caption}
+								onChangeText={setCaption}
+								returnKeyType="done"
+							/>
+							<View
+								style={{
+									position: "relative",
+									height: width - 20,
+									width: width - 20,
+									marginTop: 10,
+								}}>
+								{loading ? (
+									<ActivityIndicator
+										size={"large"}
+										color={Colors.primary}
+										style={{
+											height: width - 20,
+											width: width - 20,
+											position: "absolute",
+											top: (width - 20) / 2,
+											zIndex: 100,
+										}}
+									/>
+								) : (
+									<></>
+								)}
+								<Image
+									source={{ uri: photo?.uri }}
+									style={{ width: "100%", height: "100%", borderRadius: 10 }}
+								/>
+								<TouchableOpacity
+									onPress={() => retakePhoto()}
+									style={{
+										position: "absolute",
+										top: 20,
+										left: 20,
+										...ButtonStyles.buttonSmall,
+										backgroundColor: Colors.foreground,
+									}}>
+									<Icon
+										name="image-remove"
+										size={20}
+										type={"MaterialCommunity"}
+										color={Colors.textSecondary}
+									/>
+									<Text
+										style={{
+											...ButtonStyles.buttonTextSmall,
+											color: Colors.textSecondary,
+										}}>
+										Retake
+									</Text>
+								</TouchableOpacity>
+							</View>
+
+							<TouchableOpacity
+								style={{
+									marginTop: 20,
+									width: width - 20,
+									...ButtonStyles.buttonLarge,
+									...ButtonStyles.primary,
+								}}
+								onPress={() => handlePost()}>
+								<Text style={{ ...ButtonStyles.buttonTextLarge }}>Post</Text>
+							</TouchableOpacity>
+						</>
+					)}
 				</>
 			)}
 		</SafeAreaView>

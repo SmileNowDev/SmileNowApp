@@ -4,8 +4,9 @@ import Icon from "./core/icons";
 import { Colors, Fonts } from "../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { generateColorFromLetters } from "../utils/colorGenerator";
+import { PulseIndicator, MaterialIndicator } from "react-native-indicators";
 interface ListProps {
-	icon: string;
+	initials: string;
 	name: string;
 	canPost: boolean;
 	eventId: string;
@@ -16,7 +17,7 @@ interface ListProps {
 	isActive: boolean;
 }
 export default function PartyListItem({
-	icon,
+	initials,
 	name,
 	canPost,
 	eventId,
@@ -34,44 +35,92 @@ export default function PartyListItem({
 				alignItems: "center",
 				gap: 10,
 				padding: 10,
+				paddingRight: 0,
 				justifyContent: "flex-start",
-			}}
-		>
+			}}>
 			<View
 				style={{
-					backgroundColor: generateColorFromLetters(icon),
-					height: 40,
-					width: 40,
-					borderRadius: 20,
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					shadowOpacity: 0.1,
-					shadowOffset: { width: 0, height: 0 },
-					shadowRadius: 5,
-					elevation: 0,
-				}}
-			>
-				<Text style={{ fontSize: 22 }}>{icon}</Text>
+					position: "relative",
+				}}>
+				{attendeeInfo.isHost ? (
+					<View
+						style={{
+							position: "absolute",
+							top: 0,
+							right: 0,
+							zIndex: 50,
+
+							transform: [
+								{ rotate: "35deg" },
+								{
+									translateX: 2,
+								},
+								{ translateY: -10 },
+							],
+						}}>
+						<Icon
+							name={"crown"}
+							color={"gold"}
+							size={15}
+							type={"FontAwesome5"}
+							style={{
+								shadowOpacity: 0.25,
+								shadowOffset: { width: 0, height: 0 },
+								shadowRadius: 5,
+								shadowColor: "black",
+								elevation: 0,
+							}}
+						/>
+					</View>
+				) : (
+					<></>
+				)}
+				<View
+					style={{
+						backgroundColor: generateColorFromLetters(initials),
+						height: 40,
+						width: 40,
+						borderRadius: 20,
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						shadowOpacity: 0.1,
+						shadowOffset: { width: 0, height: 0 },
+						shadowRadius: 5,
+						elevation: 0,
+					}}>
+					<Text style={{ fontSize: 22 }}>{initials}</Text>
+				</View>
 			</View>
+
 			<Text
 				style={{
 					flex: 1,
 					fontFamily: Fonts.body.fontFamily,
 					fontSize: Fonts.body.fontSize,
-				}}
-			>
+				}}>
 				{name}
 			</Text>
-			{attendeeInfo.isHost && <Text>Host</Text>}
-			{attendeeInfo.muted && <Text>Muted</Text>}
-			{isActive && <Text>Active</Text>}
+			{attendeeInfo.muted && (
+				<Icon
+					name="moon"
+					type="Ion"
+					size={20}
+					color={Colors.textSecondary + "75"}
+				/>
+			)}
+
+			{isActive && (
+				<View>
+					<PulseIndicator color={Colors.primary} />
+				</View>
+			)}
 
 			{canPost ? (
-				<Icon name={"camera"} type='Ion' color={Colors.primary} size={30} />
+				<Icon name={"camera"} type="Ion" color={Colors.primary} size={30} />
 			) : (
 				<Icon
-					name='chevron-right'
+					name="chevron-right"
 					size={30}
 					color={Colors.textSecondary + "70"}
 				/>

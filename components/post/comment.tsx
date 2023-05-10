@@ -5,6 +5,8 @@ import Avatar from "../avatar";
 import Icon from "../core/icons";
 import DefaultOptions from "../core/defaultOptions";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 interface Comment {
 	pic: string;
 	name: string;
@@ -58,7 +60,7 @@ export default function Comment({
 							fontSize: Fonts.small.fontSize,
 							color: Colors.textSecondary,
 						}}>
-						| {dayjs(date).format("hh:mm YYYY-MM-DD")}
+						| {dayjs(date).fromNow()}
 					</Text>
 				</View>
 

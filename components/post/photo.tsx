@@ -20,6 +20,8 @@ import * as MediaLibrary from "expo-media-library";
 import ModalWrapper from "../core/modalWrapper";
 import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 // todo - add zoom functionality with pinch
 export interface PhotoProps {
 	postId: string;
@@ -170,8 +172,9 @@ export default function Photo({
 					color: Colors.textSecondary,
 					textAlign: "right",
 					paddingTop: 5,
+					marginBottom: 5,
 				}}>
-				{dayjs(date).format("DD MMM YYYY")} at {dayjs(date).format("HH:mm")}
+				{dayjs(date).fromNow()}
 			</Text>
 			<ModalWrapper
 				visible={downloadModalVisible}
@@ -201,7 +204,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 2,
 		elevation: 2,
 		shadowColor: "rgba(0, 0, 0, 0.25)",
-		marginVertical: 10,
+		marginTop: 10,
 	},
 	photoDownload: {
 		backgroundColor: Colors.background,

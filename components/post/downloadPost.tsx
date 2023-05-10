@@ -37,7 +37,6 @@ export default function DownloadPost({
 					style={{ height: Dim.width - 40, width: Dim.width - 40 }}
 				/>
 			</View>
-			{/* <View style={styles.imageWithCaptionOffScreen}> */}
 			<View
 				style={styles.imageWithCaptionOffScreen}
 				ref={imageToSaveWithCaption}>
@@ -59,7 +58,7 @@ export default function DownloadPost({
 						fontSize: 20,
 						paddingVertical: 10,
 						paddingHorizontal: 5,
-						width: "100%",
+						width: Dim.width - 40,
 					}}>
 					{caption}
 				</Text>
@@ -75,7 +74,6 @@ export default function DownloadPost({
 					{dayjs(date).format("YYYY-MM-DD  hh:mm")}
 				</Text>
 			</View>
-			{/* </View> */}
 
 			{/* flex row */}
 			<View
@@ -168,7 +166,7 @@ export default function DownloadPost({
 						alignItems: "center",
 					}}>
 					<TouchableOpacity
-						onPress={() => download(imageToSave)}
+						onPress={() => download(imageToSaveWithCaption)}
 						style={styles.photoDownload}>
 						<View style={{ position: "relative" }}>
 							<Image

@@ -13,13 +13,16 @@ import { ButtonStyles, Dim } from "../styles/styles";
 import eventApi from "../api/post/event";
 import attendeeApi from "../api/post/attendee";
 import { BarCodeScanner } from "expo-barcode-scanner";
-export default function JoinPartyPage({ navigation }) {
+import { useNavigation } from "@react-navigation/native";
+export default function JoinPartyPage({ setVisible }) {
+	const navigation = useNavigation();
 	const [joinCode, setJoinCode] = useState("");
 
 	async function joinEvent(joinCode: string) {
 		const result = await attendeeApi.join({ code: joinCode });
 		console.log({ result });
 		if (result.ok) {
+			setVisible(false);
 			//@ts-expect-error
 			navigation.navigate("Party", { eventId: result.data.event });
 		}
@@ -39,6 +42,7 @@ export default function JoinPartyPage({ navigation }) {
 	const handleBarCodeScanned = ({ type, data }) => {
 		setScanned(true);
 		setJoinCode(data);
+
 		joinEvent(data);
 	};
 
@@ -49,13 +53,13 @@ export default function JoinPartyPage({ navigation }) {
 		return <Text>No access to camera</Text>;
 	}
 	return (
-		<SafeAreaView style={{ flex: 1, height: Dim.height, position: "relative" }}>
-			<Header goBack title={"Join Party"} />
+		<View style={{ position: "relative" }}>
 			<View style={{ padding: 10, alignItems: "center" }}>
 				<Text>Enter the join code</Text>
 				<TextInput
 					value={joinCode}
 					placeholder="Code"
+					placeholderTextColor={Colors.textSecondary + "50"}
 					onChangeText={setJoinCode}
 					style={{
 						fontSize: 40,
@@ -100,6 +104,6 @@ export default function JoinPartyPage({ navigation }) {
 					</TouchableOpacity>
 				) : null}
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 }

@@ -15,7 +15,7 @@ export default function App() {
 	} else {
 		return (
 			<MyProvider>
-				<StatusBar style="auto" />
+				<StatusBar style="dark" />
 				<NavigationContainer>
 					<RootNavigator />
 				</NavigationContainer>

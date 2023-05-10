@@ -74,19 +74,24 @@ export default function Settings({ navigation }) {
 	}
 	const buttons = [
 		{
-			icon: <Icon name="logout" type="MaterialCommunity" />,
-			text: "Logout",
-			onPress: () => logout(),
+			icon: <Icon name="block" />,
+			text: "Blocked Users",
+			onPress: () => navigation.navigate("Blocked"),
 		},
 		{
-			icon: <Icon name="block" />,
-			text: "Blocked List",
-			onPress: () => navigation.navigate("Blocked"),
+			icon: <Icon name="archive" />,
+			text: "Event Archive",
+			onPress: () => navigation.navigate("Archive"),
 		},
 		{
 			icon: <Icon name="delete" type="MaterialCommunity" />,
 			text: "Delete Account",
 			onPress: () => handleConfirmDelete(),
+		},
+		{
+			icon: <Icon name="logout" type="MaterialCommunity" />,
+			text: "Logout",
+			onPress: () => logout(),
 		},
 	];
 	return (

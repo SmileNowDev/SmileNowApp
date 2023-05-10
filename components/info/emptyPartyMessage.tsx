@@ -8,6 +8,25 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 	if (isHost) {
 		return (
 			<View style={styles.container}>
+				<View
+					style={{ flexDirection: "row", justifyContent: "flex-end", gap: 5 }}>
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							textAlign: "right",
+						}}>
+						Access these options on the Top Right
+					</Text>
+					<Icon
+						name="arrow-up-right"
+						type="MaterialCommunity"
+						size={25}
+						style={{
+							transform: [{ translateY: -10 }],
+						}}
+						color={Colors.textSecondary}
+					/>
+				</View>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
@@ -16,11 +35,17 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 					Let's get this party started!
 				</Text>
 				<View style={styles.step}>
-					<Icon
-						name="person-add-alt-1"
-						size={25}
-						color={Colors.textSecondary}
-					/>
+					<Icon name="people" size={25} color={Colors.textSecondary} />
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize,
+						}}>
+						See Your Attendees
+					</Text>
+				</View>
+				<View style={styles.step}>
+					<Icon name="qr-code" size={25} color={Colors.textSecondary} />
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,

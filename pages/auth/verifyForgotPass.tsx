@@ -18,38 +18,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../../providers/provider";
 import jwt_decode from "jwt-decode";
 
-export default function VerifyPhonePage({ route, navigation }) {
+export default function VerifyPassPage({ route, navigation }) {
 	const { phone } = route.params;
 	const [code, setCode] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorText, setErrorText] = useState("");
-	const { setLoggedIn, setUserId } = useContext(Context);
-	function handleNext() {
-		navigation.navigate("AccountDetails");
-	}
-
-	async function login() {
-		const result = await authApi.login({ phone, password });
-		if (result.ok) {
-			//@ts-expect-error
-			await AsyncStorage.setItem("access-token", result.data.accessToken);
-			//@ts-expect-error
-			await AsyncStorage.setItem("refresh-token", result.data.refreshToken);
-			//@ts-expect-error
-
-			const userId = await jwt_decode(result.data.accessToken)._id;
-			setUserId(userId);
-			setLoggedIn(true);
-			handleNext();
-		} else {
-			Alert.alert("Error authenticating");
-		}
-	}
 
 	async function verifyAccount() {
-		const result = await authApi.verify({ phone, code, password });
+		const result = await authApi.newPassword({ phone, code, password });
 		if (result.ok) {
-			await login();
+			// await login();
+			Alert.alert("Password Changed", "Now login with your new password");
+			navigation.navigate("Login");
 		} else {
 			setErrorText("Something went wrong, try again.");
 		}
@@ -101,7 +81,7 @@ export default function VerifyPhonePage({ route, navigation }) {
 					}}
 				/>
 				<TextInput
-					placeholder="Create a Password"
+					placeholder="Create a new Password"
 					secureTextEntry={true}
 					onChangeText={setPassword}
 					placeholderTextColor={Colors.border}
@@ -137,7 +117,7 @@ export default function VerifyPhonePage({ route, navigation }) {
 						opacity: code.length < 5 && password.length < 8 ? 0.5 : 1,
 					}}>
 					<Text style={{ color: Colors.background, fontSize: 20 }}>
-						Create Account
+						Confirm Password
 					</Text>
 				</TouchableOpacity>
 			</View>

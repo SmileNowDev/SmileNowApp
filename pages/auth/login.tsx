@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 	View,
 	Alert,
+	Keyboard,
 } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 // @ts-expect-error
@@ -88,6 +89,7 @@ export default function LoginPage({ navigation }) {
 				keyboardType="phone-pad"
 				autoFocus={true}
 				placeholderTextColor={Colors.border}
+				returnKeyType={"done"}
 				style={{
 					width: "100%",
 					borderBottomWidth: 1,
@@ -106,6 +108,7 @@ export default function LoginPage({ navigation }) {
 				onChangeText={setPassword}
 				secureTextEntry={true}
 				placeholderTextColor={Colors.border}
+				returnKeyType={"done"}
 				style={{
 					width: "100%",
 					borderBottomWidth: 1,
@@ -131,6 +134,22 @@ export default function LoginPage({ navigation }) {
 					width: "100%",
 				}}>
 				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
+			</TouchableOpacity>
+
+			<TouchableOpacity
+				onPress={() => {
+					navigation.navigate("ForgotPass");
+				}}
+				style={{
+					...ButtonStyles.button,
+					marginTop: 40,
+					borderRadius: 5,
+					opacity: phone.length < 10 ? 0.5 : 1,
+					width: "100%",
+				}}>
+				<Text style={{ ...ButtonStyles.buttonTextLarge }}>
+					Forgot Password?
+				</Text>
 			</TouchableOpacity>
 
 			{/* header that lets you access party details */}

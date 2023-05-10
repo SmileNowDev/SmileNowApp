@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Smile Now",
 		"slug": "smileNowApp",
-		"version": "1.0.2",
+		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "automatic",
@@ -13,7 +13,7 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true,
+			"supportsTablet": false,
 			"infoPlist": {
 				"NSCameraUsageDescription": "Allow SmileNow to access camera in order to change your profile picture and share posts.",
 				"NSPhotoLibraryUsageDescription": "Allow access to photos to upload photos from your library for profile pics.",
@@ -21,7 +21,7 @@
 				"NSContactsUsageDescription": "Allow SmileNow to access your contacts so that you can add friends from your contacts list.",
 				"UIRequiresFullScreen": true
 			},
-			"bundleIdentifier": "com.samuelschmitt.smile-now",
+			"bundleIdentifier": "app.smilenow.smile",
 			"userInterfaceStyle": "automatic"
 		},
 		"android": {

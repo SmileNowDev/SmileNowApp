@@ -9,6 +9,12 @@ const getPosts = ({ eventId, page }) =>
 
 const getPost = ({ postId }) => client.get(`${endpoint}/${postId}`);
 
+const updatePost = ({ postId, caption }) =>
+	client.put(`${endpoint}/${postId}`, { caption });
+
+const getPostCache = ({ eventId }) =>
+	client.get(`${endpoint}/cache/${eventId}`);
+
 const uploadImage = ({ formData, postId }) =>
 	client.post(`${endpoint}/upload/${postId}`, formData);
 
@@ -17,5 +23,7 @@ const postApi = {
 	getPosts,
 	getPost,
 	uploadImage,
+	getPostCache,
+	updatePost,
 };
 export default postApi;

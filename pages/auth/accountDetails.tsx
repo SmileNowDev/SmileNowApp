@@ -61,6 +61,7 @@ export default function AccountDetailsScreen({ navigation }) {
 					placeholder="Name"
 					onChangeText={setName}
 					placeholderTextColor={Colors.border}
+					returnKeyType={"done"}
 					style={{
 						width: "100%",
 						borderWidth: 1,
@@ -77,6 +78,7 @@ export default function AccountDetailsScreen({ navigation }) {
 					placeholder="username"
 					onChangeText={(newName) => handleSetUsername(newName)}
 					placeholderTextColor={Colors.border}
+					returnKeyType={"done"}
 					style={{
 						width: "100%",
 						borderWidth: 1,

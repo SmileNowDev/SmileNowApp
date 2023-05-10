@@ -6,19 +6,21 @@ import {
 	View,
 	FlatList,
 	ActivityIndicator,
+	Image,
+	Alert,
 } from "react-native";
 import PartyHeader from "../../components/layout/partyHeader";
 import Photo from "../../components/post/photo";
 import Icon from "../../components/core/icons";
-import { Colors } from "../../styles/theme";
-import { ButtonStyles, Dim } from "../../styles/styles";
+import { Colors, Fonts } from "../../styles/theme";
+import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
 import eventApi from "../../api/post/event";
 import postApi from "../../api/post/post";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
 
 export default function PartyPage({ route, navigation }) {
-	const { eventId } = route.params;
+	const { eventId, justCreated } = route.params;
 	const [canPost, setCanPost] = useState(false);
 	const [name, setName] = useState("");
 	const [posts, setPosts] = useState([]);
@@ -28,6 +30,7 @@ export default function PartyPage({ route, navigation }) {
 	const [hasMore, setHasMore] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [bottomLoading, setBottomLoading] = useState(false);
+	const [isActive, setIsActive] = useState(true);
 
 	async function getPosts() {
 		setLoading(true);
@@ -59,7 +62,13 @@ export default function PartyPage({ route, navigation }) {
 
 		setBottomLoading(false);
 	}
-
+	async function activateParty() {
+		const result = await eventApi.start({ eventId });
+		if (result.ok) {
+			Alert.alert("Party Activated", "Have fun!");
+			setIsActive(!isActive);
+		}
+	}
 	async function getEvent() {
 		const result = await eventApi.getEvent({ eventId });
 		if (result.ok) {
@@ -69,6 +78,8 @@ export default function PartyPage({ route, navigation }) {
 			setCanPost(result.data.canPost);
 			// @ts-expect-error
 			setIsHost(result.data.attendeeInfo.isHost);
+			// @ts-expect-error
+			setIsActive(result.data.isActive);
 		}
 		setLoading(false);
 	}
@@ -113,6 +124,13 @@ export default function PartyPage({ route, navigation }) {
 					name={name}
 					isHost={isHost}
 				/>
+				{justCreated ? (
+					<View>
+						<Text>Welcome to {name}</Text>
+					</View>
+				) : (
+					<></>
+				)}
 				{canPost ? (
 					<View
 						style={{
@@ -121,24 +139,21 @@ export default function PartyPage({ route, navigation }) {
 							zIndex: 10,
 							left: 20,
 							right: 20,
-						}}
-					>
+						}}>
 						<TouchableOpacity
 							onPress={() => navigation.navigate("Camera", { eventId })}
-							style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}
-						>
+							style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}>
 							<Icon
-								name='camera'
+								name="camera"
 								size={30}
-								type='Feather'
+								type="Feather"
 								color={Colors.background}
 							/>
 							<Text
 								style={{
 									...ButtonStyles.buttonText,
 									color: Colors.background,
-								}}
-							>
+								}}>
 								Take a Photo!
 							</Text>
 						</TouchableOpacity>
@@ -149,8 +164,7 @@ export default function PartyPage({ route, navigation }) {
 					scrollEnabled={true}
 					loading={loading}
 					onBottomScroll={loadMoreEvents}
-					bottomLoading={bottomLoading}
-				>
+					bottomLoading={bottomLoading}>
 					<>
 						{posts.length === 0 ? (
 							<EmptyPartyMessage isHost={isHost} />
@@ -164,8 +178,7 @@ export default function PartyPage({ route, navigation }) {
 											<TouchableOpacity
 												onPress={() => {
 													navigation.navigate("Post", { postId: item._id });
-												}}
-											>
+												}}>
 												<Photo
 													postId={item._id}
 													image={item.src}
@@ -191,6 +204,73 @@ export default function PartyPage({ route, navigation }) {
 						)}
 					</>
 				</ScreenWrapper>
+				{isHost && !isActive ? (
+					<View
+						style={{
+							position: "absolute",
+							alignItems: "center",
+							bottom: 60,
+							left: 30,
+							right: 30,
+							gap: 2.5,
+							...GlobalStyles.Container,
+							shadowColor: Colors.secondary,
+							shadowOffset: {
+								width: 0,
+								height: 2,
+							},
+							shadowOpacity: 0.5,
+							shadowRadius: 10,
+							elevation: 10,
+
+							flex: 0,
+							zIndex: 100,
+						}}>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "center",
+								alignItems: "center",
+								gap: 10,
+								marginBottom: 10,
+							}}>
+							<Text
+								style={{
+									fontFamily: Fonts.body.fontFamily,
+									fontSize: Fonts.body.fontSize,
+								}}>
+								Your party is inactive
+							</Text>
+							<Icon
+								name="emoticon-sad-outline"
+								type="MaterialCommunity"
+								size={25}
+							/>
+						</View>
+						<TouchableOpacity
+							onPress={() => {
+								activateParty();
+							}}
+							style={{
+								...ButtonStyles.buttonLarge,
+								...ButtonStyles.primary,
+								width: "100%",
+							}}>
+							<Image
+								source={require("../../assets/logo_white.png")}
+								style={{ width: 30, height: 30 }}
+							/>
+							<Text
+								style={{
+									...ButtonStyles.buttonTextLarge,
+								}}>
+								Activate Party
+							</Text>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<></>
+				)}
 			</SafeAreaView>
 		);
 	}

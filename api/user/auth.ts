@@ -16,7 +16,7 @@ const forgotPassword = ({ phone }) =>
 	client.post(`${endpoint}/forgot-password`, { phone });
 
 const newPassword = ({ phone, code, password }) =>
-	client.post(`${endpoint}/new-password`, { phone, code });
+	client.post(`${endpoint}/new-password`, { phone, code, password });
 
 const deleteAccount = () => client.delete(`${endpoint}`);
 

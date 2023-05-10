@@ -21,6 +21,7 @@ export default function PartyHeader({
 		<View
 			style={{
 				...GlobalStyles.header,
+				gap: 10,
 			}}>
 			<TouchableOpacity
 				// @ts-expect-error
@@ -31,6 +32,8 @@ export default function PartyHeader({
 					flexDirection: "row",
 					alignItems: "center",
 					gap: 10,
+					flex: 1,
+					overflow: "hidden",
 				}}>
 				<Icon name={"chevron-left"} size={30} />
 
@@ -38,7 +41,6 @@ export default function PartyHeader({
 					style={{
 						fontFamily: Fonts.title.fontFamily,
 						fontSize: 20,
-						overflow: "hidden",
 					}}>
 					{title ? title : "Smile Now"}
 				</Text>
