@@ -1,8 +1,8 @@
 {
 	"expo": {
 		"name": "Smile Now",
-		"slug": "smileNowApp",
-		"version": "1.0.0",
+		"slug": "smile-now",
+		"version": "1.0.2",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "automatic",
@@ -36,6 +36,11 @@
 				"android.permission.WRITE_CONTACTS"
 			],
 			"backgroundColor": "#ffffff"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "4f1b1687-8968-4045-9f0e-59d33c66cc91"
+			}
 		}
 	},
 	"web": {
@@ -60,10 +65,5 @@
 				"cameraPermission": "Allow SmileNow to access camera."
 			}
 		]
-	],
-	"extra": {
-		"eas": {
-			"projectId": "7eb0eedd-b864-441e-90e8-b70693bfd2cc"
-		}
-	}
+	]
 }

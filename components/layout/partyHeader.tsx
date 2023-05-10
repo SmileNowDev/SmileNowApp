@@ -22,7 +22,8 @@ export default function PartyHeader({
 			style={{
 				...GlobalStyles.header,
 				gap: 10,
-			}}>
+			}}
+		>
 			<TouchableOpacity
 				// @ts-expect-error
 				onPress={() => navigation.navigate("Home")}
@@ -34,14 +35,16 @@ export default function PartyHeader({
 					gap: 10,
 					flex: 1,
 					overflow: "hidden",
-				}}>
+				}}
+			>
 				<Icon name={"chevron-left"} size={30} />
 
 				<Text
 					style={{
 						fontFamily: Fonts.title.fontFamily,
 						fontSize: 20,
-					}}>
+					}}
+				>
 					{title ? title : "Smile Now"}
 				</Text>
 			</TouchableOpacity>
@@ -52,22 +55,25 @@ export default function PartyHeader({
 					justifyContent: "flex-end",
 					alignItems: "center",
 					gap: 15,
-				}}>
+				}}
+			>
 				<TouchableOpacity
 					onPress={() =>
 						// @ts-expect-error
 						navigation.navigate("PartyAttendees", { eventId, isHost, name })
-					}>
-					<Icon name="people" size={25} color={Colors.textSecondary} />
+					}
+				>
+					<Icon name='people' size={25} color={Colors.textSecondary} />
 				</TouchableOpacity>
 				{isHost ? (
 					<>
 						<TouchableOpacity
 							onPress={() =>
 								// @ts-expect-error
-								navigation.navigate("InviteToParty", { eventId, name, isHost })
-							}>
-							<Icon name="qr-code" size={25} color={Colors.textSecondary} />
+								navigation.navigate("InviteToParty", { eventId })
+							}
+						>
+							<Icon name='qr-code' size={25} color={Colors.textSecondary} />
 						</TouchableOpacity>
 					</>
 				) : (
@@ -77,10 +83,11 @@ export default function PartyHeader({
 					onPress={() =>
 						// @ts-expect-error
 						navigation.navigate("PartySettings", { eventId, name, isHost })
-					}>
+					}
+				>
 					<Icon
-						name="settings"
-						type="Feather"
+						name='settings'
+						type='Feather'
 						size={25}
 						color={Colors.textSecondary}
 					/>
