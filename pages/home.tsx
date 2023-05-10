@@ -143,7 +143,8 @@ export default function HomePage({ navigation }) {
 				loading={loading}
 				onBottomScroll={loadMoreEvents}
 				bottomLoading={bottomLoading}
-				style={{ paddingHorizontal: 0 }}>
+				style={{ paddingHorizontal: 0 }}
+			>
 				{events.length === 0 ? (
 					<>
 						<WelcomeMessage />
@@ -155,27 +156,31 @@ export default function HomePage({ navigation }) {
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: Fonts.subTitle.fontSize,
 								padding: 10,
-							}}>
+							}}
+						>
 							My Parties
 						</Text>
 						<FlatList
 							data={events}
-							keyExtractor={(item) => item.event._id}
+							keyExtractor={(item) => item._id}
 							renderItem={({ item, index }) => (
 								<View
 									style={{
 										paddingHorizontal: 10,
 										backgroundColor:
 											index % 2 === 0 ? Colors.background : Colors.border,
-									}}>
+									}}
+								>
 									<PartyListItem
 										icon={getInitials(
-											item.event.title.split(" ")[0],
-											item.event.title.split(" ")[1]
+											item.title.split(" ")[0],
+											item.title.split(" ")[1]
 										)}
-										name={item.event.title}
-										eventId={item.event._id}
+										name={item.title}
+										eventId={item._id}
 										canPost={item.canPost}
+										attendeeInfo={item.attendeeInfo}
+										isActive={item.isActive}
 									/>
 								</View>
 							)}
@@ -200,15 +205,18 @@ export default function HomePage({ navigation }) {
 					...GlobalStyles.Container,
 
 					flex: 0,
-				}}>
+				}}
+			>
 				<TouchableOpacity
 					onPress={() => navigation.navigate("JoinParty")}
-					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}>
+					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}
+				>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={createEvent}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
+					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}
+				>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
 				</TouchableOpacity>
 			</View>

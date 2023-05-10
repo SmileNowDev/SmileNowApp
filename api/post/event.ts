@@ -10,6 +10,8 @@ const updateEvent = ({ eventId, title, description, settings }) =>
 
 const getEvent = ({ eventId }) => client.get(`${endpoint}/${eventId}`);
 
+const deleteEvent = ({ eventId }) => client.delete(`${endpoint}/${eventId}`);
+
 const getEvents = ({ page }) => client.get(`${endpoint}/events/${page}`);
 
 const eventApi = {
@@ -18,5 +20,6 @@ const eventApi = {
 	updateEvent,
 	getEvent,
 	getEvents,
+	deleteEvent,
 };
 export default eventApi;

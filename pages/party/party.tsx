@@ -68,7 +68,7 @@ export default function PartyPage({ route, navigation }) {
 			// @ts-expect-error
 			setCanPost(result.data.canPost);
 			// @ts-expect-error
-			setIsHost(result.data.isHost);
+			setIsHost(result.data.attendeeInfo.isHost);
 		}
 		setLoading(false);
 	}
@@ -121,21 +121,24 @@ export default function PartyPage({ route, navigation }) {
 							zIndex: 10,
 							left: 20,
 							right: 20,
-						}}>
+						}}
+					>
 						<TouchableOpacity
 							onPress={() => navigation.navigate("Camera", { eventId })}
-							style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}>
+							style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}
+						>
 							<Icon
-								name="camera"
+								name='camera'
 								size={30}
-								type="Feather"
+								type='Feather'
 								color={Colors.background}
 							/>
 							<Text
 								style={{
 									...ButtonStyles.buttonText,
 									color: Colors.background,
-								}}>
+								}}
+							>
 								Take a Photo!
 							</Text>
 						</TouchableOpacity>
@@ -146,7 +149,8 @@ export default function PartyPage({ route, navigation }) {
 					scrollEnabled={true}
 					loading={loading}
 					onBottomScroll={loadMoreEvents}
-					bottomLoading={bottomLoading}>
+					bottomLoading={bottomLoading}
+				>
 					<>
 						{posts.length === 0 ? (
 							<EmptyPartyMessage isHost={isHost} />
@@ -160,7 +164,8 @@ export default function PartyPage({ route, navigation }) {
 											<TouchableOpacity
 												onPress={() => {
 													navigation.navigate("Post", { postId: item._id });
-												}}>
+												}}
+											>
 												<Photo
 													postId={item._id}
 													image={item.src}

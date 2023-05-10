@@ -9,12 +9,19 @@ interface ListProps {
 	name: string;
 	canPost: boolean;
 	eventId: string;
+	attendeeInfo: {
+		isHost: boolean;
+		muted: boolean;
+	};
+	isActive: boolean;
 }
 export default function PartyListItem({
 	icon,
 	name,
 	canPost,
 	eventId,
+	attendeeInfo,
+	isActive,
 }: ListProps) {
 	const navigation = useNavigation();
 	return (
@@ -28,7 +35,8 @@ export default function PartyListItem({
 				gap: 10,
 				padding: 10,
 				justifyContent: "flex-start",
-			}}>
+			}}
+		>
 			<View
 				style={{
 					backgroundColor: generateColorFromLetters(icon),
@@ -42,7 +50,8 @@ export default function PartyListItem({
 					shadowOffset: { width: 0, height: 0 },
 					shadowRadius: 5,
 					elevation: 0,
-				}}>
+				}}
+			>
 				<Text style={{ fontSize: 22 }}>{icon}</Text>
 			</View>
 			<Text
@@ -50,14 +59,19 @@ export default function PartyListItem({
 					flex: 1,
 					fontFamily: Fonts.body.fontFamily,
 					fontSize: Fonts.body.fontSize,
-				}}>
+				}}
+			>
 				{name}
 			</Text>
+			{attendeeInfo.isHost && <Text>Host</Text>}
+			{attendeeInfo.muted && <Text>Muted</Text>}
+			{isActive && <Text>Active</Text>}
+
 			{canPost ? (
-				<Icon name={"camera"} type="Ion" color={Colors.primary} size={30} />
+				<Icon name={"camera"} type='Ion' color={Colors.primary} size={30} />
 			) : (
 				<Icon
-					name="chevron-right"
+					name='chevron-right'
 					size={30}
 					color={Colors.textSecondary + "70"}
 				/>

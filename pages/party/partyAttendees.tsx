@@ -32,13 +32,21 @@ export default function PartyAttendees({ route, navigation }) {
 	}
 
 	async function demoteToMember(id: string) {
-		const result = await attendeeApi.toggleHost({ eventId, userId: id });
+		const result = await attendeeApi.update({
+			eventId,
+			userId: id,
+			isHost: false,
+		});
 		if (result.ok) {
 			getAttendees();
 		}
 	}
 	async function promoteToHost(id: string) {
-		const result = await attendeeApi.toggleHost({ eventId, userId: id });
+		const result = await attendeeApi.update({
+			eventId,
+			userId: id,
+			isHost: true,
+		});
 		console.log({ result });
 		if (result.ok) {
 			getAttendees();
@@ -53,9 +61,11 @@ export default function PartyAttendees({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonSmall,
 						...ButtonStyles.primaryOutlined,
-					}}>
+					}}
+				>
 					<Text
-						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}>
+						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}
+					>
 						Demote to Member
 					</Text>
 				</TouchableOpacity>
@@ -67,12 +77,14 @@ export default function PartyAttendees({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonSmall,
 						...ButtonStyles.secondaryOutlined,
-					}}>
+					}}
+				>
 					<Text
 						style={{
 							...ButtonStyles.buttonTextSmall,
 							color: Colors.secondary,
-						}}>
+						}}
+					>
 						Promote to Host
 					</Text>
 				</TouchableOpacity>
@@ -117,7 +129,8 @@ export default function PartyAttendees({ route, navigation }) {
 				loading={loading}
 				onBottomScroll={() => {
 					loadMore();
-				}}>
+				}}
+			>
 				<View>
 					<FlatList
 						style={{ width: "100%", paddingHorizontal: 10 }}
