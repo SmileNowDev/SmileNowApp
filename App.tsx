@@ -1,17 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Context, Provider as MyProvider } from "./providers/provider";
 import "react-native-gesture-handler";
-import AppLoading from "expo-app-loading";
 import { StatusBar } from "expo-status-bar";
-
+import * as SplashScreen from "expo-splash-screen";
+import { View } from "react-native";
 import { loadFonts } from "./utils/loadFonts";
 import RootNavigator from "./navigation/rootNavigator";
 
 export default function App() {
-	let fontsLoaded = loadFonts();
+	const [fontsLoaded, setFontsLoaded] = useState(false);
+	const fontsAreLoaded = loadFonts();
+
+	useEffect(() => {
+		async function prepare() {
+			await SplashScreen.preventAutoHideAsync();
+
+			if (fontsAreLoaded) {
+				try {
+					await SplashScreen.hideAsync();
+				} catch (error) {
+					console.warn("Failed to hide the splash screen:", error);
+				}
+				setFontsLoaded(true);
+			}
+		}
+
+		prepare();
+	}, []);
 	if (!fontsLoaded) {
-		return <AppLoading />;
+		return <View></View>;
 	} else {
 		return (
 			<MyProvider>

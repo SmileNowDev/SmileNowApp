@@ -8,6 +8,7 @@ import {
 	ActivityIndicator,
 	Image,
 	Alert,
+	TouchableWithoutFeedback,
 } from "react-native";
 import PartyHeader from "../../components/layout/partyHeader";
 import Photo from "../../components/post/photo";
@@ -18,7 +19,7 @@ import eventApi from "../../api/post/event";
 import postApi from "../../api/post/post";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
-
+import AnimatedLottieView from "lottie-react-native";
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
 	const [canPost, setCanPost] = useState(false);
@@ -95,25 +96,22 @@ export default function PartyPage({ route, navigation }) {
 	}, [eventId]);
 	if (loading) {
 		return (
-			<SafeAreaView>
-				<PartyHeader
-					title={name}
-					eventId={eventId}
-					name={name}
-					isHost={isHost}
-				/>
-				<ActivityIndicator
-					size={"large"}
-					color={Colors.primary}
+			<View
+				style={{
+					flex: 1,
+					height: "100%",
+					backgroundColor: "rgb(12,0,64)",
+				}}>
+				<AnimatedLottieView
+					source={require("../../assets/animations/polaroid-loop.json")}
+					autoPlay
+					loop
 					style={{
-						height: Dim.width - 20,
-						width: Dim.width - 20,
-						position: "absolute",
-						top: (Dim.width - 20) / 2,
-						zIndex: 100,
+						width: Dim.width,
+						height: Dim.width,
 					}}
 				/>
-			</SafeAreaView>
+			</View>
 		);
 	} else {
 		return (
@@ -175,7 +173,7 @@ export default function PartyPage({ route, navigation }) {
 									keyExtractor={(item) => item._id}
 									renderItem={({ item }) => {
 										return (
-											<TouchableOpacity
+											<TouchableWithoutFeedback
 												onPress={() => {
 													navigation.navigate("Post", { postId: item._id });
 												}}>
@@ -194,7 +192,7 @@ export default function PartyPage({ route, navigation }) {
 													comments={item.comments || 0}
 													refresh={onRefresh}
 												/>
-											</TouchableOpacity>
+											</TouchableWithoutFeedback>
 										);
 									}}
 								/>

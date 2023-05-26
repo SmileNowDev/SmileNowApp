@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { createRef, useRef, useState } from "react";
 import {
 	Image,
 	StyleSheet,
@@ -8,6 +8,7 @@ import {
 	Dimensions,
 	Platform,
 	Alert,
+	ActivityIndicator,
 } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
@@ -21,8 +22,10 @@ import ModalWrapper from "../core/modalWrapper";
 import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
 import relativeTime from "dayjs/plugin/relativeTime";
+import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
+
+import { Dim } from "../../styles/styles";
 dayjs.extend(relativeTime);
-// todo - add zoom functionality with pinch
 export interface PhotoProps {
 	postId: string;
 	image: string;
@@ -49,6 +52,10 @@ export default function Photo({
 	comments,
 	refresh,
 }: PhotoProps) {
+	const imageWidth = Dim.width - 40;
+	const imageHeight = imageWidth;
+	const zoomableViewRef = createRef<ReactNativeZoomableView>();
+	const [loading, setLoading] = useState(false);
 	const [downloadModalVisible, setDownloadModalVisible] = useState(false);
 	const [liked, setLiked] = useState(isLiked ? true : false);
 	const [likesCount, setLikesCount] = useState(likes);
@@ -101,13 +108,52 @@ export default function Photo({
 			console.log("error", error);
 		}
 	};
+	function handleEndZoom() {
+		console.log("end zoom");
+	}
+
 	return (
 		<>
 			<View style={styles.photo}>
-				<Image
-					source={{ uri: image }}
-					style={{ height: width - 40, width: width - 40 }}
-				/>
+				<View
+					style={{
+						height: imageHeight,
+						width: imageWidth,
+						alignItems: "center",
+						justifyContent: "center",
+						overflow: "hidden",
+					}}>
+					{loading ? (
+						<ActivityIndicator
+							size="large"
+							color={Colors.primary}
+							style={{
+								position: "absolute",
+								top: 0,
+								bottom: 0,
+								left: 0,
+								right: 0,
+							}}
+						/>
+					) : (
+						<></>
+					)}
+					<ReactNativeZoomableView
+						ref={zoomableViewRef}
+						maxZoom={2}
+						minZoom={1}
+						zoomStep={0.5}
+						initialZoom={1}
+						bindToBorders={true}
+						onZoomEnd={() => zoomableViewRef.current!.zoomTo(1)}>
+						<Image
+							source={{ uri: image || "abc" }}
+							style={{ height: imageHeight, width: imageWidth }}
+							onLoadStart={() => setLoading(true)}
+							onLoad={() => setLoading(false)}
+						/>
+					</ReactNativeZoomableView>
+				</View>
 
 				<View style={{ minHeight: 50 }}>
 					<Text
