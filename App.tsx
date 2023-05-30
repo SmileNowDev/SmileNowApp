@@ -27,7 +27,7 @@ export default function App() {
 		}
 
 		prepare();
-	}, []);
+	}, [fontsAreLoaded]);
 	if (!fontsLoaded) {
 		return <View></View>;
 	} else {

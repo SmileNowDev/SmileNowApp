@@ -23,17 +23,18 @@ import ScreenWrapper from "../components/core/screenWrapper";
 import ModalWrapper from "../components/core/modalWrapper";
 import EditCaption from "../components/post/editCaption";
 import { Context } from "../providers/provider";
-
-export default function PostPage({ route, navigation }) {
+export const imageWidth = Dim.width - 50;
+export const imageHeight = imageWidth + 100;
+export default function PostPage({ route }) {
 	const { postId } = route.params;
 	const [post, setPost] = useState<any>();
 
 	const [refreshing, setRefreshing] = useState(false);
 	const [comment, setComment] = useState("");
 	const [comments, setComments] = useState([]);
-	const [page, setPage] = useState(1); // Add this state
-	const [hasMore, setHasMore] = useState(true); // Add this state
-	const [loading, setLoading] = useState(false); // Add this state
+	const [page, setPage] = useState(1);
+	const [hasMore, setHasMore] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [bottomLoading, setBottomLoading] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [caption, setCaption] = useState("");
@@ -147,6 +148,7 @@ export default function PostPage({ route, navigation }) {
 							isLiked={post?.isLiked}
 							comments={post?.comments}
 							refresh={onRefresh}
+							delay={0}
 						/>
 					) : (
 						<ActivityIndicator />

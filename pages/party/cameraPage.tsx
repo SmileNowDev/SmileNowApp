@@ -19,6 +19,7 @@ import Icon from "../../components/core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import postApi from "../../api/post/post";
+import { imageHeight, imageWidth } from "../../pages/post";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
 	const { eventId } = route.params;
@@ -161,7 +162,7 @@ export default function CameraPage({ route, navigation }) {
 							fontSize: 20,
 							textAlign: "center",
 						}}>
-						Sorry! You waited to long...
+						Sorry! You waited too long...
 					</Text>
 					<TouchableOpacity
 						style={{
@@ -178,7 +179,7 @@ export default function CameraPage({ route, navigation }) {
 				<>
 					{!isPreviewing ? (
 						<>
-							<View style={{ marginTop: 30, marginBottom: 20 }}>
+							<View style={{ marginTop: 10, marginBottom: 10 }}>
 								<Text
 									style={{
 										fontFamily: Fonts.title.fontFamily,
@@ -202,17 +203,27 @@ export default function CameraPage({ route, navigation }) {
 								}}>
 								{remainingTime.toString()}
 							</Text>
-							<Camera
+							<View
 								style={{
-									height: width - 20,
-									width: width - 20,
 									borderRadius: 20,
-									overflow: "hidden",
-									marginTop: 20,
-								}}
-								type={cameraType}
-								flashMode={flashMode}
-								ref={cameraRef}></Camera>
+									shadowOpacity: 0.25,
+									shadowOffset: { width: 0, height: 4 },
+									shadowRadius: 2,
+									elevation: 2,
+									shadowColor: "rgba(0, 0, 0, 0.25)",
+								}}>
+								<Camera
+									style={{
+										height: imageHeight,
+										width: imageWidth,
+										borderRadius: 20,
+										overflow: "hidden",
+										marginTop: 10,
+									}}
+									type={cameraType}
+									flashMode={flashMode}
+									ref={cameraRef}></Camera>
+							</View>
 
 							<View style={styles.footer}>
 								<TouchableOpacity onPress={() => toggleFlashMode()}>
@@ -270,8 +281,8 @@ export default function CameraPage({ route, navigation }) {
 							<View
 								style={{
 									position: "relative",
-									height: width - 20,
-									width: width - 20,
+									height: imageHeight,
+									width: imageWidth,
 									marginTop: 10,
 								}}>
 								{loading ? (

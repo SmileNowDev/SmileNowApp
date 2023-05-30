@@ -151,8 +151,7 @@ export default function HomePage({ navigation }) {
 				loading={loading}
 				onBottomScroll={loadMoreEvents}
 				bottomLoading={bottomLoading}
-				style={{ paddingHorizontal: 0 }}
-			>
+				style={{ paddingHorizontal: 0 }}>
 				{events.length === 0 ? (
 					<>
 						<WelcomeMessage />
@@ -164,8 +163,7 @@ export default function HomePage({ navigation }) {
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: Fonts.subTitle.fontSize,
 								padding: 10,
-							}}
-						>
+							}}>
 							My Parties
 						</Text>
 						<FlatList
@@ -173,12 +171,12 @@ export default function HomePage({ navigation }) {
 							keyExtractor={(item) => item._id}
 							renderItem={({ item, index }) => (
 								<View
+									key={item._id}
 									style={{
 										paddingHorizontal: 10,
 										backgroundColor:
 											index % 2 === 0 ? Colors.background : Colors.border,
-									}}
-								>
+									}}>
 									<PartyListItem
 										initials={getInitials(
 											item.title.split(" ")[0],
@@ -213,18 +211,15 @@ export default function HomePage({ navigation }) {
 					...GlobalStyles.Container,
 
 					flex: 0,
-				}}
-			>
+				}}>
 				<TouchableOpacity
 					onPress={() => setJoining(true)}
-					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}
-				>
+					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={createEvent}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}
-				>
+					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
 				</TouchableOpacity>
 			</View>

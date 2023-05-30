@@ -143,6 +143,13 @@ export const GlobalStyles = StyleSheet.create({
 		shadowColor: "black",
 		elevation: 3,
 	},
+	modalShadow: {
+		shadowOffset: { width: 0, height: 4 },
+		shadowRadius: 4,
+		shadowColor: "rgba(0,0,0,1)",
+		elevation: 1,
+		shadowOpacity: 0.5,
+	},
 	tabScreenContainer: {
 		padding: 0,
 	},

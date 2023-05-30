@@ -50,19 +50,25 @@
 		[
 			"expo-camera",
 			{
-				"cameraPermission": "Allow SmileNow to access your camera."
+				"cameraPermission": "Allow Smile Now to access your camera."
 			}
 		],
 		[
 			"expo-contacts",
 			{
-				"contactsPermission": "Allow SmileNow to access your contacts. "
+				"contactsPermission": "Allow Smile Now to access your contacts. "
 			}
 		],
 		[
 			"expo-barcode-scanner",
 			{
-				"cameraPermission": "Allow SmileNow to access camera."
+				"cameraPermission": "Allow Smile Now to access camera."
+			}
+		],
+		[
+			"expo-sensors",
+			{
+				"motionPermission": "Allow Smile Now to access your device motion."
 			}
 		]
 	]

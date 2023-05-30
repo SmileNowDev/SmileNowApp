@@ -20,10 +20,13 @@ import postApi from "../../api/post/post";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
 import AnimatedLottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
 	const [canPost, setCanPost] = useState(false);
 	const [name, setName] = useState("");
+	const [bio, setBio] = useState("");
 	const [posts, setPosts] = useState([]);
 	const [isHost, setIsHost] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
@@ -32,7 +35,10 @@ export default function PartyPage({ route, navigation }) {
 	const [loading, setLoading] = useState(false);
 	const [bottomLoading, setBottomLoading] = useState(false);
 	const [isActive, setIsActive] = useState(true);
-
+	function queryTipState() {}
+	async function hideHint1() {
+		let result = await AsyncStorage.setItem("@10Min_Tip", "true");
+	}
 	async function getPosts() {
 		setLoading(true);
 		const result = await postApi.getPosts({ eventId, page: 1 });
@@ -81,6 +87,8 @@ export default function PartyPage({ route, navigation }) {
 			setIsHost(result.data.attendeeInfo.isHost);
 			// @ts-expect-error
 			setIsActive(result.data.isActive);
+			// @ts-expect-error
+			setBio(result.data.bio);
 		}
 		setLoading(false);
 	}
@@ -107,8 +115,8 @@ export default function PartyPage({ route, navigation }) {
 					autoPlay
 					loop
 					style={{
-						width: Dim.width,
-						height: Dim.width,
+						width: Dim.width - 40,
+						height: Dim.width - 40,
 					}}
 				/>
 			</View>
@@ -122,21 +130,15 @@ export default function PartyPage({ route, navigation }) {
 					name={name}
 					isHost={isHost}
 				/>
-				{justCreated ? (
-					<View>
-						<Text>Welcome to {name}</Text>
-					</View>
-				) : (
-					<></>
-				)}
+
 				{canPost ? (
 					<View
 						style={{
 							position: "absolute",
 							bottom: 100,
-							zIndex: 10,
-							left: 20,
-							right: 20,
+							left: 40,
+							right: 40,
+							zIndex: 95,
 						}}>
 						<TouchableOpacity
 							onPress={() => navigation.navigate("Camera", { eventId })}
@@ -156,7 +158,9 @@ export default function PartyPage({ route, navigation }) {
 							</Text>
 						</TouchableOpacity>
 					</View>
-				) : null}
+				) : (
+					<></>
+				)}
 				<ScreenWrapper
 					onRefresh={onRefresh}
 					scrollEnabled={true}
@@ -164,6 +168,41 @@ export default function PartyPage({ route, navigation }) {
 					onBottomScroll={loadMoreEvents}
 					bottomLoading={bottomLoading}>
 					<>
+						{justCreated || posts.length === 0 ? (
+							<View>
+								<Text
+									style={{
+										textAlign: "center",
+										paddingVertical: 10,
+										fontFamily: Fonts.title.fontFamily,
+										fontSize: Fonts.title.fontSize,
+									}}>
+									Welcome to {name}
+								</Text>
+								{/* <Text
+									style={{
+										textAlign: "left",
+										paddingVertical: 10,
+										paddingHorizontal: 10,
+										fontFamily: Fonts.body.fontFamily,
+										fontSize: Fonts.body.fontSize,
+									}}>
+									{bio}
+								</Text> */}
+								<Text
+									style={{
+										textAlign: "center",
+										paddingVertical: 10,
+										paddingHorizontal: 40,
+										fontFamily: Fonts.body.fontFamily,
+										fontSize: Fonts.body.fontSize,
+									}}>
+									(You can change the name at anytime from the settings)
+								</Text>
+							</View>
+						) : (
+							<></>
+						)}
 						{posts.length === 0 ? (
 							<EmptyPartyMessage isHost={isHost} />
 						) : (
@@ -171,9 +210,10 @@ export default function PartyPage({ route, navigation }) {
 								<FlatList
 									data={posts}
 									keyExtractor={(item) => item._id}
-									renderItem={({ item }) => {
+									renderItem={({ item, index }) => {
 										return (
 											<TouchableWithoutFeedback
+												key={item._id}
 												onPress={() => {
 													navigation.navigate("Post", { postId: item._id });
 												}}>
@@ -191,6 +231,7 @@ export default function PartyPage({ route, navigation }) {
 													isLiked={item.isLiked}
 													comments={item.comments || 0}
 													refresh={onRefresh}
+													delay={index}
 												/>
 											</TouchableWithoutFeedback>
 										);
@@ -269,6 +310,43 @@ export default function PartyPage({ route, navigation }) {
 				) : (
 					<></>
 				)}
+				<View
+					style={{
+						position: "absolute",
+						bottom: 100,
+						left: 20,
+						right: 20,
+						zIndex: 90,
+
+						backgroundColor: Colors.background,
+						...GlobalStyles.Container,
+						...GlobalStyles.modalShadow,
+					}}>
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize,
+							textAlign: "center",
+						}}>
+						Photos take 10 minutes to develop!
+					</Text>
+					<TouchableOpacity
+						onPress={() => hideHint1()}
+						style={{
+							marginTop: 25,
+							...ButtonStyles.button,
+							...ButtonStyles.primary,
+						}}>
+						<Text
+							style={{
+								...ButtonStyles.buttonText,
+							}}>
+							Got it!
+						</Text>
+					</TouchableOpacity>
+					{/* <Text>{getElapsedTime()}</Text>
+						<Text>{TEN_MINUTES_IN_MS}</Text> */}
+				</View>
 			</SafeAreaView>
 		);
 	}
