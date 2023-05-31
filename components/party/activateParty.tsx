@@ -4,21 +4,31 @@ import React from "react";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function ActivateParty({
-	setIsActive,
-	isActive,
-	eventId,
-	isHost,
-}) {
+export default function ActivateParty({ isActive, eventId, isHost }) {
+	const queryClient = useQueryClient();
+	const mutation = useMutation((eventId) => eventApi.start({ eventId }), {
+		onSuccess: (data, item) => {
+			console.log("success");
+			queryClient.setQueryData(["event", eventId], (oldData) => ({
+				...{ oldData },
+				data,
+			}));
+		},
+	});
 	async function activateParty() {
-		const result = await eventApi.start({ eventId });
-		if (result.ok) {
-			Alert.alert("Party Activated", "Have fun!");
-			setIsActive(!isActive);
-		}
+		mutation.mutate(eventId, {
+			onSuccess: () => {
+				Alert.alert("Party Activated", "Have fun!");
+			},
+			onError: (error) => {
+				// Handle the error here
+				console.error(error);
+			},
+		});
 	}
-
+	console.log("in component", { isActive, eventId, isHost });
 	if (!isHost) return <></>;
 	else if (isHost && isActive) return <></>;
 	else {

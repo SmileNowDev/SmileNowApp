@@ -24,6 +24,17 @@ import PartyLoading from "../../components/party/partyLoading";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ActivateParty from "../../components/party/activateParty";
 import TakePhoto from "../../components/party/takePhoto";
+export type NotificationFrequencyType = "slow" | "normal" | "fast";
+export interface IEvent {
+	_id: string;
+	title: string;
+	description: string;
+	canPost: boolean;
+	isHost: boolean;
+	muted: boolean;
+	isActive: boolean;
+	notificationFrequency: NotificationFrequencyType;
+}
 
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
@@ -31,21 +42,43 @@ export default function PartyPage({ route, navigation }) {
 	const [polaroidLooping, setPolaroidLooping] = useState(true); // start animation right away
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1);
-	const [isActive, setIsActive] = useState(true);
 
-	const { isLoading, error, data, refetch } = useQuery<any>({
+	// EVENT
+	const { isLoading, error, data, refetch } = useQuery<IEvent>({
 		queryKey: ["event", eventId],
 		queryFn: getEvent,
 	});
 	async function getEvent() {
+		console.log("getting event");
 		const result = await eventApi.getEvent({ eventId });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
+			console.log("==============");
 			console.log(result.data);
-			return result.data;
+			console.log("==============");
+			let data: IEvent = {
+				// @ts-expect-error
+				_id: result.data?.event._id,
+				// @ts-expect-error
+				title: result.data?.event.title,
+				// @ts-expect-error
+				description: result.data?.event.description,
+				// @ts-expect-error
+				isHost: result.data?.attendeeInfo?.isHost,
+				//@ts-expect-error
+				canPost: result.data?.canPost,
+				//@ts-expect-error
+				muted: result.data?.attendeeInfo?.muted,
+				// @ts-expect-error
+				isActive: result.data?.isActive,
+				// @ts-expect-error
+				notificationFrequency: result.data?.event.notificationFrequency,
+			};
+			return data;
 		}
 	}
+	// POSTS
 	const {
 		data: postsData,
 		isLoading: postsLoading,
@@ -69,7 +102,7 @@ export default function PartyPage({ route, navigation }) {
 		}
 		return result.data;
 	}
-
+	// ANIMATIONS
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setPolaroidLooping(false);
@@ -115,13 +148,12 @@ export default function PartyPage({ route, navigation }) {
 			<SafeAreaView style={{ flex: 1 }}>
 				<PartyHeader
 					title={data.title}
-					eventId={data.eventId}
-					name={data.name}
+					eventId={eventId}
+					name={data.title}
 					isHost={data.isHost}
 				/>
 				<ActivateParty
-					isActive={isActive}
-					setIsActive={setIsActive}
+					isActive={data.isActive}
 					eventId={eventId}
 					isHost={data.isHost}
 				/>
@@ -146,9 +178,9 @@ export default function PartyPage({ route, navigation }) {
 										fontFamily: Fonts.title.fontFamily,
 										fontSize: Fonts.title.fontSize,
 									}}>
-									Welcome to {data.name}
+									Welcome to {data.title}
 								</Text>
-								{/* <Text
+								<Text
 									style={{
 										textAlign: "left",
 										paddingVertical: 10,
@@ -156,8 +188,8 @@ export default function PartyPage({ route, navigation }) {
 										fontFamily: Fonts.body.fontFamily,
 										fontSize: Fonts.body.fontSize,
 									}}>
-									{bio}
-								</Text> */}
+									{data.description}
+								</Text>
 								<Text
 									style={{
 										textAlign: "center",
@@ -172,12 +204,12 @@ export default function PartyPage({ route, navigation }) {
 						) : (
 							<></>
 						)}
-						{postsData.pages.flat().length === 0 ? (
+						{postsData?.pages.flat().length === 0 ? (
 							<EmptyPartyMessage isHost={data.isHost} />
 						) : (
 							<>
 								<FlatList
-									data={postsData.pages.flat()}
+									data={postsData?.pages.flat()}
 									keyExtractor={(item) => item._id}
 									renderItem={({ item, index }) => {
 										return (

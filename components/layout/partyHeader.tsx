@@ -16,7 +16,7 @@ export default function PartyHeader({
 	name,
 	isHost,
 }: HeaderProps) {
-	console.log({ title });
+	console.log({ title, eventId, name, isHost });
 	const navigation = useNavigation();
 	return (
 		<View
@@ -77,7 +77,7 @@ export default function PartyHeader({
 				<TouchableOpacity
 					onPress={() =>
 						// @ts-expect-error
-						navigation.navigate("PartySettings", { eventId, name, isHost })
+						navigation.navigate("PartySettings", { eventId })
 					}>
 					<Icon
 						name="settings"

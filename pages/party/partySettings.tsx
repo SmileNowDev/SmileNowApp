@@ -12,7 +12,6 @@ import {
 	Button,
 } from "react-native";
 import Header from "../../components/layout/header";
-import EmojiTextInput from "../../components/emojiTextInput";
 import { ButtonStyles, GlobalStyles, Dim } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../../components/core/icons";
@@ -20,41 +19,74 @@ import eventApi from "../../api/post/event";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/rootNavigator";
 import ScreenWrapper from "../../components/core/screenWrapper";
-import NotificationFrequencyButton from "../../components/party/notificationFrequencyButton";
 import archiveApi from "../../api/post/archive";
 import attendeeApi from "../../api/post/attendee";
 import { Context } from "../../providers/provider";
 import { PulseIndicator } from "react-native-indicators";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IEvent, NotificationFrequencyType } from "./party";
+import NotificationSettings from "../../components/party/notificationSettings";
 
-type PartyDetailsRouteProps = StackScreenProps<
-	RootStackParamList,
-	"PartySettings"
->;
-type NotificationFrequencyType = "slow" | "normal" | "fast";
+type PartyDetailProps = StackScreenProps<RootStackParamList, "PartySettings">;
 
-export default function PartySettings({
-	route,
-	navigation,
-}: PartyDetailsRouteProps) {
-	const { eventId, name } = route.params;
-	const [loading, setLoading] = useState(false);
-	const [newName, setNewName] = useState(name);
-	const [newDescription, setNewDescription] = useState("");
-	const [description, setDescription] = useState("");
+export default function PartySettings({ route, navigation }: PartyDetailProps) {
+	const queryClient = useQueryClient();
+	const { userId } = useContext(Context);
+	const { eventId } = route.params;
+	const data: IEvent = queryClient.getQueryData(["event", eventId]);
+	console.log({ data });
+	const [newDescription, setNewDescription] = useState(data.description);
+	const [newTitle, setNewTitle] = useState(data.title);
+
+	const [loading, setLoading] = useState<boolean>(false);
 	const [notificationFrequency, setNotificationFrequency] =
 		useState<NotificationFrequencyType>("normal");
 	const [notificationStatus, setNotificationStatus] = useState(false);
 	const [muted, setMuted] = useState<boolean>(false);
 	const [archived, setArchived] = useState<boolean>(false);
 	const [isHost, setIsHost] = useState<boolean>(false);
-	const { userId } = useContext(Context);
-	async function handleMuting() {
-		const result = await attendeeApi.update({ eventId, userId, muted: !muted });
-		if (result.ok) {
-			getEvent();
-		} else {
-			console.log(result.data);
+	const muteMutation = useMutation(
+		// @ts-expect-error
+		({ eventId, userId, muted }) =>
+			attendeeApi.update({ eventId, userId, muted: !muted }),
+		{
+			onSuccess: (data) => {
+				console.log("success");
+				queryClient.setQueryData(["events"], (oldData) =>
+					(oldData as IEvent[]).map((event) => {
+						if (event._id === eventId) {
+							return {
+								...event,
+								muted: !event.muted,
+							};
+						} else {
+							return event;
+						}
+					})
+				);
+				//remove it from home
+				queryClient.setQueryData(["event", eventId], (oldData) => ({
+					...(oldData as IEvent),
+					data,
+				}));
+			},
 		}
+	);
+	async function handleMuting() {
+		muteMutation.mutate(
+			//@ts-expect-error
+			{ eventId, userId, muted: data.muted },
+			{
+				onSuccess: () => {
+					Alert.alert("Party Muted", "Join in again when you're ready!");
+					navigation.navigate("Home");
+				},
+				onError: (error) => {
+					// Handle the error here
+					console.error(error);
+				},
+			}
+		);
 	}
 	async function handleNotificationStatusChange() {
 		// api to switch notification status
@@ -63,20 +95,44 @@ export default function PartySettings({
 			setNotificationStatus(!notificationStatus);
 		}
 	}
-
+	const archiveMutation = useMutation(
+		(eventId) => archiveApi.deleteArchive({ eventId }),
+		{
+			onSuccess: (data) => {
+				console.log("success");
+				queryClient.setQueryData(["events"], (oldData) => ({
+					...(oldData as IEvent[]).filter((event) => event._id !== eventId),
+				})); //remove it from home
+				queryClient.setQueryData(["event", eventId], (oldData) => ({
+					...(oldData as IEvent),
+					data,
+				}));
+			},
+		}
+	);
+	const unArchiveMutation = useMutation(
+		(eventId) => archiveApi.create({ eventId }),
+		{
+			onSuccess: (data) => {
+				console.log("success");
+				queryClient.setQueryData(["events"], (oldData) => ({
+					...(oldData as IEvent[]),
+					data,
+				})); // add it back to home
+				queryClient.setQueryData(["event", eventId], (oldData) => ({
+					...(oldData as IEvent),
+					data, // update this event's state
+				}));
+			},
+		}
+	);
 	async function toggleArchive() {
 		if (archived) {
-			const result = await archiveApi.deleteArchive({ eventId });
-			if (result.ok) {
-				await getEvent();
-			} else {
-				console.log(result.data);
-			}
+			//@ts-expect-error
+			archiveMutation.mutate(eventId);
 		} else {
-			const result = await archiveApi.create({ eventId });
-			if (result.ok) {
-				await getEvent();
-			}
+			//@ts-expect-error
+			unArchiveMutation.mutate({ eventId });
 		}
 	}
 	async function deleteParty() {
@@ -139,11 +195,9 @@ export default function PartySettings({
 		setLoading(true);
 		const result = await eventApi.updateEvent({
 			eventId,
-			title: newName,
+			title: newTitle,
 			description: newDescription,
-			settings: {
-				notificationFrequency,
-			},
+			settings: { notificationFrequency: data.notificationFrequency },
 		});
 		if (result.ok) {
 			Alert.alert("Your event has been updated", "Refresh to see your changes");
@@ -157,28 +211,6 @@ export default function PartySettings({
 	function cancel() {
 		// navigate back to the home page
 		navigation.goBack();
-	}
-
-	async function getEvent() {
-		const result = await eventApi.getEvent({ eventId });
-		if (result.ok) {
-			// @ts-expect-error
-			setNotificationStatus(result.data.event.started);
-			// @ts-expect-error
-			setNewDescription(result.data.event.description);
-			// @ts-expect-error
-			setDescription(result.data.event.description);
-			setNotificationFrequency(
-				// @ts-expect-error
-				result.data.event.settings.notificationFrequency
-			);
-			// @ts-expect-error
-			setMuted(result.data.attendeeInfo.muted);
-			// @ts-expect-error
-			setIsHost(result.data.attendeeInfo.isHost);
-			// @ts-expect-error
-			setArchived(result.data.isArchived);
-		}
 	}
 
 	function SettingsButton({ title, description, icon, buttonText, onPress }) {
@@ -233,15 +265,10 @@ export default function PartySettings({
 			</View>
 		);
 	}
-	useEffect(() => {
-		setLoading(true);
-		getEvent();
-		setLoading(false);
-	}, [eventId]);
 
-	return (
-		<SafeAreaView style={{ flex: 1, height: Dim.height }}>
-			{isHost ? (
+	function SaveCancel() {
+		if (isHost) {
+			return (
 				<View
 					style={{
 						position: "absolute",
@@ -283,14 +310,21 @@ export default function PartySettings({
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Save</Text>
 					</TouchableOpacity>
 				</View>
-			) : (
-				<></>
-			)}
-
+			);
+		} else {
+			return <></>;
+		}
+	}
+	function handleRefresh() {
+		queryClient.invalidateQueries(["event", eventId]);
+	}
+	return (
+		<SafeAreaView style={{ flex: 1, height: Dim.height }}>
+			<SaveCancel />
 			<Header goBack title={`Party Settings`} />
 			<ScreenWrapper
 				scrollEnabled={true}
-				onRefresh={getEvent}
+				onRefresh={handleRefresh}
 				loading={loading}>
 				{loading ? (
 					<ActivityIndicator
@@ -329,9 +363,9 @@ export default function PartySettings({
 					</Text>
 					{isHost ? (
 						<TextInput
-							value={newName}
+							value={newTitle}
 							placeholder="Enter a party Name"
-							onChangeText={setNewName}
+							onChangeText={setNewTitle}
 							clearButtonMode="always"
 							style={{
 								...GlobalStyles.textInput,
@@ -344,7 +378,7 @@ export default function PartySettings({
 								fontSize: Fonts.body.fontSize,
 								color: Colors.text,
 							}}>
-							{name}
+							{data.title}
 						</Text>
 					)}
 
@@ -377,7 +411,7 @@ export default function PartySettings({
 								fontSize: Fonts.body.fontSize,
 								color: Colors.text,
 							}}>
-							{description}
+							{data.description}
 						</Text>
 					)}
 				</View>
@@ -402,7 +436,7 @@ export default function PartySettings({
 						padding: 5,
 						marginTop: 10,
 					}}>
-					{notificationStatus ? (
+					{data.notificationFrequency ? (
 						<View>
 							<PulseIndicator color={Colors.primary} size={20} />
 						</View>
@@ -415,7 +449,7 @@ export default function PartySettings({
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize,
 							}}>
-							This party is {notificationStatus ? "active" : "inactive"}
+							This party is {data.notificationFrequency ? "active" : "inactive"}
 						</Text>
 						<Text
 							style={{
@@ -424,7 +458,7 @@ export default function PartySettings({
 								fontSize: Fonts.small.fontSize,
 								color: Colors.textSecondary,
 							}}>
-							{notificationStatus
+							{data.notificationFrequency
 								? "Notifications are being sent out randomly every few minutes"
 								: "No notifications are being sent out right now, activate the party to start notifications"}
 						</Text>
@@ -432,7 +466,8 @@ export default function PartySettings({
 
 					{isHost ? (
 						<Switch
-							value={notificationStatus}
+							//@ts-expect-error
+							value={data.notificationStatus}
 							onValueChange={handleNotificationStatusChange}
 						/>
 					) : (
@@ -480,84 +515,10 @@ export default function PartySettings({
 
 				<View style={GlobalStyles.hr} />
 
-				{/* Notification Frequency */}
-				{isHost ? (
-					<>
-						<Text
-							style={{
-								fontFamily: Fonts.subTitle.fontFamily,
-								fontSize: Fonts.button.fontSize,
-								width: "100%",
-								marginTop: 5,
-							}}>
-							Notification Frequency
-						</Text>
-						<View style={styles.frequencyContainer}>
-							<NotificationFrequencyButton
-								mode="fast"
-								notificationFrequency={notificationFrequency}
-								setNotificationFrequency={setNotificationFrequency}
-								color={Colors.tertiary}
-								title={"Fast"}
-								subtext={"Every 5-10 Minutes"}
-								icon={
-									<Icon
-										name="rabbit"
-										size={30}
-										color={
-											notificationFrequency === "fast"
-												? Colors.tertiaryDark
-												: Colors.textSecondary
-										}
-										type="MaterialCommunity"
-									/>
-								}
-							/>
-							<NotificationFrequencyButton
-								mode="normal"
-								notificationFrequency={notificationFrequency}
-								setNotificationFrequency={setNotificationFrequency}
-								color={Colors.primary}
-								title={"Normal"}
-								subtext={"Every 15-30 Minutes"}
-								icon={
-									<Icon
-										name="face"
-										size={30}
-										color={
-											notificationFrequency === "normal"
-												? Colors.primaryDark
-												: Colors.textSecondary
-										}
-									/>
-								}
-							/>
-							<NotificationFrequencyButton
-								mode="slow"
-								notificationFrequency={notificationFrequency}
-								setNotificationFrequency={setNotificationFrequency}
-								color={Colors.secondary}
-								title={"Slow"}
-								subtext={"Every 30-60 Minutes"}
-								icon={
-									<Icon
-										name="tortoise"
-										size={30}
-										color={
-											notificationFrequency === "slow"
-												? Colors.secondaryDark
-												: Colors.textSecondary
-										}
-										type="MaterialCommunity"
-									/>
-								}
-							/>
-						</View>
-						<View style={GlobalStyles.hr} />
-					</>
-				) : (
-					<></>
-				)}
+				<NotificationSettings
+					isHost={data.isHost}
+					notificationFrequency={data.notificationFrequency}
+				/>
 				{/* Party Settings */}
 				<Text
 					style={{
@@ -626,13 +587,3 @@ export default function PartySettings({
 		</SafeAreaView>
 	);
 }
-const styles = StyleSheet.create({
-	frequencyContainer: {
-		gap: 5,
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-		padding: 10,
-	},
-});

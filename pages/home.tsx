@@ -59,12 +59,11 @@ export default function HomePage({ navigation }) {
 	}, []);
 	async function getEvents({ pageParam = 1 }) {
 		setPage(pageParam);
-		console.log("Page", pageParam);
 		const result = await eventApi.getEvents({ page: pageParam });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		}
-		console.log(result.data);
+		console.log("result", result.data);
 		return result.data;
 	}
 	// async function loadMoreEvents() {

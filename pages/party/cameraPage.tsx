@@ -20,8 +20,10 @@ import { Colors, Fonts } from "../../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import postApi from "../../api/post/post";
 import { imageHeight, imageWidth } from "../../pages/post";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
+	const queryClient = new QueryClient();
 	const { eventId } = route.params;
 	const [loading, setLoading] = useState(false);
 	const [caption, setCaption] = useState("");
@@ -120,6 +122,30 @@ export default function CameraPage({ route, navigation }) {
 			navigation.navigate("Party", { eventId });
 		}
 	}
+	type PostType = {
+		_id: string;
+		caption: string;
+		image: string;
+		owner: {
+			_id: string;
+			name: string;
+			picture: string;
+		};
+		date: string;
+		likes: number;
+		comments: number;
+	};
+	const { status, error, mutate } = useMutation({
+		mutationFn: handlePost,
+		onSuccess: (newPost) => {
+			queryClient.setQueriesData(
+				["posts", eventId, 1],
+				(oldData: PostType[]) => [newPost, ...oldData]
+			);
+			navigation.navigate("Party", { eventId });
+		},
+	});
+
 	async function handlePost() {
 		setLoading(true);
 		const result = await postApi.create({ eventId, caption });
