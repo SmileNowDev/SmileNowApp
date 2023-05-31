@@ -135,6 +135,7 @@ export default function Polaroid({
 					alignItems: "center",
 					justifyContent: "center",
 					overflow: "hidden",
+					backgroundColor: "#000000",
 				}}>
 				{/* loading */}
 				{loading ? (

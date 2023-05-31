@@ -19,11 +19,12 @@ import eventApi from "../../api/post/event";
 import postApi from "../../api/post/post";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
-import AnimatedLottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PartyLoading from "../../components/party/partyLoading";
 
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
+	const [polaroidLooping, setPolaroidLooping] = useState(true); // start animation right away
 	const [canPost, setCanPost] = useState(false);
 	const [name, setName] = useState("");
 	const [bio, setBio] = useState("");
@@ -35,7 +36,18 @@ export default function PartyPage({ route, navigation }) {
 	const [loading, setLoading] = useState(false);
 	const [bottomLoading, setBottomLoading] = useState(false);
 	const [isActive, setIsActive] = useState(true);
-	function queryTipState() {}
+	const [showHint1, setShowHint1] = useState(false);
+	function queryTipState() {
+		AsyncStorage.getItem("@10Min_Tip").then((result) => {
+			if (result === null) {
+				// if not found
+				setShowHint1(true);
+			}
+		});
+	}
+	useEffect(() => {
+		queryTipState();
+	}, []);
 	async function hideHint1() {
 		let result = await AsyncStorage.setItem("@10Min_Tip", "true");
 	}
@@ -92,6 +104,13 @@ export default function PartyPage({ route, navigation }) {
 		}
 		setLoading(false);
 	}
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setPolaroidLooping(false);
+		}, 4000);
+		return () => clearTimeout(timer);
+	}, []);
 	function onRefresh() {
 		setRefreshing(true);
 		getPosts();
@@ -102,24 +121,13 @@ export default function PartyPage({ route, navigation }) {
 		getPosts();
 		getEvent();
 	}, [eventId]);
-	if (loading) {
+	if (loading || polaroidLooping) {
 		return (
-			<View
-				style={{
-					flex: 1,
-					height: "100%",
-					backgroundColor: "rgb(12,0,64)",
-				}}>
-				<AnimatedLottieView
-					source={require("../../assets/animations/polaroid-loop.json")}
-					autoPlay
-					loop
-					style={{
-						width: Dim.width - 40,
-						height: Dim.width - 40,
-					}}
-				/>
-			</View>
+			<TouchableOpacity
+				style={{ height: Dim.height }}
+				onPress={() => setPolaroidLooping(false)}>
+				<PartyLoading />
+			</TouchableOpacity>
 		);
 	} else {
 		return (
@@ -310,43 +318,45 @@ export default function PartyPage({ route, navigation }) {
 				) : (
 					<></>
 				)}
-				<View
-					style={{
-						position: "absolute",
-						bottom: 100,
-						left: 20,
-						right: 20,
-						zIndex: 90,
+				{showHint1 ? (
+					<View
+						style={{
+							position: "absolute",
+							bottom: 100,
+							left: 20,
+							right: 20,
+							zIndex: 90,
 
-						backgroundColor: Colors.background,
-						...GlobalStyles.Container,
-						...GlobalStyles.modalShadow,
-					}}>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-							textAlign: "center",
-						}}>
-						Photos take 10 minutes to develop!
-					</Text>
-					<TouchableOpacity
-						onPress={() => hideHint1()}
-						style={{
-							marginTop: 25,
-							...ButtonStyles.button,
-							...ButtonStyles.primary,
+							backgroundColor: Colors.background,
+							...GlobalStyles.Container,
+							...GlobalStyles.modalShadow,
 						}}>
 						<Text
 							style={{
-								...ButtonStyles.buttonText,
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+								textAlign: "center",
 							}}>
-							Got it!
+							Photos take 10 minutes to develop!
 						</Text>
-					</TouchableOpacity>
-					{/* <Text>{getElapsedTime()}</Text>
-						<Text>{TEN_MINUTES_IN_MS}</Text> */}
-				</View>
+						<TouchableOpacity
+							onPress={() => hideHint1()}
+							style={{
+								marginTop: 25,
+								...ButtonStyles.button,
+								...ButtonStyles.primary,
+							}}>
+							<Text
+								style={{
+									...ButtonStyles.buttonText,
+								}}>
+								Got it!
+							</Text>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<></>
+				)}
 			</SafeAreaView>
 		);
 	}
