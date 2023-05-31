@@ -1,129 +1,101 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
 	SafeAreaView,
 	Text,
 	TouchableOpacity,
 	View,
-	Platform,
 	FlatList,
+	StyleSheet,
+	RefreshControl,
 } from "react-native";
 import { Fonts, Colors } from "../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../styles/styles";
-import PartyListItem from "../components/partyListItem";
+import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
+import PartyListItem from "../components/home/partyListItem";
 import HomeHeader from "../components/layout/homeHeader";
 import eventApi from "../api/post/event";
-import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-import userApi from "../api/user/user";
-import * as Device from "expo-device";
 import { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
 import WelcomeMessage from "../components/info/welcomeMessage";
 import ModalWrapper from "../components/core/modalWrapper";
 import JoinPartyPage from "./joinParty";
+import { registerForPushNotificationsAsync } from "../lib/notifications";
+import {
+	useQuery,
+	useInfiniteQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
+import CreateJoin from "../components/home/createJoin";
+type EventType = {
+	_id: string;
+	title: string;
+	canPost: boolean;
+	attendeeInfo: { isHost: boolean; muted: boolean };
+	isActive: boolean;
+};
 export default function HomePage({ navigation }) {
-	//todo: give events a type
-	const [events, setEvents] = useState([]);
-	const [refreshing, setRefreshing] = useState(false);
+	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [bottomLoading, setBottomLoading] = useState(false);
-	const [joining, setJoining] = useState(false);
+	const [refreshing, setRefreshing] = useState(false);
 
-	// ... (other functions)
-
-	async function getEvents() {
-		setLoading(true);
-		const result = await eventApi.getEvents({ page: 1 });
-		if (result.ok) {
-			// @ts-expect-error
-			setEvents(result.data);
+	const {
+		data,
+		isLoading,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+		status,
+	} = useInfiniteQuery({
+		queryKey: ["events", page],
+		queryFn: ({ pageParam = 1 }) => getEvents({ pageParam }),
+		getNextPageParam: (lastPage) => {
+			return hasNextPage ? page + 1 : undefined;
+		},
+	});
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+		queryClient.invalidateQueries(["events"]);
+		setRefreshing(false);
+	}, []);
+	async function getEvents({ pageParam = 1 }) {
+		setPage(pageParam);
+		console.log("Page", pageParam);
+		const result = await eventApi.getEvents({ page: pageParam });
+		if (!result.ok) {
+			throw new Error(result.problem);
 		}
-		setLoading(false);
+		console.log(result.data);
+		return result.data;
 	}
+	// async function loadMoreEvents() {
+	// 	if (!hasMore) {
+	// 		return;
+	// 	}
 
-	// Add this function
-	async function loadMoreEvents() {
-		if (!hasMore) {
-			return;
-		}
+	// 	setBottomLoading(true);
+	// 	const nextPage = page + 1;
+	// 	const result = await eventApi.getEvents({ page: nextPage });
 
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await eventApi.getEvents({ page: nextPage });
+	// 	if (result.ok) {
+	// 		// @ts-expect-error
+	// 		if (result.data.length > 0) {
+	// 			//@ts-expect-error
+	// 			setEvents((prevEvents) => [...prevEvents, ...result.data]);
+	// 			setPage(nextPage);
+	// 		} else {
+	// 			setHasMore(false);
+	// 		}
+	// 	}
 
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setEvents((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
-	}
-
-	const uploadToken = async (expoNotificationToken: string) => {
-		const result = await userApi.updateUser({ expoNotificationToken });
-		if (result.ok) {
-		}
-	};
-	// Functions
-	async function registerForPushNotificationsAsync() {
-		let token;
-
-		if (Platform.OS === "android") {
-			await Notifications.setNotificationChannelAsync("default", {
-				name: "default",
-				importance: Notifications.AndroidImportance.MAX,
-				vibrationPattern: [0, 250, 250, 250],
-				lightColor: "#FF231F7C",
-			});
-		}
-
-		if (Device.isDevice) {
-			const { status: existingStatus } =
-				await Notifications.getPermissionsAsync();
-			let finalStatus = existingStatus;
-			if (existingStatus !== "granted") {
-				const { status } = await Notifications.requestPermissionsAsync();
-				finalStatus = status;
-			}
-			if (finalStatus !== "granted") {
-				return;
-			}
-			token = (await Notifications.getExpoPushTokenAsync()).data;
-			await uploadToken(token);
-		} else {
-		}
-
-		return token;
-	}
-	async function createEvent() {
-		const result = await eventApi.create();
-		if (result.ok) {
-			navigation.navigate("Party", {
-				// @ts-expect-error
-				eventId: result.data._id,
-				justCreated: true,
-			});
-		}
-	}
-	function onRefresh() {
-		getEvents();
-	}
+	// 	setBottomLoading(false);
+	// }
 
 	useEffect(() => {
-		getEvents();
 		registerForPushNotificationsAsync();
 	}, []);
+
 	const notificationListener = useRef();
 	const responseListener = useRef();
-
 	useEffect(() => {
 		//@ts-expect-error
 		notificationListener.current =
@@ -137,92 +109,104 @@ export default function HomePage({ navigation }) {
 					navigation.navigate(data.screen, data.params);
 				}
 			});
+		return () => {
+			Notifications.removeNotificationSubscription(
+				notificationListener.current
+			);
+			Notifications.removeNotificationSubscription(responseListener.current);
+		};
 	}, []);
-
+	if (isLoading) return <Text style={{ padding: 50 }}>Loading...</Text>;
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<ModalWrapper visible={joining} setVisible={setJoining} fullHeight={true}>
-				<JoinPartyPage setVisible={setJoining} />
-			</ModalWrapper>
 			<HomeHeader />
+			<CreateJoin navigation={navigation} />
 			<ScreenWrapper
-				onRefresh={onRefresh}
+				onRefresh={fetchNextPage}
 				scrollEnabled={true}
-				loading={loading}
-				onBottomScroll={loadMoreEvents}
-				bottomLoading={bottomLoading}
+				loading={isLoading}
 				style={{ paddingHorizontal: 0 }}>
-				{events.length === 0 ? (
+				{!data.pages.flat() ? (
 					<>
 						<WelcomeMessage />
 					</>
 				) : (
 					<>
-						<Text
-							style={{
-								fontFamily: Fonts.title.fontFamily,
-								fontSize: Fonts.subTitle.fontSize,
-								padding: 10,
-							}}>
-							My Parties
-						</Text>
-						<FlatList
-							data={events}
-							keyExtractor={(item) => item._id}
-							renderItem={({ item, index }) => (
-								<View
-									key={item._id}
-									style={{
-										paddingHorizontal: 10,
-										backgroundColor:
-											index % 2 === 0 ? Colors.background : Colors.border,
-									}}>
-									<PartyListItem
-										initials={getInitials(
-											item.title.split(" ")[0],
-											item.title.split(" ")[1]
-										)}
-										name={item.title}
-										eventId={item._id}
-										canPost={item.canPost}
-										attendeeInfo={item.attendeeInfo}
-										isActive={item.isActive}
-									/>
-								</View>
-							)}
-							onEndReached={() => setPage((prevPage) => prevPage + 1)}
-							onEndReachedThreshold={0.1}
-						/>
+						{data.pages.flat().length === 0 ? (
+							<></>
+						) : (
+							<View style={{ flex: 1 }}>
+								<FlatList
+									ListHeaderComponent={
+										<Text
+											style={{
+												fontFamily: Fonts.title.fontFamily,
+												fontSize: Fonts.subTitle.fontSize,
+												padding: 10,
+											}}>
+											My Parties
+										</Text>
+									}
+									refreshControl={
+										<RefreshControl
+											refreshing={refreshing}
+											onRefresh={onRefresh}
+										/>
+									}
+									style={{ flex: 1 }}
+									data={data.pages.flat() as EventType[]}
+									keyExtractor={(item) => item._id}
+									renderItem={({ item, index }) => {
+										return (
+											<View
+												style={{
+													paddingHorizontal: 10,
+													backgroundColor:
+														index % 2 === 0 ? Colors.background : Colors.border,
+												}}>
+												<PartyListItem
+													initials={getInitials(
+														item.title?.split(" ")[0],
+														item.title?.split(" ")[1]
+													)}
+													name={item.title}
+													eventId={item._id}
+													canPost={item.canPost}
+													attendeeInfo={item.attendeeInfo}
+													isActive={item.isActive}
+												/>
+											</View>
+										);
+									}}
+									onEndReached={() => {
+										if (hasNextPage) fetchNextPage();
+									}}
+									onEndReachedThreshold={0.5}
+									ListFooterComponent={
+										<View
+											style={{
+												height: 150,
+												width: Dim.width,
+												justifyContent: "center",
+											}}>
+											{isFetchingNextPage && (
+												<Text
+													style={{
+														textAlign: "center",
+														fontFamily: Fonts.body.fontFamily,
+														fontSize: Fonts.body.fontSize,
+													}}>
+													Getting More Parties... 🎉
+												</Text>
+											)}
+										</View>
+									}
+								/>
+							</View>
+						)}
 					</>
 				)}
 			</ScreenWrapper>
-
-			<View
-				style={{
-					position: "absolute",
-					bottom: 30,
-					left: -5,
-					right: -5,
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "center",
-					alignItems: "center",
-					gap: 2.5,
-					...GlobalStyles.Container,
-
-					flex: 0,
-				}}>
-				<TouchableOpacity
-					onPress={() => setJoining(true)}
-					style={{ ...ButtonStyles.secondary, ...ButtonStyles.buttonLarge }}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={createEvent}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
-				</TouchableOpacity>
-			</View>
 		</SafeAreaView>
 	);
 }

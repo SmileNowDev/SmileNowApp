@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Fonts, Colors } from "../../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
-import PartyListItem from "../../components/partyListItem";
+import PartyListItem from "../../components/home/partyListItem";
 import HomeHeader from "../../components/layout/homeHeader";
 import eventApi from "../../api/post/event";
 import Constants from "expo-constants";

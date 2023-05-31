@@ -1,9 +1,9 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import Icon from "./core/icons";
-import { Colors, Fonts } from "../styles/theme";
+import Icon from "../core/icons";
+import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
-import { generateColorFromLetters } from "../utils/colorGenerator";
+import { generateColorFromLetters } from "../../utils/colorGenerator";
 import { PulseIndicator, MaterialIndicator } from "react-native-indicators";
 interface ListProps {
 	initials: string;
@@ -42,7 +42,7 @@ export default function PartyListItem({
 				style={{
 					position: "relative",
 				}}>
-				{attendeeInfo.isHost ? (
+				{attendeeInfo?.isHost ? (
 					<View
 						style={{
 							position: "absolute",
@@ -101,7 +101,7 @@ export default function PartyListItem({
 				}}>
 				{name}
 			</Text>
-			{attendeeInfo.muted && (
+			{attendeeInfo?.muted && (
 				<Icon
 					name="moon"
 					type="Ion"

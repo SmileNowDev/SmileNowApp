@@ -4,10 +4,23 @@ import { Context, Provider as MyProvider } from "./providers/provider";
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { View } from "react-native";
+import { AppStateStatus, Platform, View } from "react-native";
 import { loadFonts } from "./utils/loadFonts";
 import RootNavigator from "./navigation/rootNavigator";
-
+import {
+	QueryClient,
+	QueryClientProvider,
+	focusManager,
+} from "@tanstack/react-query";
+const queryClient = new QueryClient({
+	defaultOptions: { queries: { retry: 2 } },
+});
+function onAppStateChange(status: AppStateStatus) {
+	// React Query already supports in web browser refetch on window focus by default
+	if (Platform.OS !== "web") {
+		focusManager.setFocused(status === "active");
+	}
+}
 export default function App() {
 	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const fontsAreLoaded = loadFonts();
@@ -25,7 +38,6 @@ export default function App() {
 				setFontsLoaded(true);
 			}
 		}
-
 		prepare();
 	}, [fontsAreLoaded]);
 	if (!fontsLoaded) {
@@ -34,9 +46,11 @@ export default function App() {
 		return (
 			<MyProvider>
 				<StatusBar style="dark" />
-				<NavigationContainer>
-					<RootNavigator />
-				</NavigationContainer>
+				<QueryClientProvider client={queryClient}>
+					<NavigationContainer>
+						<RootNavigator />
+					</NavigationContainer>
+				</QueryClientProvider>
 			</MyProvider>
 		);
 	}

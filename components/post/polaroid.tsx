@@ -98,7 +98,6 @@ export default function Polaroid({
 	// 	return () => subscription.remove();
 	// }, []);
 	async function handleOpacity() {
-		console.log("opacity use effect");
 		const elapsedMs = getElapsedTime();
 		if (loading) return;
 

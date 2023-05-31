@@ -21,88 +21,53 @@ import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PartyLoading from "../../components/party/partyLoading";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import ActivateParty from "../../components/party/activateParty";
+import TakePhoto from "../../components/party/takePhoto";
 
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
+
 	const [polaroidLooping, setPolaroidLooping] = useState(true); // start animation right away
-	const [canPost, setCanPost] = useState(false);
-	const [name, setName] = useState("");
-	const [bio, setBio] = useState("");
-	const [posts, setPosts] = useState([]);
-	const [isHost, setIsHost] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [bottomLoading, setBottomLoading] = useState(false);
 	const [isActive, setIsActive] = useState(true);
-	const [showHint1, setShowHint1] = useState(false);
-	function queryTipState() {
-		AsyncStorage.getItem("@10Min_Tip").then((result) => {
-			if (result === null) {
-				// if not found
-				setShowHint1(true);
-			}
-		});
-	}
-	useEffect(() => {
-		queryTipState();
-	}, []);
-	async function hideHint1() {
-		let result = await AsyncStorage.setItem("@10Min_Tip", "true");
-	}
-	async function getPosts() {
-		setLoading(true);
-		const result = await postApi.getPosts({ eventId, page: 1 });
-		if (result.ok) {
-			//@ts-expect-error
-			setPosts(result.data);
-		}
-	}
-	async function loadMoreEvents() {
-		if (!hasMore) {
-			return;
-		}
 
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await postApi.getPosts({ eventId, page: nextPage });
-
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setPosts((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
-	}
-	async function activateParty() {
-		const result = await eventApi.start({ eventId });
-		if (result.ok) {
-			Alert.alert("Party Activated", "Have fun!");
-			setIsActive(!isActive);
-		}
-	}
+	const { isLoading, error, data, refetch } = useQuery<any>({
+		queryKey: ["event", eventId],
+		queryFn: getEvent,
+	});
 	async function getEvent() {
 		const result = await eventApi.getEvent({ eventId });
-		if (result.ok) {
-			// @ts-expect-error
-			setName(result.data.event.title);
-			// @ts-expect-error
-			setCanPost(result.data.canPost);
-			// @ts-expect-error
-			setIsHost(result.data.attendeeInfo.isHost);
-			// @ts-expect-error
-			setIsActive(result.data.isActive);
-			// @ts-expect-error
-			setBio(result.data.bio);
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			console.log(result.data);
+			return result.data;
 		}
-		setLoading(false);
+	}
+	const {
+		data: postsData,
+		isLoading: postsLoading,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+		status,
+	} = useInfiniteQuery<any>({
+		queryKey: ["posts", eventId, page],
+		queryFn: getPosts,
+		getNextPageParam: (lastPage) => {
+			return hasNextPage ? page + 1 : undefined;
+		},
+	});
+
+	async function getPosts({ pageParam = 1 }) {
+		setPage(pageParam);
+		const result = await postApi.getPosts({ eventId, page: pageParam });
+		if (!result.ok) {
+			throw new Error(result.problem);
+		}
+		return result.data;
 	}
 
 	useEffect(() => {
@@ -113,15 +78,31 @@ export default function PartyPage({ route, navigation }) {
 	}, []);
 	function onRefresh() {
 		setRefreshing(true);
-		getPosts();
-		getEvent();
+		refetch();
 		setRefreshing(false);
 	}
-	useEffect(() => {
-		getPosts();
-		getEvent();
-	}, [eventId]);
-	if (loading || polaroidLooping) {
+
+	if (error) {
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					paddingHorizontal: 20,
+				}}>
+				<Text
+					style={{
+						fontFamily: Fonts.title.fontFamily,
+						fontSize: Fonts.title.fontSize,
+						textAlign: "center",
+					}}>
+					{JSON.stringify(error)}
+				</Text>
+			</View>
+		);
+	}
+	if (isLoading || polaroidLooping) {
 		return (
 			<TouchableOpacity
 				style={{ height: Dim.height }}
@@ -133,50 +114,30 @@ export default function PartyPage({ route, navigation }) {
 		return (
 			<SafeAreaView style={{ flex: 1 }}>
 				<PartyHeader
-					title={name}
-					eventId={eventId}
-					name={name}
-					isHost={isHost}
+					title={data.title}
+					eventId={data.eventId}
+					name={data.name}
+					isHost={data.isHost}
 				/>
-
-				{canPost ? (
-					<View
-						style={{
-							position: "absolute",
-							bottom: 100,
-							left: 40,
-							right: 40,
-							zIndex: 95,
-						}}>
-						<TouchableOpacity
-							onPress={() => navigation.navigate("Camera", { eventId })}
-							style={{ ...ButtonStyles.buttonLarge, ...ButtonStyles.primary }}>
-							<Icon
-								name="camera"
-								size={30}
-								type="Feather"
-								color={Colors.background}
-							/>
-							<Text
-								style={{
-									...ButtonStyles.buttonText,
-									color: Colors.background,
-								}}>
-								Take a Photo!
-							</Text>
-						</TouchableOpacity>
-					</View>
-				) : (
-					<></>
-				)}
+				<ActivateParty
+					isActive={isActive}
+					setIsActive={setIsActive}
+					eventId={eventId}
+					isHost={data.isHost}
+				/>
+				<TakePhoto eventId={eventId} canPost={data.canPost} />
 				<ScreenWrapper
 					onRefresh={onRefresh}
 					scrollEnabled={true}
-					loading={loading}
-					onBottomScroll={loadMoreEvents}
-					bottomLoading={bottomLoading}>
+					loading={postsLoading}
+					onBottomScroll={() => {
+						if (hasNextPage) {
+							fetchNextPage();
+						}
+					}}
+					bottomLoading={isFetchingNextPage}>
 					<>
-						{justCreated || posts.length === 0 ? (
+						{justCreated && postsData.pages.flat().length === 0 ? (
 							<View>
 								<Text
 									style={{
@@ -185,7 +146,7 @@ export default function PartyPage({ route, navigation }) {
 										fontFamily: Fonts.title.fontFamily,
 										fontSize: Fonts.title.fontSize,
 									}}>
-									Welcome to {name}
+									Welcome to {data.name}
 								</Text>
 								{/* <Text
 									style={{
@@ -211,12 +172,12 @@ export default function PartyPage({ route, navigation }) {
 						) : (
 							<></>
 						)}
-						{posts.length === 0 ? (
-							<EmptyPartyMessage isHost={isHost} />
+						{postsData.pages.flat().length === 0 ? (
+							<EmptyPartyMessage isHost={data.isHost} />
 						) : (
 							<>
 								<FlatList
-									data={posts}
+									data={postsData.pages.flat()}
 									keyExtractor={(item) => item._id}
 									renderItem={({ item, index }) => {
 										return (
@@ -244,120 +205,85 @@ export default function PartyPage({ route, navigation }) {
 											</TouchableWithoutFeedback>
 										);
 									}}
+									ListFooterComponent={
+										<View
+											style={{
+												height: 150,
+												width: Dim.width,
+												justifyContent: "center",
+											}}>
+											{isFetchingNextPage && (
+												<Text
+													style={{
+														textAlign: "center",
+														fontFamily: Fonts.body.fontFamily,
+														fontSize: Fonts.body.fontSize,
+													}}>
+													Getting More Pictures... 🖼
+												</Text>
+											)}
+										</View>
+									}
 								/>
-
-								<View style={{ height: Dim.height / 2 }} />
 							</>
 						)}
 					</>
 				</ScreenWrapper>
-				{isHost && !isActive ? (
-					<View
-						style={{
-							position: "absolute",
-							alignItems: "center",
-							bottom: 60,
-							left: 30,
-							right: 30,
-							gap: 2.5,
-							...GlobalStyles.Container,
-							shadowColor: Colors.secondary,
-							shadowOffset: {
-								width: 0,
-								height: 2,
-							},
-							shadowOpacity: 0.5,
-							shadowRadius: 10,
-							elevation: 10,
-
-							flex: 0,
-							zIndex: 100,
-						}}>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								alignItems: "center",
-								gap: 10,
-								marginBottom: 10,
-							}}>
-							<Text
-								style={{
-									fontFamily: Fonts.body.fontFamily,
-									fontSize: Fonts.body.fontSize,
-								}}>
-								Your party is inactive
-							</Text>
-							<Icon
-								name="emoticon-sad-outline"
-								type="MaterialCommunity"
-								size={25}
-							/>
-						</View>
-						<TouchableOpacity
-							onPress={() => {
-								activateParty();
-							}}
-							style={{
-								...ButtonStyles.buttonLarge,
-								...ButtonStyles.primary,
-								width: "100%",
-							}}>
-							<Image
-								source={require("../../assets/logo_white.png")}
-								style={{ width: 30, height: 30 }}
-							/>
-							<Text
-								style={{
-									...ButtonStyles.buttonTextLarge,
-								}}>
-								Activate Party
-							</Text>
-						</TouchableOpacity>
-					</View>
-				) : (
-					<></>
-				)}
-				{showHint1 ? (
-					<View
-						style={{
-							position: "absolute",
-							bottom: 100,
-							left: 20,
-							right: 20,
-							zIndex: 90,
-
-							backgroundColor: Colors.background,
-							...GlobalStyles.Container,
-							...GlobalStyles.modalShadow,
-						}}>
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-								textAlign: "center",
-							}}>
-							Photos take 10 minutes to develop!
-						</Text>
-						<TouchableOpacity
-							onPress={() => hideHint1()}
-							style={{
-								marginTop: 25,
-								...ButtonStyles.button,
-								...ButtonStyles.primary,
-							}}>
-							<Text
-								style={{
-									...ButtonStyles.buttonText,
-								}}>
-								Got it!
-							</Text>
-						</TouchableOpacity>
-					</View>
-				) : (
-					<></>
-				)}
 			</SafeAreaView>
 		);
 	}
 }
+// const [showHint1, setShowHint1] = useState(false);
+// function queryTipState() {
+// 	AsyncStorage.getItem("@10Min_Tip").then((result) => {
+// 		if (result === null) {
+// 			// if not found
+// 			setShowHint1(true);
+// 		}
+// 	});
+// }
+// useEffect(() => {
+// 	queryTipState();
+// }, []);
+// async function hideHint1() {
+// 	let result = await AsyncStorage.setItem("@10Min_Tip", "true");
+// }
+// {showHint1 ? (
+// 	<View
+// 		style={{
+// 			position: "absolute",
+// 			bottom: 100,
+// 			left: 20,
+// 			right: 20,
+// 			zIndex: 90,
+
+// 			backgroundColor: Colors.background,
+// 			...GlobalStyles.Container,
+// 			...GlobalStyles.modalShadow,
+// 		}}>
+// 		<Text
+// 			style={{
+// 				fontFamily: Fonts.body.fontFamily,
+// 				fontSize: Fonts.body.fontSize,
+// 				textAlign: "center",
+// 			}}>
+// 			Photos take 10 minutes to develop!
+// 		</Text>
+// 		<TouchableOpacity
+// 			onPress={() => hideHint1()}
+// 			style={{
+// 				marginTop: 25,
+// 				...ButtonStyles.button,
+// 				...ButtonStyles.primary,
+// 			}}>
+// 			<Text
+// 				style={{
+// 					...ButtonStyles.buttonText,
+// 				}}>
+// 				Got it!
+// 			</Text>
+// 		</TouchableOpacity>
+// 	</View>
+// ) : (
+// 	<></>
+// )}
