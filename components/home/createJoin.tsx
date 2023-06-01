@@ -5,17 +5,37 @@ import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 export default function CreateJoin({ navigation }) {
 	const [joining, setJoining] = useState(false);
-	async function createEvent() {
-		const result = await eventApi.create();
-		if (result.ok) {
+	const queryClient = useQueryClient();
+	const mutation = useMutation(() => eventApi.create(), {
+		onSuccess: (data) => {
 			navigation.navigate("Party", {
-				// @ts-expect-error
-				eventId: result.data._id,
+				//@ts-expect-error
+				eventId: data.data._id,
 				justCreated: true,
 			});
-		}
+			//@ts-expect-error
+			queryClient.setQueryData(["event", data.data._id], data.data);
+			queryClient.setQueryData(["events", 1], (oldData) => {
+				//@ts-expect-error
+				if (!oldData?.pages || !Array.isArray(oldData.pages)) {
+					return [[data.data]]; // Return the new data as the only page
+				}
+				// Create a copy of the first page and add the new data at the start
+				//@ts-expect-error
+				const firstPage = [data.data, ...oldData.pages[0]];
+
+				// Replace the old first page with the new first page in the pages array
+				//@ts-expect-error
+				const newPages = [firstPage, ...oldData.pages.slice(1)];
+				return newPages;
+			});
+		},
+	});
+	async function createEvent() {
+		mutation.mutate();
 	}
 
 	return (

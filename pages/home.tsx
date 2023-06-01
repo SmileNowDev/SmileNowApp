@@ -26,6 +26,7 @@ import {
 	useQueryClient,
 } from "@tanstack/react-query";
 import CreateJoin from "../components/home/createJoin";
+import { useIsFocused } from "@react-navigation/native";
 type EventType = {
 	_id: string;
 	title: string;
@@ -34,10 +35,11 @@ type EventType = {
 	isActive: boolean;
 };
 export default function HomePage({ navigation }) {
+	const isFocused = useIsFocused();
 	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
 	const [refreshing, setRefreshing] = useState(false);
-
+	const [events, setEvents] = useState<EventType[]>([]);
 	const {
 		data,
 		isLoading,
@@ -45,16 +47,35 @@ export default function HomePage({ navigation }) {
 		hasNextPage,
 		isFetchingNextPage,
 		status,
+		refetch,
+		isFetching,
 	} = useInfiniteQuery({
 		queryKey: ["events", page],
 		queryFn: ({ pageParam = 1 }) => getEvents({ pageParam }),
 		getNextPageParam: (lastPage) => {
 			return hasNextPage ? page + 1 : undefined;
 		},
+		enabled: isFocused,
+		staleTime: 1000 * 60 * 5, // data is considered fresh for 5 minutes
+		cacheTime: 1000 * 60 * 30, // data is cached for 30 minutes
 	});
+	useEffect(() => {
+		if (isFocused) {
+			refetch();
+		}
+	}, [isFocused]);
+	useEffect(() => {
+		console.log("uplading");
+		if (data?.pages?.length > 0) {
+			setEvents(data.pages.flat() as EventType[]);
+		}
+		console.log("updated");
+	}, [data]);
+
 	const onRefresh = useCallback(() => {
 		setRefreshing(true);
 		queryClient.invalidateQueries(["events"]);
+		refetch();
 		setRefreshing(false);
 	}, []);
 	async function getEvents({ pageParam = 1 }) {
@@ -66,28 +87,6 @@ export default function HomePage({ navigation }) {
 		console.log("result", result.data);
 		return result.data;
 	}
-	// async function loadMoreEvents() {
-	// 	if (!hasMore) {
-	// 		return;
-	// 	}
-
-	// 	setBottomLoading(true);
-	// 	const nextPage = page + 1;
-	// 	const result = await eventApi.getEvents({ page: nextPage });
-
-	// 	if (result.ok) {
-	// 		// @ts-expect-error
-	// 		if (result.data.length > 0) {
-	// 			//@ts-expect-error
-	// 			setEvents((prevEvents) => [...prevEvents, ...result.data]);
-	// 			setPage(nextPage);
-	// 		} else {
-	// 			setHasMore(false);
-	// 		}
-	// 	}
-
-	// 	setBottomLoading(false);
-	// }
 
 	useEffect(() => {
 		registerForPushNotificationsAsync();
@@ -115,28 +114,27 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	if (isLoading) return <Text style={{ padding: 50 }}>Loading...</Text>;
+	if (isLoading && isFetching)
+		return <Text style={{ padding: 50 }}>Loading...</Text>;
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />
 			<CreateJoin navigation={navigation} />
 			<ScreenWrapper
-				onRefresh={fetchNextPage}
+				onRefresh={onRefresh}
 				scrollEnabled={true}
 				loading={isLoading}
 				style={{ paddingHorizontal: 0 }}>
-				{!data.pages.flat() ? (
+				{data?.pages?.length === 0 ? (
 					<>
 						<WelcomeMessage />
 					</>
 				) : (
 					<>
-						{data.pages.flat().length === 0 ? (
-							<></>
-						) : (
-							<View style={{ flex: 1 }}>
-								<FlatList
-									ListHeaderComponent={
+						<View style={{ flex: 1 }}>
+							<FlatList
+								ListHeaderComponent={
+									<View>
 										<Text
 											style={{
 												fontFamily: Fonts.title.fontFamily,
@@ -145,64 +143,65 @@ export default function HomePage({ navigation }) {
 											}}>
 											My Parties
 										</Text>
-									}
-									refreshControl={
-										<RefreshControl
-											refreshing={refreshing}
-											onRefresh={onRefresh}
-										/>
-									}
-									style={{ flex: 1 }}
-									data={data.pages.flat() as EventType[]}
-									keyExtractor={(item) => item._id}
-									renderItem={({ item, index }) => {
-										return (
-											<View
-												style={{
-													paddingHorizontal: 10,
-													backgroundColor:
-														index % 2 === 0 ? Colors.background : Colors.border,
-												}}>
-												<PartyListItem
-													initials={getInitials(
-														item.title?.split(" ")[0],
-														item.title?.split(" ")[1]
-													)}
-													name={item.title}
-													eventId={item._id}
-													canPost={item.canPost}
-													attendeeInfo={item.attendeeInfo}
-													isActive={item.isActive}
-												/>
-											</View>
-										);
-									}}
-									onEndReached={() => {
-										if (hasNextPage) fetchNextPage();
-									}}
-									onEndReachedThreshold={0.5}
-									ListFooterComponent={
+										{isFetching && <Text>Fetching New</Text>}
+									</View>
+								}
+								refreshControl={
+									<RefreshControl
+										refreshing={refreshing}
+										onRefresh={onRefresh}
+									/>
+								}
+								style={{ flex: 1 }}
+								data={events}
+								keyExtractor={(item) => item._id}
+								renderItem={({ item, index }) => {
+									return (
 										<View
 											style={{
-												height: 150,
-												width: Dim.width,
-												justifyContent: "center",
+												paddingHorizontal: 10,
+												backgroundColor:
+													index % 2 === 0 ? Colors.background : Colors.border,
 											}}>
-											{isFetchingNextPage && (
-												<Text
-													style={{
-														textAlign: "center",
-														fontFamily: Fonts.body.fontFamily,
-														fontSize: Fonts.body.fontSize,
-													}}>
-													Getting More Parties... 🎉
-												</Text>
-											)}
+											<PartyListItem
+												initials={getInitials(
+													item.title?.split(" ")[0],
+													item.title?.split(" ")[1]
+												)}
+												name={item.title}
+												eventId={item._id}
+												canPost={item.canPost}
+												attendeeInfo={item.attendeeInfo}
+												isActive={item.isActive}
+											/>
 										</View>
-									}
-								/>
-							</View>
-						)}
+									);
+								}}
+								onEndReached={() => {
+									if (hasNextPage) fetchNextPage();
+								}}
+								onEndReachedThreshold={0.5}
+								ListFooterComponent={
+									<View
+										style={{
+											height: 150,
+											width: Dim.width,
+											justifyContent: "center",
+										}}>
+										{isFetchingNextPage && (
+											<Text
+												style={{
+													textAlign: "center",
+													fontFamily: Fonts.body.fontFamily,
+													fontSize: Fonts.body.fontSize,
+												}}>
+												Getting More Parties... 🎉
+											</Text>
+										)}
+									</View>
+								}
+							/>
+						</View>
 					</>
 				)}
 			</ScreenWrapper>

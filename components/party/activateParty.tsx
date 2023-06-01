@@ -28,7 +28,6 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 			},
 		});
 	}
-	console.log("in component", { isActive, eventId, isHost });
 	if (!isHost) return <></>;
 	else if (isHost && isActive) return <></>;
 	else {

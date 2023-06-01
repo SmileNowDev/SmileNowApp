@@ -55,6 +55,8 @@ export default function PartyPage({ route, navigation }) {
 			throw new Error(result.problem);
 		} else {
 			console.log("==============");
+			//@ts-expect-error
+			console.log("getting event: ", result.data.event.title);
 			console.log(result.data);
 			console.log("==============");
 			let data: IEvent = {
@@ -152,6 +154,7 @@ export default function PartyPage({ route, navigation }) {
 					name={data.title}
 					isHost={data.isHost}
 				/>
+				<Text>{eventId}</Text>
 				<ActivateParty
 					isActive={data.isActive}
 					eventId={eventId}
