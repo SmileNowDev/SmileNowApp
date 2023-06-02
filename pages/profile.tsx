@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	Image,
 	Linking,
 	SafeAreaView,
@@ -15,122 +16,146 @@ import Icon from "../components/core/icons";
 import userApi from "../api/user/user";
 import { Context } from "../providers/provider";
 import Avatar, { Picture } from "../components/avatar";
+import { useQuery } from "@tanstack/react-query";
+import ScreenWrapper from "../components/core/screenWrapper";
+type UserType = {
+	name: string;
+	pic: string;
+	username: string;
+};
 export default function ProfilePage({ navigation }) {
-	const [loading, setLoading] = useState(false);
-	const [user, setUser] = useState({ name: "", pic: "", username: "" });
 	const { userId } = useContext(Context);
+	const { isLoading, data, error, isRefetching, refetch } = useQuery({
+		queryKey: ["user", userId],
+		queryFn: getUser,
+	});
 	async function getUser() {
 		const result = await userApi.get({ userId });
 		if (result.ok) {
-			//@ts-expect-error
-			setUser(result.data);
+			console.log("user", result.data);
+			let user: UserType = {
+				//@ts-expect-error
+				name: result.data.name,
+				//@ts-expect-error
+				pic: result.data.pic,
+				//@ts-expect-error
+				username: result.data.username,
+			};
+			return user;
+		} else {
+			// todo- add chrome dinosaur game if user is not found
+			return {
+				name: "User Not Found",
+				pic: "",
+				username: "please_try_again_later",
+			};
 		}
 	}
-
-	useEffect(() => {
-		setLoading(true);
-		getUser();
-		setLoading(false);
-	}, [userId]);
-
+	function refresh() {
+		refetch();
+	}
+	if (isLoading)
+		return (
+			<SafeAreaView style={{ flex: 1 }}>
+				<View style={{ flex: 1, justifyContent: "center" }}>
+					<ActivityIndicator size={"large"} color={Colors.primary} />
+				</View>
+			</SafeAreaView>
+		);
 	return (
 		<SafeAreaView>
 			<Header goBack title={"My Profile"} />
-			<View
-				style={{
-					paddingTop: 30,
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-					justifyContent: "center",
-				}}
-			>
+			<ScreenWrapper
+				loading={isLoading}
+				scrollEnabled={true}
+				onRefresh={refresh}>
 				<View
 					style={{
-						position: "relative",
-						height: 150,
-						width: 150,
-						borderRadius: 75,
-						marginBottom: 10,
-					}}
-				>
-					<Picture pic={user.pic} size={150} />
-					<TouchableOpacity
-						onPress={() => navigation.navigate("TakeProfilePicture")}
+						paddingTop: 30,
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						justifyContent: "center",
+					}}>
+					<View
 						style={{
-							position: "absolute",
-							bottom: 0,
-							right: 0,
-							backgroundColor: Colors.background,
-							padding: 4,
-							borderRadius: 20,
+							position: "relative",
+							height: 150,
+							width: 150,
+							borderRadius: 75,
+							marginBottom: 10,
+						}}>
+						<Picture pic={data.pic} size={150} />
+						<TouchableOpacity
+							onPress={() => navigation.navigate("TakeProfilePicture")}
+							style={{
+								position: "absolute",
+								bottom: 0,
+								right: 0,
+								backgroundColor: Colors.background,
+								padding: 4,
+								borderRadius: 20,
+							}}>
+							<Icon name="account-edit" type={"MaterialCommunity"} size={30} />
+						</TouchableOpacity>
+					</View>
+					<Text
+						style={{
+							fontFamily: Fonts.subTitle.fontFamily,
+							fontSize: Fonts.subTitle.fontSize,
+						}}>
+						{data.name}
+					</Text>
+					<Text
+						style={{
+							fontFamily: Fonts.button.fontFamily,
+							fontSize: Fonts.button.fontSize,
+							color: Colors.textSecondary,
+						}}>
+						@{data.username}
+					</Text>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "center",
+						alignItems: "center",
+						gap: 5,
+						marginVertical: 20,
+					}}>
+					<TouchableOpacity
+						onPress={() => {
+							// TODO: open the app store page!
+							Linking.openURL("https://smile.samschmitt.net");
 						}}
-					>
-						<Icon name='account-edit' type={"MaterialCommunity"} size={30} />
+						style={{
+							...styles.optionButton,
+							backgroundColor: Colors.primaryLight,
+						}}>
+						<Icon name="info" type={"Feather"} size={30} />
+						<Text>Learn More</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => {
+							navigation.navigate("EditProfile");
+						}}
+						style={{
+							...styles.optionButton,
+							backgroundColor: Colors.secondaryLight,
+						}}>
+						<Icon name="edit" type={"Feather"} size={30} />
+						<Text>Edit Profile</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={() => navigation.navigate("Settings")}
+						style={{ ...styles.optionButton, backgroundColor: Colors.border }}>
+						<Icon name="settings" type={"Feather"} size={30} />
+						<Text>Settings</Text>
 					</TouchableOpacity>
 				</View>
-				<Text
-					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-					}}
-				>
-					{user.name}
-				</Text>
-				<Text
-					style={{
-						fontFamily: Fonts.button.fontFamily,
-						fontSize: Fonts.button.fontSize,
-						color: Colors.textSecondary,
-					}}
-				>
-					@{user.username}
-				</Text>
-			</View>
-			<View
-				style={{
-					flexDirection: "row",
-					justifyContent: "center",
-					alignItems: "center",
-					gap: 5,
-					marginVertical: 20,
-				}}
-			>
-				<TouchableOpacity
-					onPress={() => {
-						// TODO: open the app store page!
-						Linking.openURL("https://smile.samschmitt.net");
-					}}
-					style={{
-						...styles.optionButton,
-						backgroundColor: Colors.primaryLight,
-					}}
-				>
-					<Icon name='info' type={"Feather"} size={30} />
-					<Text>Learn More</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => {
-						navigation.navigate("EditProfile");
-					}}
-					style={{
-						...styles.optionButton,
-						backgroundColor: Colors.secondaryLight,
-					}}
-				>
-					<Icon name='edit' type={"Feather"} size={30} />
-					<Text>Edit Profile</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => navigation.navigate("Settings")}
-					style={{ ...styles.optionButton, backgroundColor: Colors.border }}
-				>
-					<Icon name='settings' type={"Feather"} size={30} />
-					<Text>Settings</Text>
-				</TouchableOpacity>
-			</View>
 
-			{/* TODO:  my pictures */}
+				{/* TODO:  my pictures */}
+			</ScreenWrapper>
 		</SafeAreaView>
 	);
 }

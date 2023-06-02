@@ -7,6 +7,7 @@ import {
 	FlatList,
 	StyleSheet,
 	RefreshControl,
+	ActivityIndicator,
 } from "react-native";
 import { Fonts, Colors } from "../styles/theme";
 import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
@@ -27,6 +28,7 @@ import {
 } from "@tanstack/react-query";
 import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
+import PartyLoading from "../components/party/partyLoading";
 type EventType = {
 	_id: string;
 	title: string;
@@ -84,7 +86,6 @@ export default function HomePage({ navigation }) {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		}
-		console.log("result", result.data);
 		return result.data;
 	}
 
@@ -114,8 +115,7 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	if (isLoading && isFetching)
-		return <Text style={{ padding: 50 }}>Loading...</Text>;
+	if (isLoading && isFetching) return <PartyLoading />;
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />
@@ -134,7 +134,12 @@ export default function HomePage({ navigation }) {
 						<View style={{ flex: 1 }}>
 							<FlatList
 								ListHeaderComponent={
-									<View>
+									<View
+										style={{
+											flexDirection: "row",
+											justifyContent: "space-between",
+											paddingRight: 20,
+										}}>
 										<Text
 											style={{
 												fontFamily: Fonts.title.fontFamily,
@@ -143,7 +148,8 @@ export default function HomePage({ navigation }) {
 											}}>
 											My Parties
 										</Text>
-										{isFetching && <Text>Fetching New</Text>}
+
+										{isFetching && <ActivityIndicator color={Colors.primary} />}
 									</View>
 								}
 								refreshControl={

@@ -141,6 +141,18 @@ export default function CameraPage({ route, navigation }) {
 			queryClient.setQueriesData(
 				["posts", eventId, 1],
 				(oldData: PostType[]) => [newPost, ...oldData]
+
+				// if (!oldData?.pages || !Array.isArray(oldData.pages)) {
+				// 	return [newPost]; // Return the new data as the only page
+				// }
+				// // Create a copy of the first page and add the new data at the start
+				// //@ts-expect-error
+				// const firstPage = [data.data, ...oldData.pages[0]];
+
+				// // Replace the old first page with the new first page in the pages array
+				// //@ts-expect-error
+				// const newPages = [firstPage, ...oldData.pages.slice(1)];
+				// return newPages;
 			);
 			navigation.navigate("Party", { eventId });
 		},

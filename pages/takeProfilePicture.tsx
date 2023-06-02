@@ -1,27 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
 	Alert,
-	Button,
 	Dimensions,
 	Image,
 	SafeAreaView,
 	StyleSheet,
 	Text,
-	TextInput,
-	Touchable,
-	TouchableOpacity,
 	View,
 	ActivityIndicator,
-	Platform,
+	TouchableOpacity,
 } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import Icon from "../components/core/icons";
 import { Colors, Fonts } from "../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../styles/styles";
+import { ButtonStyles } from "../styles/styles";
 import postApi from "../api/post/post";
 import userApi from "../api/user/user";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Context } from "../providers/provider";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
+	const queryClient = useQueryClient();
+	const { userId } = useContext(Context);
 	const [loading, setLoading] = useState(false);
 	const [permission, requestPermission] = Camera.useCameraPermissions();
 	const cameraType = CameraType.front;
@@ -29,6 +29,8 @@ export default function CameraPage({ route, navigation }) {
 	const [isPreviewing, setIsPreviewing] = useState(false);
 	const [photo, setPhoto] = useState(null);
 	const cameraRef = useRef(null);
+
+	//taking photo
 	const takePhoto = async () => {
 		if (cameraRef.current) {
 			const result = await cameraRef.current.takePictureAsync({
@@ -49,6 +51,37 @@ export default function CameraPage({ route, navigation }) {
 		setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off);
 	};
 
+	//saving photo
+
+	const { isLoading, mutate, isError } = useMutation(
+		(formData) => userApi.uploadAvatar({ formData }),
+		{
+			onSuccess: (data) => {
+				console.log("pfp uploaded");
+				console.log("postId", data);
+				// uploadImage();
+				// uploadImage(data._id);
+				// let userData = queryClient.getQueryData(["user", userId]);
+				// console.log("user Data", userData);
+
+				queryClient.setQueryData(["user", userId], (oldData) => {
+					return {
+						//@ts-expect-error
+						...oldData,
+						//@ts-expect-error
+						pic: data.pic,
+					};
+				});
+			},
+			onError: (error) => {
+				console.log("error", error);
+				Alert.alert(
+					"Image Upload Failed",
+					"Oops, something went wrong, please try again later."
+				);
+			},
+		}
+	);
 	const createFormData = (photo, body = {}) => {
 		let formData = new FormData();
 		let filename = photo.uri.split("/").pop();
@@ -69,19 +102,11 @@ export default function CameraPage({ route, navigation }) {
 		}
 	}
 	async function handleSave() {
-		setLoading(true);
 		let formData = createFormData(photo);
-		const result = await userApi.uploadAvatar({ formData });
-		if (result.ok) {
-			//@ts-expect-error
-			uploadImage(result.data._id);
-		} else {
-			Alert.alert(
-				"Image Upload Failed",
-				"Oops, something went wrong, please try again later."
-			);
-			setLoading(false);
-		}
+		//@ts-expect-error
+		console.log("formData", formData._parts[0][1]);
+		// @ts-expect-error
+		mutate(formData);
 	}
 	useEffect(() => {
 		(async () => {
@@ -157,7 +182,7 @@ export default function CameraPage({ route, navigation }) {
 							Looks Great!
 						</Text>
 					</View>
-					{loading ? (
+					{isLoading ? (
 						<ActivityIndicator
 							size={"large"}
 							color={Colors.primary}
