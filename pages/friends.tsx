@@ -1,24 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	SafeAreaView,
-	TextInput,
-	FlatList,
-	Image,
-	ScrollView,
-	StyleSheet,
-	TouchableOpacity,
-} from "react-native";
-import Header from "../components/layout/header";
-import { Dim, GlobalStyles } from "../styles/styles";
+import React from "react";
+import { Text, StyleSheet, TouchableOpacity, View, Button } from "react-native";
+import { ButtonStyles, Dim } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
-import UserCard from "../components/userCard";
-import * as Contacts from "expo-contacts";
-import ContactCard from "../components/friendsTabs/contactCard";
-import { debounce } from "lodash";
-import userApi from "../api/user/user";
-import friendApi from "../api/user/friend";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import AddFriendsTab from "../components/friendsTabs/addFriends";
 import RequestsSentTab from "../components/friendsTabs/requestsSent";
@@ -39,25 +22,40 @@ export function getInitials(firstName: string, lastName: string) {
 export default function FriendsPage({ navigation }) {
 	return (
 		<>
-			<TouchableOpacity
-				onPress={() => navigation.navigate("Home")}
+			<View
 				style={{
 					position: "absolute",
-					bottom: 30,
-					right: 30,
+					top: 50,
+					left: 10,
+					right: 10,
 					zIndex: 50,
-					backgroundColor: Colors.foreground,
-					padding: 10,
-					borderRadius: 50,
-					...GlobalStyles.shadow,
-					borderWidth: 1,
-					borderColor: Colors.border,
-					borderStyle: "solid",
+					gap: 10,
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
 				}}>
-				<Icon name="home" size={50} color={Colors.text} />
-			</TouchableOpacity>
+				<Text
+					style={{
+						fontFamily: Fonts.body.fontFamily,
+						fontSize: Fonts.body.fontSize,
+						color: Colors.textSecondary,
+					}}>
+					SmileNow is more fun with friends!
+				</Text>
+				<TouchableOpacity
+					style={{
+						...ButtonStyles.buttonSmall,
+						...ButtonStyles.primary,
+						paddingLeft: 25,
+					}}
+					onPress={() => navigation.navigate("Home")}>
+					<Text style={{ ...ButtonStyles.buttonText }}>Back</Text>
+					<Icon name="chevron-right" size={20} color={Colors.background} />
+				</TouchableOpacity>
+			</View>
+
 			<Tab.Navigator
-				style={{ paddingTop: 70 }}
+				style={{ paddingTop: 90 }}
 				screenOptions={{
 					tabBarScrollEnabled: true,
 					tabBarItemStyle: {
@@ -66,10 +64,9 @@ export default function FriendsPage({ navigation }) {
 					tabBarIndicatorStyle: {
 						backgroundColor: Colors.primary,
 					},
-				}}
-				// @ts-expect-error
-				tabBarOptions={{
-					labelStyle: { textTransform: "none" },
+					tabBarLabelStyle: {
+						textTransform: "none",
+					},
 				}}>
 				<Tab.Screen
 					name="Add Friends"

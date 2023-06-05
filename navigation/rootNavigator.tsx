@@ -36,7 +36,7 @@ export type RootStackParamList = {
 	Home: undefined;
 	Terms: undefined;
 	Party: { partyId: string; justCreated?: boolean };
-	Post: { postId: string };
+	Post: { postId: string; eventId: string; page: number };
 	CreateParty: undefined;
 	JoinParty: undefined;
 	InviteToParty: { eventId: string };

@@ -58,12 +58,12 @@ export default function CameraPage({ route, navigation }) {
 		{
 			onSuccess: (data) => {
 				console.log("pfp uploaded");
-				console.log("postId", data);
+				console.log("postId", data.data);
 				// uploadImage();
 				// uploadImage(data._id);
 				// let userData = queryClient.getQueryData(["user", userId]);
 				// console.log("user Data", userData);
-
+				queryClient.invalidateQueries(["user", userId]);
 				queryClient.setQueryData(["user", userId], (oldData) => {
 					return {
 						//@ts-expect-error

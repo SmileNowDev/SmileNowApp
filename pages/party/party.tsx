@@ -39,7 +39,6 @@ export interface IEvent {
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
 
-	const [polaroidLooping, setPolaroidLooping] = useState(true); // start animation right away
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1);
 
@@ -49,16 +48,16 @@ export default function PartyPage({ route, navigation }) {
 		queryFn: getEvent,
 	});
 	async function getEvent() {
-		console.log("getting event");
+		// console.log("getting event");
 		const result = await eventApi.getEvent({ eventId });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			console.log("==============");
-			//@ts-expect-error
-			console.log("getting event: ", result.data.event.title);
-			console.log(result.data);
-			console.log("==============");
+			// console.log("==============");
+			// //@ts-expect-error
+			// console.log("getting event: ", result.data.event.title);
+			// console.log(result.data);
+			// console.log("==============");
 			let data: IEvent = {
 				// @ts-expect-error
 				_id: result.data?.event._id,
@@ -104,13 +103,7 @@ export default function PartyPage({ route, navigation }) {
 		}
 		return result.data;
 	}
-	// ANIMATIONS
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setPolaroidLooping(false);
-		}, 4000);
-		return () => clearTimeout(timer);
-	}, []);
+
 	function onRefresh() {
 		setRefreshing(true);
 		refetch();
@@ -137,13 +130,16 @@ export default function PartyPage({ route, navigation }) {
 			</View>
 		);
 	}
-	if (isLoading || polaroidLooping) {
+	if (isLoading) {
 		return (
-			<TouchableOpacity
-				style={{ height: Dim.height }}
-				onPress={() => setPolaroidLooping(false)}>
-				<PartyLoading />
-			</TouchableOpacity>
+			<View
+				style={{
+					height: Dim.height,
+					alignItems: "center",
+					justifyContent: "center",
+				}}>
+				<ActivityIndicator size={"large"} color={Colors.primary} />
+			</View>
 		);
 	} else {
 		return (
@@ -154,7 +150,6 @@ export default function PartyPage({ route, navigation }) {
 					name={data.title}
 					isHost={data.isHost}
 				/>
-				<Text>{eventId}</Text>
 				<ActivateParty
 					isActive={data.isActive}
 					eventId={eventId}
@@ -216,10 +211,15 @@ export default function PartyPage({ route, navigation }) {
 									keyExtractor={(item) => item._id}
 									renderItem={({ item, index }) => {
 										return (
-											<TouchableWithoutFeedback
-												key={item._id}
+											<TouchableOpacity
+												delayPressIn={500}
 												onPress={() => {
-													navigation.navigate("Post", { postId: item._id });
+													console.log("Clicked");
+													navigation.navigate("Post", {
+														postId: item._id,
+														eventId: eventId,
+														page: page,
+													});
 												}}>
 												<Photo
 													postId={item._id}
@@ -237,7 +237,7 @@ export default function PartyPage({ route, navigation }) {
 													refresh={onRefresh}
 													delay={index}
 												/>
-											</TouchableWithoutFeedback>
+											</TouchableOpacity>
 										);
 									}}
 									ListFooterComponent={

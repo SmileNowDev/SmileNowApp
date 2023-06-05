@@ -1,60 +1,62 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FlatList, Text } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
 import { Context } from "../../providers/provider";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { Colors } from "../../styles/theme";
 export default function MyFriendsTab() {
-	const [list, setList] = useState([]);
-	const [page, setPage] = useState(1); // Add this state
-	const [hasMore, setHasMore] = useState(true); // Add this state
-	const [loading, setLoading] = useState(false); // Add this state
-	const [bottomLoading, setBottomLoading] = useState(false);
+	const [page, setPage] = useState(1);
+
 	const { userId } = useContext(Context);
-	async function getList() {
+	const {
+		data,
+		isLoading,
+		refetch,
+		isRefetching,
+		status,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery<any>({
+		queryKey: ["my_friends"],
+		queryFn: getList,
+		getNextPageParam: (lastPage) => {
+			return hasNextPage ? page + 1 : undefined;
+		},
+	});
+	async function getList({ pageParam = 1 }) {
+		setPage(pageParam);
 		const result = await friendApi.getMyFriends({ page: 1 });
-		if (result.ok) {
-			//@ts-expect-error
-			setList(result.data);
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			return result.data;
 		}
 	}
-	async function loadMore() {
-		if (!hasMore) {
-			return;
-		}
 
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await friendApi.getRequestingMe({ page: nextPage });
-
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setList((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
+	if (isLoading || isRefetching) {
+		return (
+			<View
+				style={{ flex: 0.75, alignItems: "center", justifyContent: "center" }}>
+				<ActivityIndicator size="large" color={Colors.primary} />
+			</View>
+		);
 	}
-	useEffect(() => {
-		getList();
-	}, []);
 	return (
 		<ScreenWrapper
-			onRefresh={getList}
+			style={GlobalStyles.tabScreenContainer}
+			onRefresh={refetch}
 			scrollEnabled={true}
-			loading={loading}
-			onBottomScroll={loadMore}
-			bottomLoading={bottomLoading}>
+			loading={isLoading}
+			onBottomScroll={fetchNextPage}
+			bottomLoading={isFetchingNextPage}>
 			<Text style={GlobalStyles.tabScreenTitle}>My Friends</Text>
 			<FlatList
 				style={{ padding: 10 }}
-				data={list}
+				data={data.pages.flat()}
 				renderItem={({ item }) => {
 					if (item.recipient._id === userId) {
 						return (

@@ -32,21 +32,41 @@ export function Picture({ size, pic }) {
 			return 20;
 		}
 	}
-	if (!pic) {
-		return <Icon name="person" size={size} color={Colors.textSecondary} />;
-	} else {
-		return (
-			<>
+
+	return (
+		<View
+			style={{
+				position: "relative",
+				shadowOpacity: 0.25,
+				shadowOffset: { width: 0, height: 0 },
+				shadowRadius: 5,
+				elevation: 2,
+				backgroundColor: Colors.background,
+				borderRadius: size / 2,
+			}}>
+			{!pic ? (
 				<View
 					style={{
-						position: "relative",
-						shadowOpacity: 0.25,
-						shadowOffset: { width: 0, height: 0 },
-						shadowRadius: 5,
-						elevation: 2,
-						backgroundColor: Colors.background,
+						width: size,
+						height: size,
+						overflow: "hidden",
 						borderRadius: size / 2,
 					}}>
+					<Icon
+						name="person"
+						size={size}
+						color={Colors.textSecondary}
+						style={{
+							transform: [
+								{
+									translateY: size / 6,
+								},
+							],
+						}}
+					/>
+				</View>
+			) : (
+				<>
 					<View style={{ position: "absolute", height: size, width: size }}>
 						{photoLoading ? (
 							<ActivityIndicator
@@ -76,10 +96,10 @@ export function Picture({ size, pic }) {
 						onLoadStart={() => setPhotoLoading(true)}
 						onLoad={() => setPhotoLoading(false)}
 					/>
-				</View>
-			</>
-		);
-	}
+				</>
+			)}
+		</View>
+	);
 }
 export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 	const { userId } = useContext(Context);

@@ -23,16 +23,35 @@ import ScreenWrapper from "../components/core/screenWrapper";
 import ModalWrapper from "../components/core/modalWrapper";
 import EditCaption from "../components/post/editCaption";
 import { Context } from "../providers/provider";
-export const imageWidth = Dim.width - 50;
+import {
+	useInfiniteQuery,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
+export const imageWidth = Dim.width - 40;
 export const imageHeight = imageWidth + 100;
+
+type CommentType = {
+	_id: string;
+	text: string;
+	user: {
+		_id: string;
+		name: string;
+		src: string;
+	};
+	createdAt: string;
+};
+
 export default function PostPage({ route }) {
-	const { postId } = route.params;
+	const queryClient = useQueryClient();
+
+	const { postId, eventId, page: queryPage } = route.params;
 	const [post, setPost] = useState<any>();
 
 	const [refreshing, setRefreshing] = useState(false);
 	const [comment, setComment] = useState("");
 	const [comments, setComments] = useState([]);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState<number>(1);
 	const [hasMore, setHasMore] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [bottomLoading, setBottomLoading] = useState(false);
@@ -40,46 +59,50 @@ export default function PostPage({ route }) {
 	const [caption, setCaption] = useState("");
 	const { userId } = useContext(Context);
 
+	const {
+		data: postData,
+		refetch: refetchPost,
+		isLoading: isPostLoading,
+	} = useQuery({
+		queryKey: ["post", postId],
+		queryFn: getPost,
+	});
+
 	async function getPost() {
-		setLoading(true);
-
+		console.log("fetching post");
 		const result = await postApi.getPost({ postId });
-		if (result.ok) {
-			setPost(result.data);
-			// @ts-expect-error
-			setCaption(result.data.caption);
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			return result.data;
 		}
-		setLoading(false);
 	}
-	async function getComments() {
+	const {
+		data: commentData,
+		isLoading: isCommentsLoading,
+		fetchNextPage,
+		hasNextPage,
+		isFetchingNextPage,
+		refetch: refetchComments,
+		status: commentStatus,
+	} = useInfiniteQuery({
+		queryKey: ["comments", postId, page],
+		queryFn: getComments,
+		getNextPageParam: (lastPage) => {
+			return hasNextPage ? page + 1 : undefined;
+		},
+	});
+	async function getComments({ pageParam = 1 }) {
+		setPage(pageParam);
 		const result = await commentApi.getComments({ postId, page: 1 });
-		if (result.ok) {
-			//@ts-expect-error
-			setComments(result.data);
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			console.log(result.data);
+			return result.data;
 		}
 	}
-	async function loadMore() {
-		if (!hasMore) {
-			return;
-		}
 
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await commentApi.getComments({ postId, page: nextPage });
-
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setList((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
-	}
 	async function handleComment() {
 		if (!comment || comment.trim().length == 0) {
 			Alert.alert("Comment cannot be empty");
@@ -87,21 +110,43 @@ export default function PostPage({ route }) {
 			const result = await commentApi.create({ postId, text: comment });
 			if (result.ok) {
 				setComment("");
-				await getComments();
+				refetchComments();
 			}
 		}
 	}
 	async function onRefresh() {
+		console.log("Refetching");
 		setRefreshing(true);
-		await getPost();
-		await getComments();
+		refetchPost();
+		refetchComments();
 		setRefreshing(false);
 	}
+
+	const allPagesData = queryClient.getQueryData(["posts", eventId, queryPage]);
+	// @ts-expect-error
+	const cachedPostData = allPagesData?.pages
+		.flat()
+		.find((post) => post._id === postId);
+	// console.log("Cached Post Data===============");
+	// console.log(cachedPostData);
+	// console.log("===============");
 	useEffect(() => {
-		getPost();
-		getComments();
-	}, []);
-	if (!loading) {
+		//reconcile cached data with api data
+		if (cachedPostData === undefined) {
+			refetchPost();
+		} else {
+			queryClient.setQueryData(["post", postId], cachedPostData);
+			setPost(cachedPostData);
+		}
+	}, [cachedPostData, postData]);
+	if (!post && isPostLoading) {
+		//todo: pretty loading screen
+		return (
+			<View style={{ flex: 1, justifyContent: "center" }}>
+				<ActivityIndicator size={"large"} color={Colors.primary} />
+			</View>
+		);
+	} else {
 		return (
 			<SafeAreaView>
 				<Header
@@ -127,49 +172,51 @@ export default function PostPage({ route }) {
 					}
 				/>
 				<ScreenWrapper
-					onRefresh={getComments}
+					onRefresh={onRefresh}
 					scrollEnabled={true}
-					loading={loading}
-					onBottomScroll={loadMore}
-					bottomLoading={bottomLoading}
+					loading={isPostLoading}
+					onBottomScroll={() => {
+						if (hasNextPage) {
+							fetchNextPage();
+						}
+					}}
+					bottomLoading={isFetchingNextPage}
 					keyboardShouldPersistTaps="handled">
-					{!loading ? (
-						<Photo
-							postId={postId}
-							image={post?.src}
-							caption={caption}
-							owner={{
-								name: post?.user.name,
-								picture: post?.user.src,
-								id: post?.user._id,
-							}}
-							date={post?.createdAt}
-							likes={post?.likes}
-							isLiked={post?.isLiked}
-							comments={post?.comments}
-							refresh={onRefresh}
-							delay={0}
-						/>
-					) : (
-						<ActivityIndicator />
-					)}
+					<Photo
+						postId={postId}
+						image={post?.src}
+						caption={post?.caption}
+						owner={{
+							name: post?.user.name,
+							picture: post?.user.src,
+							id: post?.user._id,
+						}}
+						date={post?.createdAt}
+						likes={post?.likes}
+						isLiked={post?.isLiked}
+						comments={post?.comments}
+						refresh={onRefresh}
+						delay={0}
+					/>
 
 					<View
 						style={{
 							display: "flex",
 							flexDirection: "row",
-							justifyContent: "center",
+							justifyContent: "space-between",
 							alignItems: "center",
-							marginTop: 5,
+							...GlobalStyles.textInput,
+							paddingRight: 0,
+							paddingLeft: 15,
+							paddingVertical: 6,
+							flex: 1,
+							height: 40,
+							borderRadius: 50,
+							marginTop: 20,
 						}}>
 						<TextInput
 							numberOfLines={2}
-							style={{
-								...GlobalStyles.textInput,
-								paddingVertical: 6,
-								flex: 1,
-								height: 50,
-							}}
+							style={{ flex: 1 }}
 							placeholderTextColor={Colors.textSecondary}
 							placeholder="Leave a comment here"
 							value={comment}
@@ -179,38 +226,40 @@ export default function PostPage({ route }) {
 							onPress={() => handleComment()}
 							style={{
 								backgroundColor: Colors.primary,
-								borderRadius: 5,
-								height: 50,
-								width: 50,
+								borderRadius: 25,
+								height: 40,
+								width: 40,
 								justifyContent: "center",
 								alignItems: "center",
-								alignSelf: "flex-end",
 								marginLeft: 10,
 							}}>
-							<Icon name="send" size={30} color={Colors.background} />
+							<Icon name="send" size={25} color={Colors.background} />
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}
 					<FlatList
-						data={comments}
-						renderItem={({ item, index }) => (
-							<View
-								style={{
-									backgroundColor:
-										index % 2 == 0 ? Colors.background : Colors.foreground,
-									marginVertical: 4,
-									borderRadius: 10,
-								}}>
-								<Comment
-									commentId={item._id}
-									pic={item.user.src}
-									name={item.user.name}
-									comment={item.text}
-									date={item.createdAt}
-									userId={item.user._id}
-								/>
-							</View>
-						)}
+						data={commentData?.pages?.flat()}
+						renderItem={({ item, index }) => {
+							let comment = item as CommentType;
+							return (
+								<View
+									style={{
+										backgroundColor:
+											index % 2 == 0 ? Colors.background : Colors.foreground,
+										marginVertical: 4,
+										borderRadius: 10,
+									}}>
+									<Comment
+										commentId={comment._id}
+										pic={comment.user.src}
+										name={comment.user.name}
+										comment={comment.text}
+										date={comment.createdAt}
+										userId={comment.user._id}
+									/>
+								</View>
+							);
+						}}
 					/>
 					<View style={{ height: Dim.height / 2 }}></View>
 				</ScreenWrapper>

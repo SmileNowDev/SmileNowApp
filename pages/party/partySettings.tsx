@@ -267,7 +267,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	}
 
 	function SaveCancel() {
-		if (isHost) {
+		if (data.isHost) {
 			return (
 				<View
 					style={{
@@ -361,16 +361,34 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 						}}>
 						Name:
 					</Text>
-					{isHost ? (
-						<TextInput
-							value={newTitle}
-							placeholder="Enter a party Name"
-							onChangeText={setNewTitle}
-							clearButtonMode="always"
-							style={{
-								...GlobalStyles.textInput,
-							}}
-						/>
+					{data.isHost ? (
+						<View style={{ position: "relative" }}>
+							<TextInput
+								value={newTitle}
+								placeholder="Enter a party Name"
+								onChangeText={setNewTitle}
+								clearButtonMode="always"
+								style={{
+									...GlobalStyles.textInput,
+								}}
+							/>
+							{newTitle.length > 0 && (
+								<TouchableOpacity
+									onPress={() => setNewTitle("")}
+									style={{
+										position: "absolute",
+										right: 0,
+										top: 0,
+										bottom: 0,
+										alignItems: "center",
+										justifyContent: "center",
+										marginRight: 10,
+										zIndex: 100,
+									}}>
+									<Icon name="cancel" size={20} color={Colors.textSecondary} />
+								</TouchableOpacity>
+							)}
+						</View>
 					) : (
 						<Text
 							style={{
@@ -391,7 +409,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 						}}>
 						Description:
 					</Text>
-					{isHost ? (
+					{data.isHost ? (
 						<TextInput
 							multiline
 							numberOfLines={4}
@@ -464,7 +482,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 						</Text>
 					</View>
 
-					{isHost ? (
+					{data.isHost ? (
 						<Switch
 							//@ts-expect-error
 							value={data.notificationStatus}
@@ -548,7 +566,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 						onPress={toggleArchive}
 					/>
 				)}
-				{isHost ? (
+				{data.isHost ? (
 					<SettingsButton
 						title="Delete Party"
 						description={

@@ -86,7 +86,7 @@ export default function ScreenWrapper({
 							? style
 							: {
 									borderRadius: 10,
-									paddingHorizontal: 8,
+									paddingHorizontal: 10,
 							  }
 					}
 					keyboardShouldPersistTaps={keyboardShouldPersistTaps}>

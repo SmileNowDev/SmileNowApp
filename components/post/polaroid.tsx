@@ -102,9 +102,10 @@ export default function Polaroid({
 		if (loading) return;
 
 		if (elapsedMs >= TEN_MINUTES_IN_MS) {
+			opacity.setValue(0);
 			Animated.timing(opacity, {
 				toValue: 0,
-				duration: 1000,
+				duration: 0,
 				useNativeDriver: false,
 				delay: delay,
 			}).start();
@@ -135,6 +136,7 @@ export default function Polaroid({
 					justifyContent: "center",
 					overflow: "hidden",
 					backgroundColor: "#000000",
+					borderRadius: 5,
 				}}>
 				{/* loading */}
 				{loading ? (
@@ -169,7 +171,7 @@ export default function Polaroid({
 				/>
 				{/* photo */}
 				<ReactNativeZoomableView
-					style={{ zIndex: 1 }}
+					style={{ zIndex: 1, borderRadius: 5, overflow: "hidden" }}
 					ref={zoomableViewRef}
 					maxZoom={2}
 					minZoom={1}
@@ -179,7 +181,7 @@ export default function Polaroid({
 					onZoomEnd={() => zoomableViewRef.current!.zoomTo(1)}>
 					<Image
 						source={{ uri: imageUri || "abc" }}
-						style={{ height: imageHeight, width: imageWidth, borderRadius: 4 }}
+						style={{ height: imageHeight, width: imageWidth, borderRadius: 5 }}
 						onLoadStart={() => setLoading(true)}
 						onLoad={() => setLoading(false)}
 					/>

@@ -17,7 +17,7 @@ import DefaultOptions from "./core/defaultOptions";
 import { Context } from "../providers/provider";
 import { useNavigation } from "@react-navigation/native";
 
-interface UserCardProps {
+export interface UserCardProps {
 	profilePicture: string;
 	name: string;
 	username: string;
@@ -38,13 +38,17 @@ export default function UserCard({
 	const [modalVisible, setModalVisible] = useState(false);
 	function handlePress() {
 		if (id === userId) {
+			// @ts-expect-error
 			navigation.navigate("Profile");
 		} else if (!onPress) setModalVisible(true);
 		else onPress();
 	}
 	return (
 		<>
-			<TouchableOpacity style={styles.container} onPress={handlePress}>
+			<TouchableOpacity
+				style={styles.container}
+				onPress={handlePress}
+				delayPressIn={500}>
 				<Picture pic={profilePicture} size={40} />
 				<View style={{ flex: 1 }}>
 					<Text

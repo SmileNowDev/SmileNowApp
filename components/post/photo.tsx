@@ -6,7 +6,6 @@ import {
 	TouchableOpacity,
 	View,
 	Alert,
-	ActivityIndicator,
 } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
@@ -20,7 +19,7 @@ import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Polaroid from "./polaroid";
-import { imageHeight, imageWidth } from "../../pages/post";
+import { useQueryClient } from "@tanstack/react-query";
 dayjs.extend(relativeTime);
 export interface PhotoProps {
 	postId: string;
@@ -116,7 +115,7 @@ export default function Photo({
 					delay={delay}
 					postId={postId}
 				/>
-				<View style={{ minHeight: 50 }}>
+				<View style={{ minHeight: 50, width: "100%" }}>
 					<Text
 						style={{
 							marginTop: 10,
@@ -138,7 +137,7 @@ export default function Photo({
 										flex: 1,
 										width: "100%",
 									}}>
-									{owner.name} blah
+									{owner.name}
 								</Text>
 								<Text
 									style={{
@@ -207,9 +206,11 @@ const styles = StyleSheet.create({
 	photo: {
 		backgroundColor: Colors.background,
 		borderColor: Colors.border,
+		borderRadius: 7.5,
 		borderWidth: 1,
 		borderStyle: "solid",
-		padding: 14,
+		alignItems: "center",
+		padding: 10,
 		paddingBottom: 10,
 		shadowOpacity: 0.25,
 		shadowOffset: { width: 0, height: 4 },
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		gap: 15,
+		gap: 10,
 		flex: 1,
 	},
 	reaction: {

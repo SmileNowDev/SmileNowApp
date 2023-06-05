@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Text, TouchableOpacity, View, Image } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
@@ -16,7 +16,6 @@ export default function HomeHeader() {
 	const queryClient = useQueryClient();
 	const { userId } = useContext(Context);
 	const userData: UserDataType = queryClient.getQueryData(["user", userId]);
-	console.log("userData", userData);
 	return (
 		<View
 			style={{

@@ -1,67 +1,89 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
-export default function RequestsTab(params) {
-	const [list, setList] = useState([]);
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { Fonts, Colors } from "../../styles/theme";
+export default function RequestsTab() {
 	const [page, setPage] = useState(1); // Add this state
-	const [hasMore, setHasMore] = useState(true); // Add this state
-	const [loading, setLoading] = useState(false); // Add this state
-	const [bottomLoading, setBottomLoading] = useState(false);
-	async function getList() {
-		const result = await friendApi.getRequestingMe({ page: 1 });
-		if (result.ok) {
-			//@ts-expect-error
-			setList(result.data);
+	const {
+		data,
+		isLoading,
+		refetch,
+		isRefetching,
+		status,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery<any>({
+		queryKey: ["friend_requests"],
+		queryFn: getList,
+		getNextPageParam: (lastPage) => {
+			return hasNextPage ? page + 1 : undefined;
+		},
+	});
+	async function getList({ pageParam = 1 }) {
+		setPage(pageParam);
+		const result = await friendApi.getRequestingMe({ page: pageParam });
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			return result.data;
 		}
 	}
-	async function loadMore() {
-		if (!hasMore) {
-			return;
-		}
-
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await friendApi.getRequestingMe({ page: nextPage });
-
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setList((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
+	if (isLoading || isRefetching) {
+		return (
+			<View
+				style={{ flex: 0.75, alignItems: "center", justifyContent: "center" }}>
+				<ActivityIndicator size="large" color={Colors.primary} />
+			</View>
+		);
 	}
-	useEffect(() => {
-		getList();
-	}, []);
 	return (
 		<ScreenWrapper
 			style={GlobalStyles.tabScreenContainer}
-			onRefresh={getList}
+			onRefresh={refetch}
 			scrollEnabled={true}
-			loading={loading}
-			onBottomScroll={loadMore}
-			bottomLoading={bottomLoading}
-		>
+			loading={isLoading}
+			onBottomScroll={fetchNextPage}
+			bottomLoading={isFetchingNextPage}>
 			<Text style={GlobalStyles.tabScreenTitle}>Requesting Me</Text>
-			{list.map(function (item, index) {
-				return (
-					<UserCard
-						profilePicture={item.src}
-						name={item.requester.name}
-						username={item.requester.username}
-						id={item.requester._id}
-					/>
-				);
-			})}
+			{data.pages.flat().length == 0 ? (
+				<View style={{ margin: 15 }}>
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize + 4,
+							color: Colors.textSecondary,
+						}}>
+						No Friend Requests
+					</Text>
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize,
+						}}>
+						Looks like you're already everyone's friend 🥹
+					</Text>
+				</View>
+			) : (
+				<>
+					{/* todo: make this a flatlist */}
+					{data.pages.flat().map(function (item, index) {
+						let user = item as any; //todo: as UserType
+						return (
+							<UserCard
+								profilePicture={user.src}
+								name={user.requester.name}
+								username={user.requester.username}
+								id={user.requester._id}
+							/>
+						);
+					})}
+				</>
+			)}
 		</ScreenWrapper>
 	);
 }

@@ -15,7 +15,7 @@ import PartyListItem from "../components/home/partyListItem";
 import HomeHeader from "../components/layout/homeHeader";
 import eventApi from "../api/post/event";
 import * as Notifications from "expo-notifications";
-import { getInitials } from "./friends";
+import FriendsPage, { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
 import WelcomeMessage from "../components/info/welcomeMessage";
 import ModalWrapper from "../components/core/modalWrapper";
