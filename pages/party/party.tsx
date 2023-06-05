@@ -33,6 +33,7 @@ export interface IEvent {
 	isHost: boolean;
 	muted: boolean;
 	isActive: boolean;
+	archived: boolean;
 	notificationFrequency: NotificationFrequencyType;
 }
 
@@ -58,6 +59,7 @@ export default function PartyPage({ route, navigation }) {
 			// console.log("getting event: ", result.data.event.title);
 			// console.log(result.data);
 			// console.log("==============");
+			console.log(result.data);
 			let data: IEvent = {
 				// @ts-expect-error
 				_id: result.data?.event._id,
@@ -75,6 +77,8 @@ export default function PartyPage({ route, navigation }) {
 				isActive: result.data?.isActive,
 				// @ts-expect-error
 				notificationFrequency: result.data?.event.notificationFrequency,
+				// @ts-expect-error
+				archived: result.data?.event.archived,
 			};
 			return data;
 		}

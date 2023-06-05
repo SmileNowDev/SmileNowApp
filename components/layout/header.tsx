@@ -32,7 +32,7 @@ export default function Header({
 					textAlign: "center",
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
-					width: Dim.width,
+					width: Dim.width - 60,
 				}}>
 				{title ? title : "Smile Now"}
 			</Text>

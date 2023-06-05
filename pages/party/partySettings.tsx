@@ -44,7 +44,6 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	const [notificationStatus, setNotificationStatus] = useState(false);
 	const [muted, setMuted] = useState<boolean>(false);
 	const [archived, setArchived] = useState<boolean>(false);
-	const [isHost, setIsHost] = useState<boolean>(false);
 	const muteMutation = useMutation(
 		// @ts-expect-error
 		({ eventId, userId, muted }) =>
@@ -127,7 +126,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 		}
 	);
 	async function toggleArchive() {
-		if (archived) {
+		if (data.archived) {
 			//@ts-expect-error
 			archiveMutation.mutate(eventId);
 		} else {
@@ -271,30 +270,25 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 			return (
 				<View
 					style={{
-						position: "absolute",
-						bottom: 40,
-						left: -5,
-						right: -5,
 						display: "flex",
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
 						gap: 2.5,
 						flex: 0,
-						zIndex: 100,
-						...GlobalStyles.Container,
+						marginVertical: 10,
 					}}>
 					<TouchableOpacity
 						onPress={() => cancel()}
 						style={{
-							...ButtonStyles.buttonLarge,
+							...ButtonStyles.button,
 							...ButtonStyles.secondary,
 							width: Dim.width / 2 - 20,
 						}}>
-						<Icon name="close" size={30} color={Colors.background} />
+						<Icon name="delete" size={25} color={Colors.background} />
 						<Text
 							style={{
-								...ButtonStyles.buttonTextLarge,
+								...ButtonStyles.buttonText,
 							}}>
 							Cancel
 						</Text>
@@ -302,12 +296,12 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 					<TouchableOpacity
 						onPress={() => save()}
 						style={{
-							...ButtonStyles.buttonLarge,
+							...ButtonStyles.button,
 							...ButtonStyles.primary,
 							width: Dim.width / 2 - 20,
 						}}>
-						<Icon name="save" size={30} color={Colors.background} />
-						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Save</Text>
+						<Icon name="save" size={25} color={Colors.background} />
+						<Text style={{ ...ButtonStyles.buttonText }}>Save</Text>
 					</TouchableOpacity>
 				</View>
 			);
@@ -320,7 +314,6 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	}
 	return (
 		<SafeAreaView style={{ flex: 1, height: Dim.height }}>
-			<SaveCancel />
 			<Header goBack title={`Party Settings`} />
 			<ScreenWrapper
 				scrollEnabled={true}
@@ -341,6 +334,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 				) : (
 					<></>
 				)}
+				<SaveCancel />
 
 				{/* Name and Description */}
 				<View style={{ padding: 10 }}>
