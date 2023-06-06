@@ -4,5 +4,11 @@
 		"titleBar.activeBackground": "#4A3F18",
 		"titleBar.activeForeground": "#FCFAF5"
 	},
-	"cSpell.words": ["tanstack", "zoomable"]
+	"cSpell.words": [
+		"appspot",
+		"firebaseapp",
+		"smilenowapp",
+		"tanstack",
+		"zoomable"
+	]
 }

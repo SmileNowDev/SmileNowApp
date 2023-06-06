@@ -21,7 +21,11 @@ import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PartyLoading from "../../components/party/partyLoading";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+	useInfiniteQuery,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import ActivateParty from "../../components/party/activateParty";
 import TakePhoto from "../../components/party/takePhoto";
 export type NotificationFrequencyType = "slow" | "normal" | "fast";
@@ -39,8 +43,6 @@ export interface IEvent {
 
 export default function PartyPage({ route, navigation }) {
 	const { eventId, justCreated } = route.params;
-
-	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1);
 
 	// EVENT
@@ -108,12 +110,6 @@ export default function PartyPage({ route, navigation }) {
 		return result.data;
 	}
 
-	function onRefresh() {
-		setRefreshing(true);
-		refetch();
-		setRefreshing(false);
-	}
-
 	if (error) {
 		return (
 			<View
@@ -133,8 +129,7 @@ export default function PartyPage({ route, navigation }) {
 				</Text>
 			</View>
 		);
-	}
-	if (isLoading) {
+	} else if (isLoading) {
 		return (
 			<View
 				style={{
@@ -161,7 +156,7 @@ export default function PartyPage({ route, navigation }) {
 				/>
 				<TakePhoto eventId={eventId} canPost={data.canPost} />
 				<ScreenWrapper
-					onRefresh={onRefresh}
+					onRefresh={refetch}
 					scrollEnabled={true}
 					loading={postsLoading}
 					onBottomScroll={() => {
@@ -171,7 +166,7 @@ export default function PartyPage({ route, navigation }) {
 					}}
 					bottomLoading={isFetchingNextPage}>
 					<>
-						{justCreated && postsData.pages.flat().length === 0 ? (
+						{justCreated ? (
 							<View>
 								<Text
 									style={{
@@ -180,7 +175,7 @@ export default function PartyPage({ route, navigation }) {
 										fontFamily: Fonts.title.fontFamily,
 										fontSize: Fonts.title.fontSize,
 									}}>
-									Welcome to {data.title}
+									Welcome to {data.title || "Your Party"}
 								</Text>
 								<Text
 									style={{
@@ -190,7 +185,7 @@ export default function PartyPage({ route, navigation }) {
 										fontFamily: Fonts.body.fontFamily,
 										fontSize: Fonts.body.fontSize,
 									}}>
-									{data.description}
+									{data.description || "Your Party Description"}
 								</Text>
 								<Text
 									style={{
@@ -238,7 +233,7 @@ export default function PartyPage({ route, navigation }) {
 													likes={item.likes || 0}
 													isLiked={item.isLiked}
 													comments={item.comments || 0}
-													refresh={onRefresh}
+													refresh={refetch}
 													delay={index}
 												/>
 											</TouchableOpacity>

@@ -1,13 +1,17 @@
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import React, { useContext, useState } from "react";
+import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as Analytics from "expo-firebase-analytics";
+import { Context } from "../../providers/provider";
+
 export default function CreateJoin({ navigation }) {
 	const [joining, setJoining] = useState(false);
+	const { userId } = useContext(Context);
 	const queryClient = useQueryClient();
 	const mutation = useMutation(() => eventApi.create(), {
 		onSuccess: (data) => {
@@ -35,7 +39,22 @@ export default function CreateJoin({ navigation }) {
 		},
 	});
 	async function createEvent() {
-		mutation.mutate();
+		mutation.mutate(null, {
+			onSuccess: (data) => {
+				//@ts-expect-error
+				console.log("created event: ", data.data._id);
+				Analytics.logEvent("create_event", {
+					//@ts-expect-error
+					eventId: data.data._id,
+					user: userId,
+				});
+			},
+			onError: (error) => {
+				console.log(error);
+				Alert.alert("Something Went Wrong", "We're sorry! Try again later :)");
+				navigation.navigate("Home");
+			},
+		});
 	}
 
 	return (
@@ -55,7 +74,7 @@ export default function CreateJoin({ navigation }) {
 					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					onPress={createEvent}
+					onPress={() => createEvent()}
 					style={{
 						...ButtonStyles.primary,
 						...ButtonStyles.buttonLarge,
