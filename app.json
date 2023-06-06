@@ -55,7 +55,8 @@
 			"eas": {
 				"projectId": "4f1b1687-8968-4045-9f0e-59d33c66cc91"
 			}
-		}
+		},
+		"plugins": ["expo-build-properties"]
 	},
 	"web": {
 		"favicon": "./assets/favicon.png"
