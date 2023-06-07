@@ -7,8 +7,10 @@ import friendApi from "../api/user/friend";
 import userApi from "../api/user/user";
 import Icon from "./core/icons";
 import DefaultOptions from "./core/defaultOptions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 type FriendStatus = "stranger" | "requestedYou" | "requested" | "accepted";
 export default function OtherProfile({ id }) {
+	const queryClient = useQueryClient();
 	const [friendStatus, setFriendStatus] = useState<FriendStatus>("stranger");
 	const [name, setName] = useState("");
 	const [userName, setUserName] = useState("");
@@ -35,6 +37,28 @@ export default function OtherProfile({ id }) {
 			setFriendStatus("requested");
 		}
 	}
+	const acceptRequest = useMutation(() => friendApi.accept({ userId: id }), {
+		onSuccess: (data) => {
+			console.log("success", data);
+			setFriendStatus("accepted");
+			queryClient.setQueryData(["friend_requests"], (oldData) => {
+				//@ts-expect-error
+				const updatedPages = oldData.pages.map((page) => {
+					return page.filter((item) => item._id != id);
+				});
+				//@ts-expect-error
+				return { ...oldData, pages: updatedPages };
+			});
+			queryClient.setQueryData(["requests"], (oldData) => {
+				console.log("oldData", oldData);
+				//@ts-expect-error
+				if (oldData > 0) {
+					//@ts-expect-error
+					return oldData - 1;
+				} else return 0;
+			});
+		},
+	});
 	async function acceptFriendRequest() {
 		const result = await friendApi.accept({ userId: id });
 		if (result.ok) {
@@ -72,7 +96,7 @@ export default function OtherProfile({ id }) {
 						{name} wants to be friends!
 					</Text>
 					<TouchableOpacity
-						onPress={() => acceptFriendRequest()}
+						onPress={() => acceptRequest.mutate()}
 						style={{ ...ButtonStyles.button, ...ButtonStyles.success }}>
 						<Icon name="person-add" size={20} color="white" />
 						<Text style={{ ...ButtonStyles.buttonText }}>

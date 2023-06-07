@@ -142,6 +142,7 @@ export const GlobalStyles = StyleSheet.create({
 		shadowRadius: 8,
 		shadowColor: "black",
 		elevation: 3,
+		shadowOpacity: 0.125,
 	},
 	modalShadow: {
 		shadowOffset: { width: 0, height: 4 },

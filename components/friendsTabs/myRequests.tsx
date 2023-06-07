@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
-import { GlobalStyles } from "../../styles/styles";
+import {
+	ActivityIndicator,
+	FlatList,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
+import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+	QueryClient,
+	useInfiniteQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { Fonts, Colors } from "../../styles/theme";
+import { useIsFocused } from "@react-navigation/native";
 export default function RequestsTab() {
+	const isFocused = useIsFocused();
+	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1); // Add this state
 	const {
 		data,
@@ -33,6 +47,36 @@ export default function RequestsTab() {
 			return result.data;
 		}
 	}
+	useEffect(() => {
+		if (isFocused) {
+			refetch();
+		}
+	}, [isFocused]);
+
+	// function AcceptButton({ userId }) {
+	// 	return (
+	// 		<TouchableOpacity
+	// 			onPress={() => {
+	// 				mutation.mutate(userId, {
+	// 					onSuccess: () => {
+	// 						console.log("success");
+	// 					},
+	// 				});
+	// 			}}
+	// 			style={{
+	// 				...ButtonStyles.buttonSmall,
+	// 				...ButtonStyles.primary,
+	// 			}}>
+	// 			<Text
+	// 				style={{
+	// 					...ButtonStyles.buttonTextSmall,
+	// 					color: Colors.background,
+	// 				}}>
+	// 				Accept
+	// 			</Text>
+	// 		</TouchableOpacity>
+	// 	);
+	// }
 	if (isLoading || isRefetching) {
 		return (
 			<View
@@ -70,18 +114,28 @@ export default function RequestsTab() {
 				</View>
 			) : (
 				<>
-					{/* todo: make this a flatlist */}
-					{data.pages.flat().map(function (item, index) {
-						let user = item as any; //todo: as UserType
-						return (
-							<UserCard
-								profilePicture={user.src}
-								name={user.requester.name}
-								username={user.requester.username}
-								id={user.requester._id}
-							/>
-						);
-					})}
+					<FlatList
+						style={{ padding: 10 }}
+						scrollEnabled={false}
+						data={data.pages.flat()}
+						keyExtractor={(item) => item._id}
+						renderItem={({ item }) => {
+							console.log(item);
+							let user = item as any; //todo: as UserType
+							return (
+								<UserCard
+									profilePicture={user.requester.src}
+									name={user.requester.name}
+									username={user.requester.username}
+									id={user.requester._id}
+									onClose={() => {
+										console.log("close");
+										refetch();
+									}}
+								/>
+							);
+						}}
+					/>
 				</>
 			)}
 		</ScreenWrapper>

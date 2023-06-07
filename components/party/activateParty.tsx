@@ -9,12 +9,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export default function ActivateParty({ isActive, eventId, isHost }) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation((eventId) => eventApi.start({ eventId }), {
-		onSuccess: (data, item) => {
+		onSuccess: () => {
 			console.log("success");
-			queryClient.setQueryData(["event", eventId], (oldData) => ({
-				...{ oldData },
-				data,
-			}));
+			queryClient.setQueryData(["event", eventId], (oldData) => {
+				//@ts-expect-error
+				return { ...oldData, isActive: true };
+			});
 		},
 	});
 	async function activateParty() {

@@ -10,6 +10,7 @@ interface ModalProps {
 	fullHeight?: boolean;
 	scrollable?: boolean;
 	noSwipe?: boolean;
+	onClose?: () => void;
 }
 export default function ModalWrapper({
 	visible,
@@ -18,6 +19,7 @@ export default function ModalWrapper({
 	fullHeight = false,
 	scrollable = false,
 	noSwipe = false,
+	onClose = () => {},
 }) {
 	const containerStyle = {
 		paddingHorizontal: 20,
@@ -51,16 +53,21 @@ export default function ModalWrapper({
 			backdropOpacity={0.7}
 			animationInTiming={300}
 			animationOutTiming={300}
-			onBackdropPress={() => setVisible(false)}
+			onBackdropPress={() => {
+				onClose();
+				setVisible(false);
+			}}
 			supportedOrientations={["portrait", "landscape"]}
 			// transparent={true}
 			isVisible={visible}
 			onSwipeComplete={() => {
+				onClose();
 				setVisible(false);
 			}}
 			swipeDirection={"down"}
 			// @ts-expect-error
 			onRequestClose={() => {
+				onClose();
 				setVisible(false);
 			}}
 			propagateSwipe={noSwipe ? false : true}

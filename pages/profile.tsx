@@ -18,7 +18,7 @@ import { Context } from "../providers/provider";
 import Avatar, { Picture } from "../components/avatar";
 import { useQuery } from "@tanstack/react-query";
 import ScreenWrapper from "../components/core/screenWrapper";
-type UserType = {
+export type UserType = {
 	name: string;
 	pic: string;
 	username: string;

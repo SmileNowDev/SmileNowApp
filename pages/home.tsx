@@ -63,20 +63,19 @@ export default function HomePage({ navigation }) {
 	});
 	useEffect(() => {
 		if (isFocused) {
-			refetch();
+			onRefresh();
 		}
 	}, [isFocused]);
 	useEffect(() => {
-		console.log("uplading");
 		if (data?.pages?.length > 0) {
 			setEvents(data.pages.flat() as EventType[]);
 		}
-		console.log("updated");
 	}, [data]);
 
 	const onRefresh = useCallback(() => {
 		setRefreshing(true);
 		queryClient.invalidateQueries(["events"]);
+		queryClient.invalidateQueries(["requests"]);
 		refetch();
 		setRefreshing(false);
 	}, []);
@@ -115,7 +114,7 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	if (isLoading && isFetching) return <PartyLoading />;
+	// if (isLoading && isFetching) return <PartyLoading />;
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />

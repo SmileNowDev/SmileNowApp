@@ -35,7 +35,6 @@ export interface PhotoProps {
 	isLiked: boolean;
 	comments: number;
 	refresh: () => void;
-	delay: number;
 }
 
 export default function Photo({
@@ -48,7 +47,6 @@ export default function Photo({
 	isLiked,
 	comments,
 	refresh,
-	delay,
 }: PhotoProps) {
 	const [downloadModalVisible, setDownloadModalVisible] = useState(false);
 	const [liked, setLiked] = useState(isLiked ? true : false);
@@ -109,12 +107,7 @@ export default function Photo({
 	return (
 		<>
 			<View style={styles.photo}>
-				<Polaroid
-					imageUri={image}
-					takenAt={date}
-					delay={delay}
-					postId={postId}
-				/>
+				<Polaroid imageUri={image} takenAt={date} postId={postId} />
 				<View style={{ minHeight: 50, width: "100%" }}>
 					<Text
 						style={{

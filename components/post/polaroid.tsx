@@ -19,56 +19,50 @@ interface PolaroidProps {
 	imageUri: string;
 	takenAt: string;
 	postId: string;
-	delay: number;
 }
 const TEN_MINUTES_IN_MS = 10 * 60 * 1000;
 // left TODO: for the fade
 
-export default function Polaroid({
-	imageUri,
-	takenAt,
-	delay,
-	postId,
-}: PolaroidProps) {
+export default function Polaroid({ imageUri, takenAt, postId }: PolaroidProps) {
 	const zoomableViewRef = createRef<ReactNativeZoomableView>();
 	const [loading, setLoading] = useState(false);
 	const opacity = new Animated.Value(1);
 	const [finishedFading, setFinishedFading] = useState(false);
 	const [shakeCount, setShakeCount] = useState(0);
 
-	function getElapsedTime() {
-		const elapsedMs = dayjs().diff(dayjs(takenAt), "millisecond");
-		return elapsedMs;
-	}
-	const calculateTime = () => {
-		const elapsedMs = getElapsedTime();
-		const remainingTime = TEN_MINUTES_IN_MS - elapsedMs - 1000;
-		console.log("remainingTime in minutes", remainingTime / 1000 / 60);
-		return remainingTime;
-	};
-	function factorial(n) {
-		if (n === 0) {
-			return 1;
-		}
-		return n * factorial(n - 1);
-	}
-	async function calculateOpacity() {
-		// only called once, so this is where we calculate if there are any legacy shakes to worry about.
-		const elapsedMs = getElapsedTime();
-		const remainingMs = TEN_MINUTES_IN_MS - elapsedMs - shakeCount * 60000;
-		if (remainingMs < 0) {
-			//the photo is done fading, remove legacy shakes form async storage and return 0
-			await AsyncStorage.removeItem(`shakes_${postId}`);
-			return 0;
-		} else {
-			// the photo is still fading calculate the starting opacity given the number of legacy shakes
-			let shakes = await AsyncStorage.getItem(`shakes_${postId}`);
+	// function getElapsedTime() {
+	// 	const elapsedMs = dayjs().diff(dayjs(takenAt), "millisecond");
+	// 	return elapsedMs;
+	// }
+	// const calculateTime = () => {
+	// 	const elapsedMs = getElapsedTime();
+	// 	const remainingTime = TEN_MINUTES_IN_MS - elapsedMs - 1000;
+	// 	console.log("remainingTime in minutes", remainingTime / 1000 / 60);
+	// 	return remainingTime;
+	// };
+	// function factorial(n) {
+	// 	if (n === 0) {
+	// 		return 1;
+	// 	}
+	// 	return n * factorial(n - 1);
+	// }
+	// async function calculateOpacity() {
+	// 	// only called once, so this is where we calculate if there are any legacy shakes to worry about.
+	// 	const elapsedMs = getElapsedTime();
+	// 	const remainingMs = TEN_MINUTES_IN_MS - elapsedMs - shakeCount * 60000;
+	// 	if (remainingMs < 0) {
+	// 		//the photo is done fading, remove legacy shakes form async storage and return 0
+	// 		await AsyncStorage.removeItem(`shakes_${postId}`);
+	// 		return 0;
+	// 	} else {
+	// 		// the photo is still fading calculate the starting opacity given the number of legacy shakes
+	// 		let shakes = await AsyncStorage.getItem(`shakes_${postId}`);
 
-			let opacity =
-				remainingMs / TEN_MINUTES_IN_MS - 0.05 * factorial(parseInt(shakes));
-			return opacity;
-		}
-	}
+	// 		let opacity =
+	// 			remainingMs / TEN_MINUTES_IN_MS - 0.05 * factorial(parseInt(shakes));
+	// 		return opacity;
+	// 	}
+	// }
 	// async function handelShake() {
 	// 	setShakeCount((prevShakeCount) => {
 	// 		const newShakeCount = prevShakeCount + 1;
@@ -97,33 +91,33 @@ export default function Polaroid({
 
 	// 	return () => subscription.remove();
 	// }, []);
-	async function handleOpacity() {
-		const elapsedMs = getElapsedTime();
-		if (loading) return;
+	// async function handleOpacity() {
+	// 	// const elapsedMs = getElapsedTime();
+	// 	if (loading) return;
 
-		if (elapsedMs >= TEN_MINUTES_IN_MS) {
-			opacity.setValue(0);
-			Animated.timing(opacity, {
-				toValue: 0,
-				duration: 0,
-				useNativeDriver: false,
-				delay: delay,
-			}).start();
-		} else {
-			let startOpacity = await calculateOpacity();
-			let animationTime = calculateTime();
-			opacity.setValue(startOpacity);
-			Animated.timing(opacity, {
-				toValue: 0,
-				duration: animationTime,
-				useNativeDriver: false,
-			}).start();
-			setFinishedFading(true);
-		}
-	}
-	useEffect(() => {
-		handleOpacity();
-	}, [loading]);
+	// 	if (elapsedMs >= TEN_MINUTES_IN_MS) {
+	// 		opacity.setValue(0);
+	// 		Animated.timing(opacity, {
+	// 			toValue: 0,
+	// 			duration: 0,
+	// 			useNativeDriver: false,
+	// 			delay: delay,
+	// 		}).start();
+	// 	} else {
+	// 		let startOpacity = await calculateOpacity();
+	// 		let animationTime = calculateTime();
+	// 		opacity.setValue(startOpacity);
+	// 		Animated.timing(opacity, {
+	// 			toValue: 0,
+	// 			duration: animationTime,
+	// 			useNativeDriver: false,
+	// 		}).start();
+	// 		setFinishedFading(true);
+	// 	}
+	// }
+	// useEffect(() => {
+	// 	handleOpacity();
+	// }, [loading]);
 
 	return (
 		<View>
@@ -135,14 +129,14 @@ export default function Polaroid({
 					alignItems: "center",
 					justifyContent: "center",
 					overflow: "hidden",
-					backgroundColor: "#000000",
+					backgroundColor: "#808080",
 					borderRadius: 5,
 				}}>
 				{/* loading */}
 				{loading ? (
 					<ActivityIndicator
 						size="large"
-						color={Colors.primary}
+						color={"#fff"}
 						style={{
 							position: "absolute",
 							top: 0,
@@ -156,20 +150,6 @@ export default function Polaroid({
 				)}
 
 				{/* polaroid  effect */}
-
-				<Animated.View
-					style={{
-						backgroundColor: "#000000",
-						position: "absolute",
-						top: 0,
-						left: 0,
-						height: imageHeight,
-						width: imageWidth,
-						opacity: opacity,
-						zIndex: 2,
-					}}
-				/>
-				{/* photo */}
 				<ReactNativeZoomableView
 					style={{ zIndex: 1, borderRadius: 5, overflow: "hidden" }}
 					ref={zoomableViewRef}
@@ -179,6 +159,20 @@ export default function Polaroid({
 					initialZoom={1}
 					bindToBorders={true}
 					onZoomEnd={() => zoomableViewRef.current!.zoomTo(1)}>
+					{/* <Animated.View
+						style={{
+							backgroundColor: "#000000",
+							position: "absolute",
+							top: 0,
+							left: 0,
+							height: imageHeight,
+							width: imageWidth,
+							opacity: opacity,
+							zIndex: 2,
+						}}
+					/> */}
+					{/* photo */}
+
 					<Image
 						source={{ uri: imageUri || "abc" }}
 						style={{ height: imageHeight, width: imageWidth, borderRadius: 5 }}

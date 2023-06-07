@@ -15,6 +15,8 @@ const getMyRequests = ({ page }) =>
 const getRequestingMe = ({ page }) =>
 	client.get(`${endpoint}/requestingMe/${page}`);
 
+const countRequests = () => client.get(`${endpoint}/count-requests`);
+
 const friendApi = {
 	request,
 	accept,
@@ -22,5 +24,6 @@ const friendApi = {
 	getMyFriends,
 	getMyRequests,
 	getRequestingMe,
+	countRequests,
 };
 export default friendApi;

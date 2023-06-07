@@ -4,6 +4,7 @@ import { Context } from "../providers/provider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
 import { Fonts } from "../styles/theme";
+import PartyLoading from "../components/party/partyLoading";
 export default function SplashPage({ navigation }) {
 	const { setUserId, setLoggedIn } = useContext(Context);
 
@@ -23,14 +24,12 @@ export default function SplashPage({ navigation }) {
 		init();
 	}, []);
 	return (
-		<SafeAreaView>
-			<Text
-				style={{
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: Fonts.title.fontSize,
-				}}>
-				Smile Now
-			</Text>
+		<SafeAreaView
+			style={{
+				justifyContent: "center",
+				height: "100%",
+			}}>
+			<PartyLoading />
 		</SafeAreaView>
 	);
 }

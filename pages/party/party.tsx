@@ -28,6 +28,7 @@ import {
 } from "@tanstack/react-query";
 import ActivateParty from "../../components/party/activateParty";
 import TakePhoto from "../../components/party/takePhoto";
+import { useIsFocused } from "@react-navigation/native";
 export type NotificationFrequencyType = "slow" | "normal" | "fast";
 export interface IEvent {
 	_id: string;
@@ -42,6 +43,8 @@ export interface IEvent {
 }
 
 export default function PartyPage({ route, navigation }) {
+	const isFocused = useIsFocused();
+	const queryClient = useQueryClient();
 	const { eventId, justCreated } = route.params;
 	const [page, setPage] = useState(1);
 
@@ -234,7 +237,6 @@ export default function PartyPage({ route, navigation }) {
 													isLiked={item.isLiked}
 													comments={item.comments || 0}
 													refresh={refetch}
-													delay={index}
 												/>
 											</TouchableOpacity>
 										);

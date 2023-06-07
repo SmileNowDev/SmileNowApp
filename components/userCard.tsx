@@ -24,6 +24,7 @@ export interface UserCardProps {
 	id: string;
 	onPress?: () => void;
 	rightElement?: React.ReactNode;
+	onClose?: () => void;
 }
 export default function UserCard({
 	profilePicture,
@@ -32,6 +33,7 @@ export default function UserCard({
 	id,
 	onPress,
 	rightElement,
+	onClose,
 }: UserCardProps) {
 	const navigation = useNavigation();
 	const { userId } = useContext(Context);
@@ -70,6 +72,7 @@ export default function UserCard({
 				{rightElement ? rightElement : <></>}
 			</TouchableOpacity>
 			<ModalWrapper
+				onClose={onClose}
 				visible={modalVisible}
 				setVisible={setModalVisible}
 				fullHeight={false}

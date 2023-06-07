@@ -13,21 +13,28 @@ import {
 	View,
 	ActivityIndicator,
 	Platform,
+	Animated,
 } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import Icon from "../../components/core/icons";
 import { Colors, Fonts } from "../../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
 import postApi from "../../api/post/post";
 import { imageHeight, imageWidth } from "../../pages/post";
 import { QueryClient, useMutation } from "@tanstack/react-query";
+import Polaroid from "@components/post/polaroid";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
 	const queryClient = new QueryClient();
 	const { eventId } = route.params;
 	const [loading, setLoading] = useState(false);
 	const [caption, setCaption] = useState("");
+	const opacity = useRef(new Animated.Value(1)).current;
+
+	const offset = useRef(new Animated.Value(0)).current;
+	const keyboardOffset = useRef(new Animated.Value(0)).current;
 	const [permission, requestPermission] = Camera.useCameraPermissions();
+
 	const [cameraType, setCameraType] = useState(CameraType.back);
 	const [flashMode, setFlashMode] = useState(FlashMode.off);
 	const [isPreviewing, setIsPreviewing] = useState(false);
@@ -37,6 +44,7 @@ export default function CameraPage({ route, navigation }) {
 	const [endTime, setEndTime] = useState("");
 	const [getPostCacheFired, setGetPostCacheFired] = useState(false);
 	const [expired, setExpired] = useState(false);
+
 	async function getPostCache() {
 		const result = await postApi.getPostCache({ eventId });
 		if (result.ok) {
@@ -89,6 +97,29 @@ export default function CameraPage({ route, navigation }) {
 			setIsPreviewing(true);
 		}
 	};
+	function handleAnimation() {
+		if (isPreviewing) {
+			Animated.parallel([
+				Animated.timing(offset, {
+					toValue: 1,
+					duration: 2000,
+					useNativeDriver: false,
+				}),
+				Animated.timing(opacity, {
+					toValue: 0,
+					duration: 4000,
+					useNativeDriver: false,
+					delay: 1000,
+				}),
+			]).start();
+		} else {
+			offset.setValue(0);
+			opacity.setValue(1);
+		}
+	}
+	useEffect(() => {
+		handleAnimation();
+	}, [isPreviewing]);
 
 	const retakePhoto = () => {
 		setIsPreviewing(false);
@@ -135,26 +166,24 @@ export default function CameraPage({ route, navigation }) {
 		likes: number;
 		comments: number;
 	};
-	const { status, error, mutate } = useMutation({
+	const { status, error, mutate, isLoading } = useMutation({
 		mutationFn: handlePost,
 		onSuccess: (newPost) => {
-			queryClient.setQueriesData(
-				["posts", eventId, 1],
-				(oldData: PostType[]) => [newPost, ...oldData]
+			queryClient.setQueriesData(["posts", eventId, 1], (oldData) => {
+				//@ts-expect-error
+				const updatedPages = oldData ? oldData.pages : [];
 
-				// if (!oldData?.pages || !Array.isArray(oldData.pages)) {
-				// 	return [newPost]; // Return the new data as the only page
-				// }
-				// // Create a copy of the first page and add the new data at the start
-				// //@ts-expect-error
-				// const firstPage = [data.data, ...oldData.pages[0]];
-
-				// // Replace the old first page with the new first page in the pages array
-				// //@ts-expect-error
-				// const newPages = [firstPage, ...oldData.pages.slice(1)];
-				// return newPages;
-			);
-			navigation.navigate("Party", { eventId });
+				// Check if the first page exists
+				if (updatedPages[0]) {
+					// add newPost to the beginning of the first page array
+					updatedPages[0] = [newPost, ...updatedPages[0]];
+				} else {
+					// if there are no pages yet, create the first page with the newPost
+					updatedPages[0] = [newPost];
+				}
+				//@ts-expect-error
+				return { ...oldData, pages: updatedPages };
+			});
 		},
 	});
 
@@ -164,6 +193,7 @@ export default function CameraPage({ route, navigation }) {
 		if (result.ok) {
 			//@ts-expect-error
 			uploadImage(result.data._id);
+			navigation.navigate("Party", { eventId, newPost: result.data });
 		} else {
 			setLoading(false);
 			Alert.alert("Error", "Something went wrong, please try again later.");
@@ -205,7 +235,7 @@ export default function CameraPage({ route, navigation }) {
 					<TouchableOpacity
 						style={{
 							marginTop: 20,
-							width: width - 20,
+							width: Dim.width - 20,
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
 						}}
@@ -293,90 +323,159 @@ export default function CameraPage({ route, navigation }) {
 						</>
 					) : (
 						<>
-							<Text
-								style={{
-									fontFamily: Fonts.button.fontFamily,
-									fontSize: Fonts.button.fontSize,
-									textAlign: "left",
-									width: width - 20,
-								}}>
-								Time Remaining: {remainingTime.toString()}
-							</Text>
-
-							<TextInput
-								placeholderTextColor={Colors.textSecondary}
-								style={{
-									...GlobalStyles.textInput,
-									marginTop: 10,
-									width: width - 20,
-									height: 60,
-								}}
-								placeholder="Caption Your Photo"
-								value={caption}
-								onChangeText={setCaption}
-								returnKeyType="done"
-							/>
 							<View
 								style={{
-									position: "relative",
-									height: imageHeight,
-									width: imageWidth,
-									marginTop: 10,
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									width: Dim.width - 20,
 								}}>
-								{loading ? (
-									<ActivityIndicator
-										size={"large"}
-										color={Colors.primary}
-										style={{
-											height: width - 20,
-											width: width - 20,
-											position: "absolute",
-											top: (width - 20) / 2,
-											zIndex: 100,
-										}}
-									/>
-								) : (
-									<></>
-								)}
-								<Image
-									source={{ uri: photo?.uri }}
-									style={{ width: "100%", height: "100%", borderRadius: 10 }}
-								/>
-								<TouchableOpacity
-									onPress={() => retakePhoto()}
+								<Text
 									style={{
-										position: "absolute",
-										top: 20,
-										left: 20,
-										...ButtonStyles.buttonSmall,
-										backgroundColor: Colors.foreground,
+										fontFamily: Fonts.button.fontFamily,
+										fontSize: Fonts.button.fontSize,
+										textAlign: "left",
 									}}>
-									<Icon
-										name="image-remove"
-										size={20}
-										type={"MaterialCommunity"}
-										color={Colors.textSecondary}
-									/>
-									<Text
-										style={{
-											...ButtonStyles.buttonTextSmall,
-											color: Colors.textSecondary,
-										}}>
-										Retake
-									</Text>
+									Time Remaining: {remainingTime.toString()}
+								</Text>
+								<TouchableOpacity
+									style={{
+										...ButtonStyles.button,
+										...ButtonStyles.primary,
+									}}
+									onPress={() => mutate()}>
+									<Text style={{ ...ButtonStyles.buttonText }}>Post</Text>
 								</TouchableOpacity>
 							</View>
-
-							<TouchableOpacity
+							<Animated.View
 								style={{
-									marginTop: 20,
-									width: width - 20,
-									...ButtonStyles.buttonLarge,
-									...ButtonStyles.primary,
-								}}
-								onPress={() => handlePost()}>
-								<Text style={{ ...ButtonStyles.buttonTextLarge }}>Post</Text>
-							</TouchableOpacity>
+									transform: [
+										{
+											translateY: keyboardOffset.interpolate({
+												inputRange: [0, 1],
+												outputRange: [0, -imageHeight * 0.5], // adjust this value to move as much as you need
+											}),
+										},
+									],
+								}}>
+								<Animated.View
+									style={{
+										marginTop: 20,
+										backgroundColor: Colors.background,
+										alignItems: "center",
+										padding: 10,
+										borderRadius: 3.5,
+										...GlobalStyles.shadow,
+
+										transform: [
+											{
+												translateY: offset.interpolate({
+													inputRange: [0, 1],
+													outputRange: [-imageHeight * 1.5, 0], // adjust this value to move as much as you need
+												}),
+											},
+										],
+									}}>
+									{loading ? (
+										<ActivityIndicator
+											size={"large"}
+											color={Colors.primary}
+											style={{
+												height: width - 20,
+												width: width - 20,
+												position: "absolute",
+												top: (width - 20) / 2,
+												zIndex: 100,
+											}}
+										/>
+									) : (
+										<></>
+									)}
+									<View
+										style={{
+											height: imageHeight,
+											width: imageWidth,
+											borderRadius: 5,
+											position: "relative",
+											overflow: "hidden",
+										}}>
+										<Animated.View
+											style={{
+												position: "absolute",
+												top: 0,
+												left: 0,
+												zIndex: 100,
+												borderRadius: 5,
+												height: imageHeight,
+												width: imageWidth,
+												opacity: opacity,
+												backgroundColor: "black",
+											}}
+										/>
+										<Image
+											source={{ uri: photo?.uri }}
+											style={{ width: "100%", height: "100%", borderRadius: 5 }}
+										/>
+									</View>
+									<TextInput
+										placeholderTextColor={Colors.textSecondary}
+										style={{
+											...GlobalStyles.textInput,
+											marginTop: 10,
+											height: 60,
+											width: imageWidth,
+										}}
+										placeholder="Caption Your Photo"
+										onBlur={() => {
+											console.log("HERE 1");
+											// set offset back to 0
+											Animated.timing(keyboardOffset, {
+												toValue: 0,
+												duration: 500,
+												useNativeDriver: false,
+											}).start();
+											console.log(keyboardOffset);
+										}}
+										onFocus={() => {
+											// set offset to move image above keyboard
+											console.log("HERE 2");
+											Animated.timing(keyboardOffset, {
+												toValue: 1,
+												duration: 500,
+												useNativeDriver: false,
+											}).start();
+											console.log(keyboardOffset);
+										}}
+										value={caption}
+										onChangeText={setCaption}
+										returnKeyType="done"
+									/>
+									<TouchableOpacity
+										onPress={() => retakePhoto()}
+										style={{
+											position: "absolute",
+											top: 20,
+											left: 20,
+											zIndex: 150,
+											...ButtonStyles.buttonSmall,
+											backgroundColor: Colors.foreground,
+										}}>
+										<Icon
+											name="image-remove"
+											size={20}
+											type={"MaterialCommunity"}
+											color={Colors.textSecondary}
+										/>
+										<Text
+											style={{
+												...ButtonStyles.buttonTextSmall,
+												color: Colors.textSecondary,
+											}}>
+											Retake
+										</Text>
+									</TouchableOpacity>
+								</Animated.View>
+							</Animated.View>
 						</>
 					)}
 				</>
