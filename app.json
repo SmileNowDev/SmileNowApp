@@ -22,8 +22,7 @@
 				"UIRequiresFullScreen": true
 			},
 			"bundleIdentifier": "app.smilenow.smile",
-			"userInterfaceStyle": "automatic",
-			"googleServicesFile": "./GoogleService-Info.plist"
+			"userInterfaceStyle": "automatic"
 		},
 		"android": {
 			"adaptiveIcon": {
@@ -38,19 +37,7 @@
 			],
 			"backgroundColor": "#ffffff"
 		},
-		"web": {
-			"config": {
-				"firebase": {
-					"apiKey": "AIzaSyCZsBpnyLyudROXDzEMM_xEZBIYJDpMKsU",
-					"authDomain": "smilenowapp.firebaseapp.com",
-					"projectId": "smilenowapp",
-					"storageBucket": "smilenowapp.appspot.com",
-					"messagingSenderId": "1047765184",
-					"appId": "1:1047765184:web:788ca45ef14b7935b28d25",
-					"measurementId": "G-J8T77YKC9X"
-				}
-			}
-		},
+
 		"extra": {
 			"eas": {
 				"projectId": "4f1b1687-8968-4045-9f0e-59d33c66cc91"
@@ -84,14 +71,6 @@
 			"expo-sensors",
 			{
 				"motionPermission": "Allow Smile Now to access your device motion."
-			}
-		],
-		[
-			"expo-build-properties",
-			{
-				"ios": {
-					"useFrameworks": "static"
-				}
 			}
 		]
 	]

@@ -12,8 +12,6 @@ import {
 	QueryClientProvider,
 	focusManager,
 } from "@tanstack/react-query";
-import { initializeApp } from "firebase/app";
-import "firebase/analytics";
 // @ts-ignore
 import { GOOGLE_API_KEY } from "@env";
 const queryClient = new QueryClient({
@@ -28,17 +26,7 @@ function onAppStateChange(status: AppStateStatus) {
 export default function App() {
 	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const fontsAreLoaded = loadFonts();
-	const firebaseConfig = {
-		apiKey: GOOGLE_API_KEY,
-		authDomain: "smilenowapp.firebaseapp.com",
-		projectId: "smilenowapp",
-		storageBucket: "smilenowapp.appspot.com",
-		messagingSenderId: "1047765184",
-		appId: "1:1047765184:web:788ca45ef14b7935b28d25",
-		measurementId: "G-J8T77YKC9X",
-	};
 
-	const app = initializeApp(firebaseConfig);
 	useEffect(() => {
 		async function prepare() {
 			await SplashScreen.preventAutoHideAsync();

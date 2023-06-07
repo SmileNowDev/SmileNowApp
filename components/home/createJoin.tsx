@@ -6,7 +6,6 @@ import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import analytics from "@react-native-firebase/analytics";
 import { Context } from "../../providers/provider";
 
 export default function CreateJoin({ navigation }) {
@@ -43,11 +42,6 @@ export default function CreateJoin({ navigation }) {
 			onSuccess: async (data) => {
 				//@ts-expect-error
 				console.log("created event: ", data.data._id);
-				// await analytics().logEvent("create_event", {
-				// 	//@ts-expect-error
-				// 	eventId: data.data._id,
-				// 	user: userId,
-				// });
 			},
 			onError: (error) => {
 				console.log(error);
