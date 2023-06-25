@@ -1,16 +1,14 @@
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Context } from "../../providers/provider";
 
 export default function CreateJoin({ navigation }) {
 	const [joining, setJoining] = useState(false);
-	const { userId } = useContext(Context);
 	const queryClient = useQueryClient();
 	const mutation = useMutation(() => eventApi.create(), {
 		onSuccess: (data) => {

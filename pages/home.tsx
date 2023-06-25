@@ -29,6 +29,7 @@ import {
 import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
+import AnimatedLottieView from "lottie-react-native";
 type EventType = {
 	_id: string;
 	title: string;
@@ -114,7 +115,20 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	// if (isLoading && isFetching) return <PartyLoading />;
+	if (isLoading)
+		return (
+			<SafeAreaView>
+				<AnimatedLottieView
+					source={require("../assets/animations/smile_loading.json")}
+					autoPlay
+					loop
+					style={{
+						width: Dim.width,
+						height: Dim.width,
+					}}
+				/>
+			</SafeAreaView>
+		);
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />

@@ -8,11 +8,13 @@ interface HeaderProps {
 	goBack?: boolean;
 	title?: string;
 	rightContent?: React.ReactNode;
+	leftContent?: React.ReactNode;
 }
 export default function Header({
 	goBack = false,
 	title,
 	rightContent,
+	leftContent,
 }: HeaderProps) {
 	const navigation = useNavigation();
 	return (
@@ -20,12 +22,17 @@ export default function Header({
 			style={{
 				...GlobalStyles.header,
 			}}>
-			{goBack && (
-				<TouchableOpacity onPress={() => navigation.goBack()}>
-					<Icon name={"chevron-left"} size={30} />
-				</TouchableOpacity>
+			{leftContent ? (
+				<View>{leftContent}</View>
+			) : (
+				<>
+					{goBack && (
+						<TouchableOpacity onPress={() => navigation.goBack()}>
+							<Icon name={"chevron-left"} size={30} />
+						</TouchableOpacity>
+					)}
+				</>
 			)}
-
 			<Text
 				style={{
 					flex: 1,

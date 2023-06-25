@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-query";
 // @ts-ignore
 import { GOOGLE_API_KEY } from "@env";
+import { ToastProvider } from "react-native-toast-notifications";
 const queryClient = new QueryClient({
 	defaultOptions: { queries: { retry: 2 } },
 });
@@ -48,11 +49,13 @@ export default function App() {
 		return (
 			<MyProvider>
 				<StatusBar style="dark" />
-				<QueryClientProvider client={queryClient}>
-					<NavigationContainer>
-						<RootNavigator />
-					</NavigationContainer>
-				</QueryClientProvider>
+				<ToastProvider placement="top" offsetTop={50}>
+					<QueryClientProvider client={queryClient}>
+						<NavigationContainer>
+							<RootNavigator />
+						</NavigationContainer>
+					</QueryClientProvider>
+				</ToastProvider>
 			</MyProvider>
 		);
 	}

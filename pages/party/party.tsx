@@ -47,7 +47,11 @@ export default function PartyPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId, justCreated } = route.params;
 	const [page, setPage] = useState(1);
-
+	useEffect(() => {
+		if (isFocused) {
+			refetch();
+		}
+	}, [isFocused]);
 	// EVENT
 	const { isLoading, error, data, refetch } = useQuery<IEvent>({
 		queryKey: ["event", eventId],
@@ -60,7 +64,6 @@ export default function PartyPage({ route, navigation }) {
 			throw new Error(result.problem);
 		} else {
 			// console.log("==============");
-			// //@ts-expect-error
 			// console.log("getting event: ", result.data.event.title);
 			// console.log(result.data);
 			// console.log("==============");

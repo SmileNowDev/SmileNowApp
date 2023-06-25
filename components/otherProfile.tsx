@@ -170,7 +170,7 @@ export default function OtherProfile({ id }) {
 					fontFamily: Fonts.title.fontFamily,
 					fontSize: Fonts.title.fontSize,
 				}}>
-				{name}
+				{name || "Loading..."}
 			</Text>
 			<Text
 				style={{
@@ -178,7 +178,7 @@ export default function OtherProfile({ id }) {
 					fontSize: Fonts.button.fontSize,
 					color: Colors.textSecondary,
 				}}>
-				@{userName}
+				@{userName || "username"}
 			</Text>
 			<View style={{ paddingVertical: 30 }}>
 				<ActionButton />

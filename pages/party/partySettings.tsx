@@ -10,6 +10,7 @@ import {
 	ActivityIndicator,
 	StyleSheet,
 	Button,
+	Animated,
 } from "react-native";
 import Header from "../../components/layout/header";
 import { ButtonStyles, GlobalStyles, Dim } from "../../styles/styles";
@@ -26,6 +27,7 @@ import { PulseIndicator } from "react-native-indicators";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IEvent, NotificationFrequencyType } from "./party";
 import NotificationSettings from "../../components/party/notificationSettings";
+import NameAndDescription from "../../components/party/settings/nameAndDescription";
 
 type PartyDetailProps = StackScreenProps<RootStackParamList, "PartySettings">;
 
@@ -35,8 +37,6 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	const { eventId } = route.params;
 	const data: IEvent = queryClient.getQueryData(["event", eventId]);
 	console.log({ data });
-	const [newDescription, setNewDescription] = useState(data.description);
-	const [newTitle, setNewTitle] = useState(data.title);
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const [notificationFrequency, setNotificationFrequency] =
@@ -44,6 +44,12 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	const [notificationStatus, setNotificationStatus] = useState(false);
 	const [muted, setMuted] = useState<boolean>(false);
 	const [archived, setArchived] = useState<boolean>(false);
+	const [isSaved, setIsSaved] = useState(true);
+	useEffect(() => {
+		//when any setting changes, isSaved is false,
+		//once result.ok is received by the backend, isSaved is will true -> handled in the mutation functions
+		setIsSaved(false);
+	}, [notificationFrequency, notificationStatus, muted, archived, isSaved]);
 	const muteMutation = useMutation(
 		// @ts-expect-error
 		({ eventId, userId, muted }) =>
@@ -189,23 +195,23 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 		);
 	}
 
-	async function save() {
-		// save the new name to the database
-		setLoading(true);
-		const result = await eventApi.updateEvent({
-			eventId,
-			title: newTitle,
-			description: newDescription,
-			settings: { notificationFrequency: data.notificationFrequency },
-		});
-		if (result.ok) {
-			Alert.alert("Your event has been updated", "Refresh to see your changes");
+	// async function save() {
+	// 	// save the new name to the database
+	// 	setLoading(true);
+	// 	const result = await eventApi.updateEvent({
+	// 		eventId,
+	// 		title: newTitle,
+	// 		description: newDescription,
+	// 		settings: { notificationFrequency: data.notificationFrequency },
+	// 	});
+	// 	if (result.ok) {
+	// 		Alert.alert("Your event has been updated", "Refresh to see your changes");
 
-			navigation.goBack();
-		} else {
-			Alert.alert("Error", "Something went wrong");
-		}
-	}
+	// 		navigation.goBack();
+	// 	} else {
+	// 		Alert.alert("Error", "Something went wrong");
+	// 	}
+	// }
 
 	function cancel() {
 		// navigate back to the home page
@@ -265,168 +271,36 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 		);
 	}
 
-	function SaveCancel() {
-		if (data.isHost) {
-			return (
-				<View
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
-						gap: 2.5,
-						flex: 0,
-						marginVertical: 10,
-					}}>
-					<TouchableOpacity
-						onPress={() => cancel()}
-						style={{
-							...ButtonStyles.button,
-							...ButtonStyles.secondary,
-							width: Dim.width / 2 - 20,
-						}}>
-						<Icon name="delete" size={25} color={Colors.background} />
-						<Text
-							style={{
-								...ButtonStyles.buttonText,
-							}}>
-							Cancel
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={() => save()}
-						style={{
-							...ButtonStyles.button,
-							...ButtonStyles.primary,
-							width: Dim.width / 2 - 20,
-						}}>
-						<Icon name="save" size={25} color={Colors.background} />
-						<Text style={{ ...ButtonStyles.buttonText }}>Save</Text>
-					</TouchableOpacity>
-				</View>
-			);
-		} else {
-			return <></>;
-		}
-	}
 	function handleRefresh() {
 		queryClient.invalidateQueries(["event", eventId]);
 	}
+	function SafeBackButton() {
+		function checkIfCanGoBack() {
+			navigation.goBack();
+		}
+		return (
+			<View>
+				<TouchableOpacity onPress={() => checkIfCanGoBack()}>
+					<Icon name={"chevron-left"} size={30} />
+				</TouchableOpacity>
+			</View>
+		);
+	}
 	return (
 		<SafeAreaView style={{ flex: 1, height: Dim.height }}>
-			<Header goBack title={`Party Settings`} />
+			<Header leftContent={<SafeBackButton />} title={`Party Settings`} />
 			<ScreenWrapper
 				scrollEnabled={true}
 				onRefresh={handleRefresh}
 				loading={loading}>
-				{loading ? (
-					<ActivityIndicator
-						size={"large"}
-						color={Colors.primary}
-						style={{
-							height: Dim.width - 20,
-							width: Dim.width - 20,
-							position: "absolute",
-							top: Dim.width / 2,
-							zIndex: 100,
-						}}
-					/>
-				) : (
-					<></>
-				)}
-				<SaveCancel />
-
 				{/* Name and Description */}
-				<View style={{ padding: 10 }}>
-					<Text
-						style={{
-							fontFamily: Fonts.subTitle.fontFamily,
-							fontSize: Fonts.button.fontSize,
-							width: "100%",
-							marginBottom: 10,
-						}}>
-						Party Details
-					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.small.fontFamily,
-							fontSize: Fonts.small.fontSize,
-							color: Colors.textSecondary,
-						}}>
-						Name:
-					</Text>
-					{data.isHost ? (
-						<View style={{ position: "relative" }}>
-							<TextInput
-								value={newTitle}
-								placeholder="Enter a party Name"
-								onChangeText={setNewTitle}
-								clearButtonMode="always"
-								style={{
-									...GlobalStyles.textInput,
-								}}
-							/>
-							{newTitle.length > 0 && (
-								<TouchableOpacity
-									onPress={() => setNewTitle("")}
-									style={{
-										position: "absolute",
-										right: 0,
-										top: 0,
-										bottom: 0,
-										alignItems: "center",
-										justifyContent: "center",
-										marginRight: 10,
-										zIndex: 100,
-									}}>
-									<Icon name="cancel" size={20} color={Colors.textSecondary} />
-								</TouchableOpacity>
-							)}
-						</View>
-					) : (
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-								color: Colors.text,
-							}}>
-							{data.title}
-						</Text>
-					)}
-
-					<Text
-						style={{
-							fontFamily: Fonts.small.fontFamily,
-							fontSize: Fonts.small.fontSize,
-							color: Colors.textSecondary,
-							marginTop: 20,
-						}}>
-						Description:
-					</Text>
-					{data.isHost ? (
-						<TextInput
-							multiline
-							numberOfLines={4}
-							clearButtonMode="always"
-							value={newDescription}
-							placeholder="Enter a party Name"
-							onChangeText={setNewDescription}
-							style={{
-								...GlobalStyles.textInput,
-								height: 100,
-							}}
-						/>
-					) : (
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-								color: Colors.text,
-							}}>
-							{data.description}
-						</Text>
-					)}
-				</View>
+				<NameAndDescription
+					isHost={data.isHost}
+					title={data.title}
+					description={data.description}
+					id={data._id}
+					notificationFrequency={data.notificationFrequency}
+				/>
 				{/* Notification State */}
 				<View style={GlobalStyles.hr} />
 				<Text
