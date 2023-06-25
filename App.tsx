@@ -49,7 +49,7 @@ export default function App() {
 		return (
 			<MyProvider>
 				<StatusBar style="dark" />
-				<ToastProvider placement="top" offsetTop={50}>
+				<ToastProvider placement="bottom" offsetTop={50}>
 					<QueryClientProvider client={queryClient}>
 						<NavigationContainer>
 							<RootNavigator />

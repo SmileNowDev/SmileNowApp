@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Colors, Fonts } from "../../styles/theme";
-import Icon from "../../components/core/icons";
+import { Colors, Fonts } from "../../../styles/theme";
+import Icon from "../../core/icons";
 import NotificationFrequencyButton from "./notificationFrequencyButton";
-import { GlobalStyles } from "../../styles/styles";
+import { GlobalStyles } from "../../../styles/styles";
 
-export default function NotificationSettings({
+export default function NotificationFrequency({
 	isHost,
 	notificationFrequency,
 }) {
@@ -85,7 +85,6 @@ export default function NotificationSettings({
 						}
 					/>
 				</View>
-				<View style={GlobalStyles.hr} />
 			</View>
 		);
 	} else {

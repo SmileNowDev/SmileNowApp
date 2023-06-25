@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Dim } from "../../styles/styles";
-import { Colors, Fonts } from "../../styles/theme";
+import { Dim } from "../../../styles/styles";
+import { Colors, Fonts } from "../../../styles/theme";
 
 export default function NotificationFrequencyButton({
 	mode,
