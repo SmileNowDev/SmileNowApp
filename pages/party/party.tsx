@@ -137,14 +137,10 @@ export default function PartyPage({ route, navigation }) {
 		);
 	} else if (isLoading) {
 		return (
-			<View
-				style={{
-					height: Dim.height,
-					alignItems: "center",
-					justifyContent: "center",
-				}}>
-				<ActivityIndicator size={"large"} color={Colors.primary} />
-			</View>
+			<PartyLoading
+				variant="white_backdrop"
+				message={"Gathering who's at the party"}
+			/>
 		);
 	} else {
 		return (

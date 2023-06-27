@@ -115,7 +115,7 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	if (isLoading) return <PartyLoading />;
+	if (isLoading) return <PartyLoading variant={"pink_backdrop"} />;
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />
@@ -161,14 +161,9 @@ export default function HomePage({ navigation }) {
 								style={{ flex: 1 }}
 								data={events}
 								keyExtractor={(item) => item._id}
-								renderItem={({ item, index }) => {
+								renderItem={({ item }) => {
 									return (
-										<View
-											style={{
-												paddingHorizontal: 10,
-												backgroundColor:
-													index % 2 === 0 ? Colors.background : Colors.border,
-											}}>
+										<View key={item._id}>
 											<PartyListItem
 												initials={getInitials(
 													item.title?.split(" ")[0],

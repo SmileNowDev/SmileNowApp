@@ -1,12 +1,12 @@
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 import eventApi from "../../api/post/event";
-import { Colors } from "../../styles/theme";
+import { Colors, Fonts } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { LinearGradient } from "expo-linear-gradient";
 export default function CreateJoin({ navigation }) {
 	const [joining, setJoining] = useState(false);
 	const queryClient = useQueryClient();
@@ -54,27 +54,64 @@ export default function CreateJoin({ navigation }) {
 			<ModalWrapper visible={joining} setVisible={setJoining} fullHeight={true}>
 				<JoinPartyPage setVisible={setJoining} />
 			</ModalWrapper>
-
-			<View style={styles.createJoinContainer}>
+			<LinearGradient
+				colors={["transparent", Colors.textSecondary]}
+				locations={[0.1, 1]}
+				style={{
+					position: "absolute",
+					bottom: 0,
+					left: 0,
+					right: 0,
+					height: Dim.height * 0.25,
+					zIndex: 40,
+				}}
+			/>
+			<LinearGradient
+				style={styles.createJoinContainer}
+				colors={[
+					Colors.foreground,
+					Colors.background,
+					Colors.background,
+					Colors.textSecondary,
+				]}
+				locations={[0, 0.1, 0.8, 1]}
+				start={{ x: 0, y: 0 }}
+				end={{ x: 0, y: 1 }}>
 				<TouchableOpacity
 					onPress={() => setJoining(true)}
 					style={{
 						...ButtonStyles.secondary,
 						...ButtonStyles.buttonLarge,
+						shadowColor: Colors.primary,
+
 						flex: 1,
 					}}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Join Party</Text>
+					<Text
+						style={{
+							...ButtonStyles.buttonTextLarge,
+							textAlign: "center",
+							fontWeight: "bold",
+						}}>
+						Join Party
+					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => createEvent()}
 					style={{
 						...ButtonStyles.primary,
 						...ButtonStyles.buttonLarge,
+
 						flex: 1,
 					}}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Create Party</Text>
+					<Text
+						style={{
+							...ButtonStyles.buttonTextLarge,
+							textAlign: "center",
+						}}>
+						Create Party
+					</Text>
 				</TouchableOpacity>
-			</View>
+			</LinearGradient>
 		</>
 	);
 }
@@ -90,8 +127,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		gap: 2.5,
+		paddingVertical: 12,
 		...GlobalStyles.Container,
-		shadowColor: Colors.secondary,
+		shadowColor: Colors.text,
 		shadowOffset: {
 			width: 0,
 			height: 5,
@@ -100,5 +138,6 @@ const styles = StyleSheet.create({
 		shadowRadius: 10,
 		elevation: 5,
 		flex: 0,
+		borderColor: "transparent",
 	},
 });
