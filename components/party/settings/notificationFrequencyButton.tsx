@@ -11,10 +11,15 @@ export default function NotificationFrequencyButton({
 	title,
 	icon,
 	subtext,
+	disabled,
 }) {
 	return (
 		<TouchableOpacity
-			onPress={() => setNotificationFrequency(mode)}
+			disabled={disabled}
+			onPress={() => {
+				console.log("pressing : ", mode);
+				setNotificationFrequency(mode);
+			}}
 			style={{
 				...styles.frequencyOption,
 				backgroundColor:

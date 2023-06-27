@@ -115,20 +115,7 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	if (isLoading)
-		return (
-			<SafeAreaView>
-				<AnimatedLottieView
-					source={require("../assets/animations/smile_loading.json")}
-					autoPlay
-					loop
-					style={{
-						width: Dim.width,
-						height: Dim.width,
-					}}
-				/>
-			</SafeAreaView>
-		);
+	if (isLoading) return <PartyLoading />;
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />

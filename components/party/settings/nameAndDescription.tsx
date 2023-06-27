@@ -62,8 +62,25 @@ export default function NameAndDescription({
 	);
 	async function abandonChanges() {
 		// revert the server state to match the client state (which should be stale when this button is clicked)
-		setClientTitle(initialTitle);
-		setClientDescription(initialDescription);
+		// confirm that they will lose progress
+		Alert.alert(
+			"Are you sure you want to revert changes?",
+			"All your hard work will be lost",
+			[
+				{
+					text: "No, keep my changes",
+					onPress: () => {},
+					style: "cancel",
+				},
+				{
+					text: "Yes, Revert Changes",
+					onPress: () => {
+						setClientTitle(initialTitle);
+						setClientDescription(initialDescription);
+					},
+				},
+			]
+		);
 	}
 	const debounceSaveDetails = debounce(() => {
 		// save the new name and description to the database
@@ -77,7 +94,7 @@ export default function NameAndDescription({
 			description: clientDescription,
 			notificationFrequency,
 		});
-	}, 500);
+	}, 1000);
 
 	useEffect(() => {
 		if (
@@ -96,6 +113,14 @@ export default function NameAndDescription({
 	if (isHost) {
 		return (
 			<View style={{ padding: 10 }}>
+				<Text
+					style={{
+						fontFamily: Fonts.subTitle.fontFamily,
+						fontSize: Fonts.button.fontSize,
+						flex: 0,
+					}}>
+					Party Details
+				</Text>
 				<View
 					style={{
 						display: "flex",
@@ -104,16 +129,39 @@ export default function NameAndDescription({
 						alignItems: "center",
 						width: "100%",
 					}}>
-					<Text
+					<View
 						style={{
-							fontFamily: Fonts.subTitle.fontFamily,
-							fontSize: Fonts.button.fontSize,
-							marginBottom: 10,
-							flex: 0,
+							display: "flex",
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "flex-start",
+							gap: 5,
 						}}>
-						Party Details
-					</Text>
-					{isLoading && <ActivityIndicator color={Colors.primary} />}
+						{hasMadeEdits && !detailsMutation.isLoading && (
+							<>
+								<Icon name="check" size={18} />
+								<Text
+									style={{
+										fontFamily: Fonts.small.fontFamily,
+										fontSize: Fonts.small.fontSize,
+									}}>
+									Saved
+								</Text>
+							</>
+						)}
+						{detailsMutation.isLoading && (
+							<>
+								<ActivityIndicator color={Colors.textSecondary} size={18} />
+								<Text
+									style={{
+										fontFamily: Fonts.small.fontFamily,
+										fontSize: Fonts.small.fontSize,
+									}}>
+									Saving...
+								</Text>
+							</>
+						)}
+					</View>
 
 					{hasMadeEdits && (
 						<TouchableOpacity

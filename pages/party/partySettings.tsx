@@ -35,8 +35,10 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	const queryClient = useQueryClient();
 	const { eventId } = route.params;
 	const data: IEvent = queryClient.getQueryData(["event", eventId]);
-	console.log({ data });
+	console.log("FROM SETTINGS QUERY");
 
+	console.log(data);
+	console.log("--------------------------");
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const [archived, setArchived] = useState<boolean>(false);
@@ -98,6 +100,8 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 				<View style={GlobalStyles.hr} />
 				<NotificationsSettings
 					eventId={eventId}
+					title={data.title}
+					description={data.description}
 					notificationFrequency={data.notificationFrequency}
 					isHost={data.isHost}
 					muted={data.muted}

@@ -1,7 +1,13 @@
 import Icon from "../../core/icons";
 import eventApi from "../../../api/post/event";
 import React, { useContext, useState } from "react";
-import { Switch, Text, View } from "react-native";
+import {
+	ActivityIndicator,
+	StyleSheet,
+	Switch,
+	Text,
+	View,
+} from "react-native";
 import { GlobalStyles } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,10 +15,12 @@ import { useToast } from "react-native-toast-notifications";
 import { IEvent } from "../../../pages/party/party";
 import { PulseIndicator } from "react-native-indicators";
 import attendeeApi from "../../../api/post/attendee";
-import NotificationFrequency from "./notificationFrequency";
 import { Context } from "../../../providers/provider";
+import NotificationFrequencyButton from "./notificationFrequencyButton";
 export default function NotificationsSettings({
 	eventId,
+	title,
+	description,
 	notificationFrequency,
 	isHost,
 	muted,
@@ -24,6 +32,9 @@ export default function NotificationsSettings({
 
 	const [notificationStatus, setNotificationStatus] = useState(active);
 	const [isMuted, setIsMuted] = useState(muted);
+	const [newNotificationFrequency, setNewNotificationFrequency] = useState(
+		notificationFrequency || "normal"
+	);
 	const muteMutation = useMutation(
 		// @ts-expect-error
 		({ eventId, userId, muteStatus }) =>
@@ -90,6 +101,47 @@ export default function NotificationsSettings({
 		console.log("here");
 		// api to switch notification status
 		activeMutation.mutate(eventId);
+	}
+	const notificationFrequencyMutation = useMutation(
+		// @ts-expect-error
+		({ eventId, frequency }) =>
+			eventApi.updateEvent({
+				eventId,
+				title,
+				description,
+				settings: { notificationFrequency: frequency },
+			}),
+		{
+			onSuccess: (data) => {
+				console.log(data.data);
+				//@ts-expect-error
+				let _newFrequency = data.data.settings.notificationFrequency;
+				// console.log("muted was:", isMuted);
+				console.log("on success - frequency: ", _newFrequency);
+
+				let message = `Your notifications are now on ${_newFrequency}`;
+				toast.show(message);
+
+				queryClient.setQueryData(["event", eventId], (oldData) => ({
+					...(oldData as IEvent),
+					notificationFrequency: _newFrequency,
+				}));
+				setNewNotificationFrequency(_newFrequency);
+			},
+			onError: (error) => {
+				console.log(error);
+				toast.show("Something went wrong, try again later", {
+					type: "danger",
+				});
+			},
+		}
+	);
+	function handleFrequencyChange(frequency) {
+		console.log("new notification frequency: ", frequency);
+		notificationFrequencyMutation.mutate(
+			//@ts-expect-error
+			{ eventId, frequency }
+		);
 	}
 	return (
 		<View>
@@ -190,13 +242,110 @@ export default function NotificationsSettings({
 
 			<View style={GlobalStyles.hr} />
 			{notificationStatus ? (
-				<NotificationFrequency
-					isHost={isHost}
-					notificationFrequency={notificationFrequency}
-				/>
+				<View>
+					<View
+						style={{
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+							width: "100%",
+						}}>
+						<Text
+							style={{
+								fontFamily: Fonts.subTitle.fontFamily,
+								fontSize: Fonts.button.fontSize,
+
+								marginTop: 5,
+							}}>
+							Notification Frequency: {newNotificationFrequency}
+						</Text>
+						<View>
+							{notificationFrequencyMutation.isLoading ? (
+								<ActivityIndicator size="small" color={Colors.textSecondary} />
+							) : (
+								<></>
+							)}
+						</View>
+					</View>
+					<View style={styles.frequencyContainer}>
+						<NotificationFrequencyButton
+							mode="fast"
+							notificationFrequency={newNotificationFrequency}
+							setNotificationFrequency={handleFrequencyChange}
+							color={Colors.tertiary}
+							title={"Fast"}
+							subtext={"Every 5-10 Minutes"}
+							icon={
+								<Icon
+									name="rabbit"
+									size={30}
+									color={
+										notificationFrequency === "fast"
+											? Colors.tertiaryDark
+											: Colors.textSecondary
+									}
+									type="MaterialCommunity"
+								/>
+							}
+							disabled={notificationFrequencyMutation.isLoading}
+						/>
+						<NotificationFrequencyButton
+							mode="normal"
+							notificationFrequency={newNotificationFrequency}
+							setNotificationFrequency={handleFrequencyChange}
+							color={Colors.primary}
+							title={"Normal"}
+							subtext={"Every 15-30 Minutes"}
+							icon={
+								<Icon
+									name="face"
+									size={30}
+									color={
+										notificationFrequency === "normal"
+											? Colors.primaryDark
+											: Colors.textSecondary
+									}
+								/>
+							}
+							disabled={notificationFrequencyMutation.isLoading}
+						/>
+						<NotificationFrequencyButton
+							mode="slow"
+							notificationFrequency={newNotificationFrequency}
+							setNotificationFrequency={handleFrequencyChange}
+							color={Colors.secondary}
+							title={"Slow"}
+							subtext={"Every 30-60 Minutes"}
+							icon={
+								<Icon
+									name="tortoise"
+									size={30}
+									color={
+										notificationFrequency === "slow"
+											? Colors.secondaryDark
+											: Colors.textSecondary
+									}
+									type="MaterialCommunity"
+								/>
+							}
+							disabled={notificationFrequencyMutation.isLoading}
+						/>
+					</View>
+				</View>
 			) : (
 				<></>
 			)}
 		</View>
 	);
 }
+const styles = StyleSheet.create({
+	frequencyContainer: {
+		gap: 5,
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		padding: 10,
+	},
+});
