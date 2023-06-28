@@ -9,7 +9,10 @@ import {
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
-import { generateColorFromLetters } from "../../utils/colorGenerator";
+import {
+	generateColorFromLetters,
+	generateSecondaryColorFromLetters,
+} from "../../utils/colorGenerator";
 import { PulseIndicator, MaterialIndicator } from "react-native-indicators";
 import { LinearGradient } from "expo-linear-gradient";
 import { SquircleView } from "react-native-figma-squircle";
@@ -36,19 +39,11 @@ export default function PartyListItem({
 	return (
 		<LinearGradient
 			colors={[Colors.background, Colors.foreground]}
-			start={{ x: 0, y: 0 }}
-			end={{ x: 0, y: 1 }}
-			style={{
-				flex: 1,
-				borderRadius: 10,
-				marginBottom: 5,
-				marginHorizontal: 10,
-				shadowOffset: { width: 0, height: 0 },
-				shadowOpacity: 0.5,
-				shadowRadius: 5,
-				shadowColor: "black",
-				elevation: 3,
-			}}>
+			// colors={[
+			// 	generateColorFromLetters(initials),
+			// 	generateSecondaryColorFromLetters(initials),
+			// ]}
+			style={styles.gradientStyles}>
 			<TouchableWithoutFeedback
 				// @ts-ignore error
 				onPress={() => navigation.navigate("Party", { eventId })}>
@@ -56,26 +51,50 @@ export default function PartyListItem({
 					style={{
 						flexDirection: "row",
 						alignItems: "center",
-						padding: 10,
+						padding: 8,
 						gap: 10,
 						justifyContent: "space-between",
 					}}>
+					<LinearGradient
+						style={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							bottom: 0,
+							right: 0,
+							opacity: 0.25,
+						}}
+						start={{ x: 0, y: 0 }}
+						end={{ x: 1, y: 1 }}
+						colors={[
+							generateSecondaryColorFromLetters(initials),
+							Colors.background,
+							generateColorFromLetters(initials),
+						]}
+						locations={[0.2, 0.75, 0.95]}
+					/>
 					<View style={styles.avatarContainer}>
 						{attendeeInfo?.isHost ? (
 							<View
 								style={{
 									position: "absolute",
-									top: 0,
+									bottom: 0,
 									right: 0,
 									zIndex: 50,
+									height: 20,
+									width: 20,
+
 									shadowOffset: { width: 0, height: 0 },
 									shadowOpacity: 0.5,
 									shadowRadius: 5,
-									shadowColor: "#fcba03",
+									backgroundColor: "#fcba03",
+									borderRadius: 10,
+									alignItems: "center",
+									justifyContent: "center",
+									// shadowColor: "#fcba03",
 									elevation: 3,
 
 									transform: [
-										{ rotate: "35deg" },
 										{
 											translateX: 3,
 										},
@@ -84,8 +103,8 @@ export default function PartyListItem({
 								}}>
 								<Icon
 									name={"crown"}
-									color={"gold"}
-									size={15}
+									color={"white"}
+									size={10}
 									type={"FontAwesome5"}
 									style={{
 										shadowOpacity: 0.25,
@@ -124,7 +143,7 @@ export default function PartyListItem({
 						style={{
 							flex: 1,
 							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
+							fontSize: Fonts.body.fontSize + 2,
 						}}>
 						{name}
 					</Text>
@@ -158,6 +177,11 @@ export default function PartyListItem({
 	);
 }
 const styles = StyleSheet.create({
+	gradientStyles: {
+		flex: 1,
+		borderRadius: 10,
+		marginHorizontal: 10,
+	},
 	avatarContainer: {
 		position: "relative",
 		display: "flex",

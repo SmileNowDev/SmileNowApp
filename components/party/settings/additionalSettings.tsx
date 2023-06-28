@@ -74,59 +74,85 @@ function SettingsButton({ title, description, icon, buttonText, onPress }) {
 }
 export default function AdditionalSettings({ eventId, isHost, archived }) {
 	const { userId } = useContext(Context);
-
+	const toast = useToast();
 	const navigation = useNavigation();
 	const queryClient = useQueryClient();
 	const archiveMutation = useMutation(
-		(eventId) => archiveApi.deleteArchive({ eventId }),
+		//@ts-expect-error
+		({ eventId }) => archiveApi.create({ eventId }),
 		{
 			onSuccess: (data) => {
-				console.log("success");
-				queryClient.setQueryData(["events"], (oldData) => ({
-					...(oldData as IEvent[]).filter((event) => event._id !== eventId),
-				})); //remove it from home
+				console.log("success - now this is archived");
+				console.log("data", data.data);
+				queryClient.invalidateQueries(["events"]);
+				// queryClient.setQueryData(["events"], (oldData) => ({
+				// 	...(oldData as IEvent[]).filter((event) => event._id !== eventId),
+				// })); //remove it from home
 				queryClient.setQueryData(["event", eventId], (oldData) => ({
 					...(oldData as IEvent),
+					isArchived: data.data,
+				}));
+				queryClient.setQueryData(["archived_events"], (oldData) => ({
+					...(oldData as IEvent[]),
 					data,
 				}));
+				toast.show("Your party has been archived", {
+					type: "success",
+					placement: "top",
+				});
+				//@ts-expect-error
+				navigation.navigate("Home");
 			},
 		}
 	);
 	const unArchiveMutation = useMutation(
-		(eventId) => archiveApi.create({ eventId }),
+		//@ts-expect-error
+		({ eventId }) => archiveApi.deleteArchive({ eventId }),
 		{
 			onSuccess: (data) => {
-				console.log("success");
+				console.log("success - event brought back");
+				console.log("data", data.data);
 				queryClient.setQueryData(["events"], (oldData) => ({
 					...(oldData as IEvent[]),
 					data,
 				})); // add it back to home
 				queryClient.setQueryData(["event", eventId], (oldData) => ({
 					...(oldData as IEvent),
-					data, // update this event's state
+					archived: false, // update this event's state
 				}));
+				toast.show("Your party has been restored", {
+					type: "success",
+					placement: "top",
+				});
+				//@ts-expect-error
+				navigation.navigate("Home");
 			},
 		}
 	);
 	async function toggleArchive() {
 		if (!archived) {
 			console.log("archiving a active party");
-			archiveMutation.mutate(eventId);
+			//@ts-expect-error
+			archiveMutation.mutate({ eventId });
 		} else {
 			console.log("bringing an archived party back");
 			//@ts-expect-error
 			unArchiveMutation.mutate({ eventId });
 		}
 	}
-	async function deleteParty() {
-		async function yes() {
-			const result = await eventApi.deleteEvent({ eventId });
-			if (result.ok) {
+	const deleteMutation = useMutation(
+		//@ts-expect-error
+		({ eventId }) => eventApi.deleteEvent({ eventId }),
+		{
+			onSuccess: (data) => {
+				console.log("success - event deleted");
+				toast.show("Your party has been deleted", { placement: "top" });
 				//@ts-expect-error
 				navigation.navigate("Home");
-			} else {
-			}
+			},
 		}
+	);
+	async function deleteParty() {
 		Alert.alert(
 			"Are you sure you want to delete this event?",
 			"This action is irreversible and all posts will be deleted as well, forever.",
@@ -138,24 +164,29 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 				},
 				{
 					text: "Accept",
-					onPress: async () => {
-						yes();
+					onPress: () => {
+						//@ts-expect-error
+						deleteMutation.mutate({ eventId });
 					},
 				},
 			]
 		);
 	}
-	async function leaveParty() {
-		async function yes() {
-			console.log({ eventId, userId });
-			const result = await attendeeApi.deleteAttendee({ eventId, userId });
-			if (result.ok) {
+	const leaveMutation = useMutation(
+		//@ts-expect-error
+		({ eventId }) => eventApi.deleteEvent({ eventId }),
+		{
+			onSuccess: (data) => {
+				console.log("success - event deleted");
+				toast.show("You have been removed from the event", {
+					placement: "top",
+				});
 				//@ts-expect-error
 				navigation.navigate("Home");
-			} else {
-				console.log(result);
-			}
+			},
 		}
+	);
+	async function leaveParty() {
 		Alert.alert(
 			"Are you sure you want to leave?",
 			"If you leave, a host will have to reinvite you!",
@@ -167,8 +198,9 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 				},
 				{
 					text: "Accept",
-					onPress: async () => {
-						yes();
+					onPress: () => {
+						//@ts-expect-error
+						leaveMutation.mutate({ eventId });
 					},
 				},
 			]

@@ -77,6 +77,13 @@ export default function NameAndDescription({
 					onPress: () => {
 						setClientTitle(initialTitle);
 						setClientDescription(initialDescription);
+						//@ts-expect-error
+						detailsMutation.mutate({
+							id,
+							title: initialTitle,
+							description: initialDescription,
+							notificationFrequency,
+						});
 					},
 				},
 			]
@@ -199,7 +206,6 @@ export default function NameAndDescription({
 						onChangeText={(newTitle) => {
 							setClientTitle(newTitle);
 						}}
-						clearButtonMode="always"
 						style={{
 							...GlobalStyles.textInput,
 						}}

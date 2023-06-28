@@ -63,11 +63,22 @@ export default function PartyPage({ route, navigation }) {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			// console.log("==============");
-			// console.log("getting event: ", result.data.event.title);
-			// console.log(result.data);
-			// console.log("==============");
+			console.log("==============");
+			console.log("GET EVENT");
+			//@ts-expect-error
+			console.log("getting event: ", result.data.event.title);
 			console.log(result.data);
+			console.log("==============");
+			let _archived = false;
+			//@ts-expect-error
+			if (result.data.isArchived !== null) {
+				//@ts-expect-error
+				console.log("result.data.isArchived: ", result.data.isArchived);
+				_archived = true;
+			}
+			console.log("archived", _archived);
+			//@ts-expect-error
+			console.log("isArchived", result.data.event.isArchived);
 			let data: IEvent = {
 				// @ts-expect-error
 				_id: result.data?.event._id,
@@ -85,9 +96,9 @@ export default function PartyPage({ route, navigation }) {
 				isActive: result.data?.isActive,
 				// @ts-expect-error
 				notificationFrequency: result.data?.event.notificationFrequency,
-				// @ts-expect-error
-				archived: result.data?.event.archived,
+				archived: _archived,
 			};
+			console.log("formatted", data);
 			return data;
 		}
 	}

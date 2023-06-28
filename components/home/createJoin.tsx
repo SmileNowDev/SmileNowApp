@@ -56,7 +56,7 @@ export default function CreateJoin({ navigation }) {
 			</ModalWrapper>
 			<LinearGradient
 				colors={["transparent", Colors.textSecondary]}
-				locations={[0.1, 1]}
+				locations={[0.15, 1]}
 				style={{
 					position: "absolute",
 					bottom: 0,
@@ -69,10 +69,15 @@ export default function CreateJoin({ navigation }) {
 			<LinearGradient
 				style={styles.createJoinContainer}
 				colors={[
-					Colors.foreground,
-					Colors.background,
-					Colors.background,
-					Colors.textSecondary,
+					// Colors.foreground,
+					// Colors.background,
+					// Colors.background,
+					// Colors.textSecondary,
+
+					"transparent",
+					"transparent",
+					"transparent",
+					"transparent",
 				]}
 				locations={[0, 0.1, 0.8, 1]}
 				start={{ x: 0, y: 0 }}
@@ -129,6 +134,7 @@ const styles = StyleSheet.create({
 		gap: 2.5,
 		paddingVertical: 12,
 		...GlobalStyles.Container,
+		backgroundColor: "transparent",
 		shadowColor: Colors.text,
 		shadowOffset: {
 			width: 0,

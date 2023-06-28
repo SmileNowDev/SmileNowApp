@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
 	SafeAreaView,
 	Text,
@@ -6,6 +6,7 @@ import {
 	View,
 	Platform,
 	FlatList,
+	ActivityIndicator,
 } from "react-native";
 import { Fonts, Colors } from "../../styles/theme";
 import { ButtonStyles, GlobalStyles } from "../../styles/styles";
@@ -23,59 +24,49 @@ import ModalWrapper from "../../components/core/modalWrapper";
 import JoinPartyPage from "../joinParty";
 import archiveApi from "../../api/post/archive";
 import Header from "../../components/layout/header";
+import {
+	useInfiniteQuery,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
+import { useIsFocused } from "@react-navigation/native";
 export default function ArchivePage({ navigation }) {
-	//todo: give events a type
-	const [events, setEvents] = useState([]);
+	//todo: test the pagination on this page
+	const isFocused = useIsFocused();
+	const queryClient = useQueryClient();
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
+	const [hasNextPage, setHasNextPage] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [bottomLoading, setBottomLoading] = useState(false);
-	const [joining, setJoining] = useState(false);
 
 	// ... (other functions)
-
-	async function getEvents() {
-		setLoading(true);
-		const result = await archiveApi.getArchives({ page: 1 });
-		if (result.ok) {
-			// @ts-expect-error
-			setEvents(result.data);
-		}
-		setLoading(false);
-	}
-
-	// Add this function
-	async function loadMoreEvents() {
-		if (!hasMore) {
-			return;
-		}
-
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await archiveApi.getArchives({ page: nextPage });
-
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setEvents((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
-	}
-
-	function onRefresh() {
-		getEvents();
-	}
-
+	const { data, isLoading, status, refetch, isFetching } = useQuery({
+		queryKey: ["archived_events", page],
+		queryFn: ({ pageParam = 1 }) => getEvents({ pageParam }),
+	});
 	useEffect(() => {
-		getEvents();
+		if (isFocused) {
+			onRefresh();
+		}
+	}, [isFocused]);
+
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+		queryClient.invalidateQueries(["events"]);
+		queryClient.invalidateQueries(["requests"]);
+		refetch();
+		setRefreshing(false);
 	}, []);
+	async function getEvents({ pageParam = 1 }) {
+		setPage(pageParam);
+		const result = await archiveApi.getArchives({ page: 1 });
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			return result.data;
+		}
+	}
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -83,20 +74,34 @@ export default function ArchivePage({ navigation }) {
 			<ScreenWrapper
 				onRefresh={onRefresh}
 				scrollEnabled={true}
-				loading={loading}
-				onBottomScroll={loadMoreEvents}
-				bottomLoading={bottomLoading}
+				loading={isLoading}
+				// onBottomScroll={fetchNextPage}
+				// bottomLoading={isFetchingNextPage}
 				style={{ paddingHorizontal: 0 }}>
 				<>
 					<FlatList
-						data={events}
+						style={{ paddingTop: 20 }}
+						//@ts-expect-error
+						data={data}
 						keyExtractor={(item) => item._id}
+						ListHeaderComponent={
+							<View>
+								{isFetching && <ActivityIndicator color={Colors.primary} />}
+							</View>
+						}
 						renderItem={({ item, index }) => (
 							<View
+								key={item._id}
 								style={{
-									paddingHorizontal: 10,
-									backgroundColor:
-										index % 2 === 0 ? Colors.background : Colors.border,
+									// shadowColor: "#000",
+									// shadowOffset: {
+									// 	width: 0,
+									// 	height: 2,
+									// },
+									// shadowOpacity: 0.125,
+									// shadowRadius: 2.5,
+									// elevation: 2,
+									marginBottom: 15,
 								}}>
 								<PartyListItem
 									initials={getInitials(
@@ -109,10 +114,9 @@ export default function ArchivePage({ navigation }) {
 									attendeeInfo={item.attendeeInfo}
 									isActive={item.isActive}
 								/>
+								{/* todo: add action buttons here to unarchive and delete */}
 							</View>
 						)}
-						onEndReached={() => setPage((prevPage) => prevPage + 1)}
-						onEndReachedThreshold={0.1}
 					/>
 				</>
 			</ScreenWrapper>

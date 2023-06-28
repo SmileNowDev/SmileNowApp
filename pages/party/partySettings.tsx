@@ -37,7 +37,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	const data: IEvent = queryClient.getQueryData(["event", eventId]);
 	console.log("FROM SETTINGS QUERY");
 
-	console.log(data);
+	console.log("data from this page", data);
 	console.log("--------------------------");
 	const [loading, setLoading] = useState<boolean>(false);
 

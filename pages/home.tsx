@@ -163,7 +163,19 @@ export default function HomePage({ navigation }) {
 								keyExtractor={(item) => item._id}
 								renderItem={({ item }) => {
 									return (
-										<View key={item._id}>
+										<View
+											key={item._id}
+											style={{
+												shadowColor: "#000",
+												shadowOffset: {
+													width: 0,
+													height: 2,
+												},
+												shadowOpacity: 0.125,
+												shadowRadius: 3,
+												elevation: 2,
+												marginBottom: 15,
+											}}>
 											<PartyListItem
 												initials={getInitials(
 													item.title?.split(" ")[0],
