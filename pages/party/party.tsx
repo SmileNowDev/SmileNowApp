@@ -79,6 +79,12 @@ export default function PartyPage({ route, navigation }) {
 			console.log("archived", _archived);
 			//@ts-expect-error
 			console.log("isArchived", result.data.event.isArchived);
+			let _frequency: NotificationFrequencyType = "normal";
+			//@ts-expect-error
+			if (result.data.event.settings.notificationFrequency) {
+				//@ts-expect-error
+				_frequency = result.data.event.settings.notificationFrequency;
+			}
 			let data: IEvent = {
 				// @ts-expect-error
 				_id: result.data?.event._id,
@@ -94,8 +100,7 @@ export default function PartyPage({ route, navigation }) {
 				muted: result.data?.attendeeInfo?.muted,
 				// @ts-expect-error
 				isActive: result.data?.isActive,
-				// @ts-expect-error
-				notificationFrequency: result.data?.event.notificationFrequency,
+				notificationFrequency: _frequency,
 				archived: _archived,
 			};
 			console.log("formatted", data);

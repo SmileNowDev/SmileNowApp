@@ -17,6 +17,7 @@ import { PulseIndicator } from "react-native-indicators";
 import attendeeApi from "../../../api/post/attendee";
 import { Context } from "../../../providers/provider";
 import NotificationFrequencyButton from "./notificationFrequencyButton";
+import QueryLoadingStatus from "../../core/queryLoadingStatus";
 export default function NotificationsSettings({
 	eventId,
 	title,
@@ -114,19 +115,20 @@ export default function NotificationsSettings({
 		{
 			onSuccess: (data) => {
 				console.log(data.data);
-				//@ts-expect-error
-				let _newFrequency = data.data.settings.notificationFrequency;
+				let _newFrequency = newNotificationFrequency;
 				// console.log("muted was:", isMuted);
 				console.log("on success - frequency: ", _newFrequency);
 
 				let message = `Your notifications are now on ${_newFrequency}`;
-				toast.show(message);
-
-				queryClient.setQueryData(["event", eventId], (oldData) => ({
-					...(oldData as IEvent),
-					notificationFrequency: _newFrequency,
-				}));
-				setNewNotificationFrequency(_newFrequency);
+				toast.show(message, {
+					type: "success",
+				});
+				if (_newFrequency !== undefined) {
+					queryClient.setQueryData(["event", eventId], (oldData) => ({
+						...(oldData as IEvent),
+						notificationFrequency: newNotificationFrequency,
+					}));
+				}
 			},
 			onError: (error) => {
 				console.log(error);
@@ -138,6 +140,8 @@ export default function NotificationsSettings({
 	);
 	function handleFrequencyChange(frequency) {
 		console.log("new notification frequency: ", frequency);
+		setNewNotificationFrequency(frequency);
+
 		notificationFrequencyMutation.mutate(
 			//@ts-expect-error
 			{ eventId, frequency }
@@ -145,15 +149,26 @@ export default function NotificationsSettings({
 	}
 	return (
 		<View>
-			<Text
+			<View
 				style={{
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.button.fontSize,
-					width: "100%",
-					marginTop: 5,
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
 				}}>
-				Notification Settings
-			</Text>
+				<Text
+					style={{
+						fontFamily: Fonts.subTitle.fontFamily,
+						fontSize: Fonts.button.fontSize,
+						marginTop: 5,
+					}}>
+					Notification Settings
+				</Text>
+				<QueryLoadingStatus
+					isLoading={activeMutation.isLoading || muteMutation.isLoading}
+					status={activeMutation.status || muteMutation.status}
+				/>
+			</View>
 			<View
 				style={{
 					gap: 5,
@@ -196,6 +211,7 @@ export default function NotificationsSettings({
 					<Switch
 						value={notificationStatus}
 						onValueChange={handleNotificationStatusChange}
+						disabled={activeMutation.isLoading}
 					/>
 				) : (
 					<></>
@@ -237,12 +253,16 @@ export default function NotificationsSettings({
 					</Text>
 				</View>
 
-				<Switch value={!isMuted} onValueChange={handleMuting} />
+				<Switch
+					value={!isMuted}
+					onValueChange={handleMuting}
+					disabled={muteMutation.isLoading}
+				/>
 			</View>
 
-			<View style={GlobalStyles.hr} />
 			{notificationStatus ? (
 				<View>
+					<View style={GlobalStyles.hr} />
 					<View
 						style={{
 							display: "flex",
@@ -260,13 +280,10 @@ export default function NotificationsSettings({
 							}}>
 							Notification Frequency: {newNotificationFrequency}
 						</Text>
-						<View>
-							{notificationFrequencyMutation.isLoading ? (
-								<ActivityIndicator size="small" color={Colors.textSecondary} />
-							) : (
-								<></>
-							)}
-						</View>
+						<QueryLoadingStatus
+							isLoading={notificationFrequencyMutation.isLoading}
+							status={notificationFrequencyMutation.status}
+						/>
 					</View>
 					<View style={styles.frequencyContainer}>
 						<NotificationFrequencyButton
@@ -281,7 +298,7 @@ export default function NotificationsSettings({
 									name="rabbit"
 									size={30}
 									color={
-										notificationFrequency === "fast"
+										newNotificationFrequency === "fast"
 											? Colors.tertiaryDark
 											: Colors.textSecondary
 									}
@@ -302,7 +319,7 @@ export default function NotificationsSettings({
 									name="face"
 									size={30}
 									color={
-										notificationFrequency === "normal"
+										newNotificationFrequency === "normal"
 											? Colors.primaryDark
 											: Colors.textSecondary
 									}
@@ -322,7 +339,7 @@ export default function NotificationsSettings({
 									name="tortoise"
 									size={30}
 									color={
-										notificationFrequency === "slow"
+										newNotificationFrequency === "slow"
 											? Colors.secondaryDark
 											: Colors.textSecondary
 									}
