@@ -5,6 +5,7 @@ import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as Haptics from "expo-haptics";
 
 export default function ActivateParty({ isActive, eventId, isHost }) {
 	const queryClient = useQueryClient();
@@ -76,6 +77,7 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 				</View>
 				<TouchableOpacity
 					onPress={() => {
+						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 						activateParty();
 					}}
 					style={{

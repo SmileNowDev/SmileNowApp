@@ -4,7 +4,7 @@ import ModalWrapper from "../core/modalWrapper";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 import eventApi from "../../api/post/event";
-import { Colors, Fonts } from "../../styles/theme";
+import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 export default function CreateJoin({ navigation }) {
@@ -12,11 +12,7 @@ export default function CreateJoin({ navigation }) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(() => eventApi.create(), {
 		onSuccess: (data) => {
-			navigation.navigate("Party", {
-				//@ts-expect-error
-				eventId: data.data._id,
-				justCreated: true,
-			});
+			console.log("data: ", data.data);
 			//@ts-expect-error
 			queryClient.setQueryData(["event", data.data._id], data.data);
 			queryClient.setQueryData(["events", 1], (oldData) => {
@@ -40,6 +36,10 @@ export default function CreateJoin({ navigation }) {
 			onSuccess: async (data) => {
 				//@ts-expect-error
 				console.log("created event: ", data.data._id);
+				navigation.navigate("CreateParty", {
+					//@ts-expect-error
+					eventId: data.data._id,
+				});
 			},
 			onError: (error) => {
 				console.log(error);
@@ -66,22 +66,7 @@ export default function CreateJoin({ navigation }) {
 					zIndex: 40,
 				}}
 			/>
-			<LinearGradient
-				style={styles.createJoinContainer}
-				colors={[
-					// Colors.foreground,
-					// Colors.background,
-					// Colors.background,
-					// Colors.textSecondary,
-
-					"transparent",
-					"transparent",
-					"transparent",
-					"transparent",
-				]}
-				locations={[0, 0.1, 0.8, 1]}
-				start={{ x: 0, y: 0 }}
-				end={{ x: 0, y: 1 }}>
+			<View style={styles.createJoinContainer}>
 				<TouchableOpacity
 					onPress={() => setJoining(true)}
 					style={{
@@ -116,7 +101,7 @@ export default function CreateJoin({ navigation }) {
 						Create Party
 					</Text>
 				</TouchableOpacity>
-			</LinearGradient>
+			</View>
 		</>
 	);
 }

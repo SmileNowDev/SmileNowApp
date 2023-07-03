@@ -13,9 +13,10 @@ import {
 	generateColorFromLetters,
 	generateSecondaryColorFromLetters,
 } from "../../utils/colorGenerator";
-import { PulseIndicator, MaterialIndicator } from "react-native-indicators";
+import { PulseIndicator } from "react-native-indicators";
 import { LinearGradient } from "expo-linear-gradient";
 import { SquircleView } from "react-native-figma-squircle";
+import * as Haptics from "expo-haptics";
 interface ListProps {
 	initials: string;
 	name: string;
@@ -45,8 +46,11 @@ export default function PartyListItem({
 			// ]}
 			style={styles.gradientStyles}>
 			<TouchableWithoutFeedback
-				// @ts-ignore error
-				onPress={() => navigation.navigate("Party", { eventId })}>
+				onPress={() => {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+					// @ts-ignore error
+					navigation.navigate("Party", { eventId });
+				}}>
 				<View
 					style={{
 						flexDirection: "row",
@@ -125,6 +129,7 @@ export default function PartyListItem({
 								fillColor: generateColorFromLetters(initials),
 							}}
 							style={{
+								zIndex: 2,
 								height: 45,
 								width: 45,
 								display: "flex",
@@ -137,6 +142,18 @@ export default function PartyListItem({
 							}}>
 							<Text style={{ fontSize: 22 }}>{initials}</Text>
 						</SquircleView>
+						{isActive && (
+							<View
+								style={{
+									position: "absolute",
+									zIndex: 1,
+								}}>
+								<PulseIndicator
+									color={generateColorFromLetters(initials)}
+									size={60}
+								/>
+							</View>
+						)}
 					</View>
 
 					<Text
@@ -183,7 +200,9 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 	},
 	avatarContainer: {
+		width: 55,
 		position: "relative",
+		overflow: "visible",
 		display: "flex",
 		flexDirection: "row",
 		alignItems: "center",

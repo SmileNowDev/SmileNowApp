@@ -1,18 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
 	Alert,
-	Button,
-	Dimensions,
 	Image,
 	SafeAreaView,
 	StyleSheet,
 	Text,
 	TextInput,
-	Touchable,
 	TouchableOpacity,
 	View,
 	ActivityIndicator,
-	Platform,
 	Animated,
 } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
@@ -21,19 +17,23 @@ import { Colors, Fonts } from "../../styles/theme";
 import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
 import postApi from "../../api/post/post";
 import { imageHeight, imageWidth } from "../../pages/post";
-import { QueryClient, useMutation } from "@tanstack/react-query";
-import Polaroid from "@components/post/polaroid";
-const { width, height } = Dimensions.get("window");
+import {
+	QueryClient,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
 export default function CameraPage({ route, navigation }) {
-	const queryClient = new QueryClient();
+	const queryClient = useQueryClient();
 	const { eventId } = route.params;
+	console.log("eventId: ", eventId);
+	let existingPostData = queryClient.getQueryData(["posts", eventId, 1]);
+	console.log("existing posts: ", existingPostData);
 	const [loading, setLoading] = useState(false);
 	const [caption, setCaption] = useState("");
 	const opacity = useRef(new Animated.Value(1)).current;
 
 	const offset = useRef(new Animated.Value(0)).current;
 	const keyboardOffset = useRef(new Animated.Value(0)).current;
-	const [permission, requestPermission] = Camera.useCameraPermissions();
 
 	const [cameraType, setCameraType] = useState(CameraType.back);
 	const [flashMode, setFlashMode] = useState(FlashMode.off);
@@ -146,10 +146,11 @@ export default function CameraPage({ route, navigation }) {
 	};
 
 	async function uploadImage(postId: string) {
+		console.log("Uploading image");
 		let formData = createFormData(photo);
 		const result = await postApi.uploadImage({ formData, postId });
 		if (result.ok) {
-			setLoading(false);
+			console.log("image uploaded, result: ", result.data);
 			navigation.navigate("Party", { eventId });
 		}
 	}
@@ -166,38 +167,46 @@ export default function CameraPage({ route, navigation }) {
 		likes: number;
 		comments: number;
 	};
-	const { status, error, mutate, isLoading } = useMutation({
-		mutationFn: handlePost,
-		onSuccess: (newPost) => {
-			queryClient.setQueriesData(["posts", eventId, 1], (oldData) => {
+	const { status, error, mutate, isLoading } = useMutation(
+		() => postApi.create({ eventId, caption }),
+		{
+			onSuccess: (newPost) => {
+				console.log("new post: ", newPost.data);
 				//@ts-expect-error
-				const updatedPages = oldData ? oldData.pages : [];
-
-				// Check if the first page exists
-				if (updatedPages[0]) {
-					// add newPost to the beginning of the first page array
-					updatedPages[0] = [newPost, ...updatedPages[0]];
-				} else {
-					// if there are no pages yet, create the first page with the newPost
-					updatedPages[0] = [newPost];
-				}
-				//@ts-expect-error
-				return { ...oldData, pages: updatedPages };
-			});
-		},
-	});
+				uploadImage(newPost.data._id);
+				queryClient.setQueryData(["posts", eventId, 1], (oldData) => {
+					//@ts-expect-error
+					console.log("oldData: ", oldData.pages[0]);
+					console.log("new post: ", newPost.data);
+					//@ts-expect-error
+					if (!oldData?.pages || !Array.isArray(oldData.pages)) {
+						return [[newPost.data]]; // Return the new data as the only page
+					}
+					//@ts-expect-error
+					const firstPage = [newPost.data, ...oldData.pages[0]];
+					//@ts-expect-error
+					const newPages = [firstPage, ...oldData.pages.slice(1)];
+					return {
+						//@ts-expect-error,
+						pageParams: oldData.pageParams,
+						pages: newPages,
+					};
+				});
+			},
+		}
+	);
 
 	async function handlePost() {
-		setLoading(true);
-		const result = await postApi.create({ eventId, caption });
-		if (result.ok) {
-			//@ts-expect-error
-			uploadImage(result.data._id);
-			navigation.navigate("Party", { eventId, newPost: result.data });
-		} else {
-			setLoading(false);
-			Alert.alert("Error", "Something went wrong, please try again later.");
-		}
+		mutate(null, {
+			onSuccess: (newPost) => {
+				console.log("new post: ", newPost.data);
+				navigation.navigate("Party", { eventId, newPost: newPost.data });
+			},
+			onError: (error) => {
+				console.log("error: ", error);
+				Alert.alert("Error", "Something went wrong, please try again later.");
+			},
+		});
 	}
 	useEffect(() => {
 		(async () => {
@@ -343,8 +352,14 @@ export default function CameraPage({ route, navigation }) {
 										...ButtonStyles.button,
 										...ButtonStyles.primary,
 									}}
-									onPress={() => mutate()}>
-									<Text style={{ ...ButtonStyles.buttonText }}>Post</Text>
+									onPress={() => handlePost()}>
+									{isLoading ? (
+										<View>
+											<ActivityIndicator color={Colors.background} size={15} />
+										</View>
+									) : (
+										<Text style={{ ...ButtonStyles.buttonText }}>Post</Text>
+									)}
 								</TouchableOpacity>
 							</View>
 							<Animated.View
@@ -381,10 +396,10 @@ export default function CameraPage({ route, navigation }) {
 											size={"large"}
 											color={Colors.primary}
 											style={{
-												height: width - 20,
-												width: width - 20,
+												height: Dim.width - 20,
+												width: Dim.width - 20,
 												position: "absolute",
-												top: (width - 20) / 2,
+												top: (Dim.width - 20) / 2,
 												zIndex: 100,
 											}}
 										/>

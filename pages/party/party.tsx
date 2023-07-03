@@ -52,6 +52,7 @@ export default function PartyPage({ route, navigation }) {
 			refetch();
 		}
 	}, [isFocused]);
+
 	// EVENT
 	const { isLoading, error, data, refetch } = useQuery<IEvent>({
 		queryKey: ["event", eventId],
@@ -63,22 +64,11 @@ export default function PartyPage({ route, navigation }) {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			console.log("==============");
-			console.log("GET EVENT");
-			//@ts-expect-error
-			console.log("getting event: ", result.data.event.title);
-			console.log(result.data);
-			console.log("==============");
 			let _archived = false;
 			//@ts-expect-error
 			if (result.data.isArchived !== null) {
-				//@ts-expect-error
-				console.log("result.data.isArchived: ", result.data.isArchived);
 				_archived = true;
 			}
-			console.log("archived", _archived);
-			//@ts-expect-error
-			console.log("isArchived", result.data.event.isArchived);
 			let _frequency: NotificationFrequencyType = "normal";
 			//@ts-expect-error
 			if (result.data.event.settings.notificationFrequency) {
@@ -103,7 +93,6 @@ export default function PartyPage({ route, navigation }) {
 				notificationFrequency: _frequency,
 				archived: _archived,
 			};
-			console.log("formatted", data);
 			return data;
 		}
 	}
@@ -160,7 +149,7 @@ export default function PartyPage({ route, navigation }) {
 		);
 	} else {
 		return (
-			<SafeAreaView style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1, bottom: -30 }}>
 				<PartyHeader
 					title={data.title}
 					eventId={eventId}
@@ -175,8 +164,8 @@ export default function PartyPage({ route, navigation }) {
 				<TakePhoto eventId={eventId} canPost={data.canPost} />
 				<ScreenWrapper
 					onRefresh={refetch}
+					loading={false}
 					scrollEnabled={true}
-					loading={postsLoading}
 					onBottomScroll={() => {
 						if (hasNextPage) {
 							fetchNextPage();
@@ -219,63 +208,83 @@ export default function PartyPage({ route, navigation }) {
 						) : (
 							<></>
 						)}
-						{postsData?.pages.flat().length === 0 ? (
-							<EmptyPartyMessage isHost={data.isHost} />
+						{postsLoading ? (
+							<View
+								style={{
+									position: "absolute",
+									left: 0,
+									right: 0,
+									flex: 1,
+									height: Dim.height,
+									alignContent: "center",
+									justifyContent: "center",
+								}}>
+								<PartyLoading
+									variant="white_backdrop"
+									message={"Getting all your pictures"}
+								/>
+							</View>
 						) : (
 							<>
-								<FlatList
-									data={postsData?.pages.flat()}
-									keyExtractor={(item) => item._id}
-									renderItem={({ item, index }) => {
-										return (
-											<TouchableOpacity
-												delayPressIn={500}
-												onPress={() => {
-													console.log("Clicked");
-													navigation.navigate("Post", {
-														postId: item._id,
-														eventId: eventId,
-														page: page,
-													});
-												}}>
-												<Photo
-													postId={item._id}
-													image={item.src}
-													caption={item.caption}
-													owner={{
-														name: item.user.name,
-														picture: item.user.src,
-														id: item.user._id,
-													}}
-													date={item.createdAt}
-													likes={item.likes || 0}
-													isLiked={item.isLiked}
-													comments={item.comments || 0}
-													refresh={refetch}
-												/>
-											</TouchableOpacity>
-										);
-									}}
-									ListFooterComponent={
-										<View
-											style={{
-												height: 150,
-												width: Dim.width,
-												justifyContent: "center",
-											}}>
-											{isFetchingNextPage && (
-												<Text
+								{postsData?.pages.flat().length === 0 ? (
+									<EmptyPartyMessage isHost={data.isHost} />
+								) : (
+									<>
+										<FlatList
+											data={postsData?.pages.flat()}
+											keyExtractor={(item) => item._id}
+											renderItem={({ item, index }) => {
+												return (
+													<TouchableOpacity
+														delayPressIn={500}
+														onPress={() => {
+															console.log("Clicked");
+															navigation.navigate("Post", {
+																postId: item._id,
+																eventId: eventId,
+																page: page,
+															});
+														}}>
+														<Photo
+															postId={item._id}
+															image={item.src}
+															caption={item.caption}
+															owner={{
+																name: item.user.name,
+																picture: item.user.src,
+																id: item.user._id,
+															}}
+															date={item.createdAt}
+															likes={item.likes || 0}
+															isLiked={item.isLiked}
+															comments={item.comments || 0}
+															refresh={refetch}
+														/>
+													</TouchableOpacity>
+												);
+											}}
+											ListFooterComponent={
+												<View
 													style={{
-														textAlign: "center",
-														fontFamily: Fonts.body.fontFamily,
-														fontSize: Fonts.body.fontSize,
+														height: 150,
+														width: Dim.width,
+														justifyContent: "center",
 													}}>
-													Getting More Pictures... 🖼
-												</Text>
-											)}
-										</View>
-									}
-								/>
+													{isFetchingNextPage && (
+														<Text
+															style={{
+																textAlign: "center",
+																fontFamily: Fonts.body.fontFamily,
+																fontSize: Fonts.body.fontSize,
+															}}>
+															Getting More Pictures... 🖼
+														</Text>
+													)}
+												</View>
+											}
+										/>
+									</>
+								)}
 							</>
 						)}
 					</>

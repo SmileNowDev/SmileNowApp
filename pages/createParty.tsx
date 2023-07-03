@@ -1,80 +1,300 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
 	View,
 	Text,
 	SafeAreaView,
-	TextInput,
 	TouchableOpacity,
-	ScrollView,
+	Animated,
+	TouchableWithoutFeedback,
 } from "react-native";
 import Header from "../components/layout/header";
 import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import Icon from "../components/core/icons";
-import eventApi from "../api/post/event";
 import QRCode from "react-native-qrcode-svg";
+import { useQueryClient } from "@tanstack/react-query";
+import ScreenWrapper from "../components/core/screenWrapper";
+import PartyLoading from "../components/party/partyLoading";
+import AnimatedLottieView from "lottie-react-native";
 
 export default function CreatePartyPage({ route, navigation }) {
-	const [joinCode, setJoinCode] = useState("ABCD");
 	const { eventId } = route.params;
-	const [name, setName] = useState("");
-	async function getEvent() {
-		const result = await eventApi.getEvent({ eventId });
-		if (result.ok) {
-			//@ts-expect-error
-			setName(result.data.event.title);
-			//@ts-expect-error
-			setJoinCode(result.data.event.inviteCode);
-		}
-	}
-	useEffect(() => {
-		getEvent();
-	}, [eventId]);
-	return (
-		<SafeAreaView>
-			<Header goBack title={"Your Party Has Been Created!"} />
-			<ScrollView>
-				<View style={{ alignItems: "center", gap: 20, paddingTop: 20 }}>
-					<View>
-						<Text
-							style={{
-								fontFamily: Fonts.small.fontFamily,
-								fontSize: Fonts.small.fontSize,
-								color: Colors.textSecondary,
-							}}>
-							What's the name of your event?
-						</Text>
-						<TextInput
-							style={{
-								...GlobalStyles.textInput,
-								fontSize: 20,
-								width: Dim.width - 40,
-							}}
-							value={name}
-							onChangeText={setName}
-							autoFocus={true}
-							placeholder="Party Name"
-						/>
-					</View>
+	const queryClient = useQueryClient();
+	const data = queryClient.getQueryData(["event", eventId]);
 
-					<View
+	// Create Animated Values for the three lines and content
+	const line1OffsetY = useRef(new Animated.Value(Dim.height)).current;
+	const line2OffsetY = useRef(new Animated.Value(Dim.height)).current;
+	const line3OffsetY = useRef(new Animated.Value(Dim.height)).current;
+	const lottieProgress = useRef(new Animated.Value(0)).current;
+	const line3Scale = useRef(new Animated.Value(1)).current;
+	const contentOffsetY = useRef(new Animated.Value(Dim.height)).current;
+	const skipAnimationOffsetY = useRef(new Animated.Value(0)).current;
+	useEffect(() => {
+		// Start the animation
+		Animated.sequence([
+			Animated.parallel([
+				Animated.sequence([
+					Animated.timing(line1OffsetY, {
+						toValue: Dim.height / 2.4,
+						duration: 1000,
+						useNativeDriver: true,
+						delay: 0,
+					}),
+					Animated.timing(line1OffsetY, {
+						toValue: -Dim.height,
+						duration: 1000,
+						useNativeDriver: true,
+						delay: 250,
+					}),
+				]),
+				Animated.sequence([
+					Animated.timing(line2OffsetY, {
+						toValue: Dim.height / 2.4,
+						duration: 1000,
+						useNativeDriver: true,
+						delay: 1000,
+					}),
+					Animated.timing(line2OffsetY, {
+						toValue: -Dim.height,
+						duration: 1000,
+						useNativeDriver: true,
+						delay: 250,
+					}),
+				]),
+				Animated.parallel([
+					Animated.timing(lottieProgress, {
+						toValue: 1,
+						duration: 3000,
+						useNativeDriver: true,
+						delay: 3000,
+					}),
+					Animated.sequence([
+						Animated.timing(line3OffsetY, {
+							toValue: Dim.height / 2.4,
+							duration: 1000,
+							useNativeDriver: true,
+							delay: 2000,
+						}),
+						Animated.timing(line3Scale, {
+							toValue: 1.25,
+							duration: 250,
+							useNativeDriver: true,
+						}),
+						Animated.timing(line3Scale, {
+							toValue: 1,
+							duration: 250,
+							useNativeDriver: true,
+						}),
+						Animated.timing(line3Scale, {
+							toValue: 1.25,
+							duration: 250,
+							useNativeDriver: true,
+						}),
+						Animated.timing(line3Scale, {
+							toValue: 1,
+							duration: 250,
+							useNativeDriver: true,
+						}),
+						Animated.timing(line3OffsetY, {
+							toValue: -Dim.height,
+							duration: 1000,
+							useNativeDriver: true,
+							delay: 1500,
+						}),
+					]),
+				]),
+			]),
+			Animated.parallel([
+				Animated.timing(contentOffsetY, {
+					toValue: 0,
+					duration: 1000,
+					useNativeDriver: true,
+				}),
+				Animated.timing(skipAnimationOffsetY, {
+					toValue: -Dim.height,
+					duration: 1000,
+					useNativeDriver: true,
+				}),
+			]),
+		]).start(() => {
+			line1OffsetY.setValue(Dim.height);
+			line2OffsetY.setValue(Dim.height);
+			line3OffsetY.setValue(Dim.height);
+			contentOffsetY.setValue(0);
+			lottieProgress.setValue(0);
+			line3Scale.setValue(1);
+			skipAnimationOffsetY.setValue(-Dim.height);
+			console.log("done");
+		});
+	}, []);
+	if (!data) {
+		return <PartyLoading variant="white_backdrop" />;
+	}
+	return (
+		<>
+			<View
+				style={{
+					top: 50,
+					zIndex: 100,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					paddingHorizontal: 4,
+				}}>
+				<TouchableOpacity
+					onPress={() => navigation.goBack()}
+					style={{
+						padding: 10,
+						zIndex: 100,
+						flexDirection: "row",
+						gap: 5,
+						alignItems: "center",
+					}}>
+					<Icon
+						name="chevron-left"
+						size={30}
+						type="Feather"
+						color={Colors.textSecondary}
+					/>
+					<Text
 						style={{
-							height: Dim.width - 40,
-							width: Dim.width - 40,
-							borderRadius: 20,
-							backgroundColor: "gray",
+							color: Colors.textSecondary,
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize,
 						}}>
-						<QRCode value={joinCode} size={Dim.width - 40} />
-						{/* QR Code goes here*/}
-					</View>
+						Back
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={{
+						padding: 10,
+						zIndex: 100,
+						flexDirection: "row",
+						gap: 5,
+						alignItems: "center",
+					}}
+					onPress={() => navigation.navigate("Party", { eventId })}>
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
 							color: Colors.textSecondary,
 						}}>
-						(Use the QR scanner in the app)
+						Skip to Party
 					</Text>
+					<Icon
+						name="chevron-right"
+						size={30}
+						type="Feather"
+						color={Colors.textSecondary}
+					/>
+				</TouchableOpacity>
+			</View>
+			<SafeAreaView style={{ flex: 1, height: Dim.height }}>
+				<Animated.Text
+					style={{
+						fontFamily: Fonts.title.fontFamily,
+						fontSize: Fonts.title.fontSize,
+						zIndex: 3,
+						textAlign: "center",
+						position: "absolute",
+						left: 0,
+						right: 0,
+						transform: [{ translateY: line1OffsetY }],
+					}}>
+					Welcome
+				</Animated.Text>
+				<Animated.Text
+					style={{
+						fontFamily: Fonts.title.fontFamily,
+						fontSize: Fonts.title.fontSize,
+						zIndex: 2,
+						textAlign: "center",
+						position: "absolute",
+						left: 0,
+						right: 0,
+						transform: [{ translateY: line2OffsetY }],
+					}}>
+					to
+				</Animated.Text>
+				<AnimatedLottieView
+					style={{
+						width: Dim.width,
+						height: Dim.height,
+						position: "absolute",
+						zIndex: 1,
+						top: 0,
+						left: 0,
+					}}
+					progress={lottieProgress}
+					source={require("../assets/animations/confetti.json")}
+				/>
+				<Animated.View
+					style={{
+						position: "absolute",
+						zIndex: 3,
+						left: 0,
+						right: 0,
+						transform: [{ translateY: line3OffsetY }],
+					}}>
+					<Animated.Text
+						style={{
+							fontFamily: Fonts.title.fontFamily,
+							fontSize: Fonts.title.fontSize,
+							textAlign: "center",
+
+							transform: [{ scale: line3Scale }],
+						}}>
+						{/* @ts-expect-error */}
+						{data?.title}
+					</Animated.Text>
+					<Text
+						style={{
+							textAlign: "center",
+							fontStyle: "italic",
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize,
+						}}>
+						A Smile Now Experience
+					</Text>
+				</Animated.View>
+				<Animated.View
+					style={{
+						zIndex: 1,
+						position: "absolute",
+						left: 0,
+						top: 0,
+						width: Dim.width,
+						height: Dim.height,
+						transform: [{ translateY: skipAnimationOffsetY }],
+					}}>
+					<TouchableOpacity
+						style={{
+							position: "absolute",
+							width: Dim.width,
+							height: Dim.height,
+						}}
+						onPress={() => {
+							console.log("pressed");
+							line1OffsetY.stopAnimation();
+							line2OffsetY.stopAnimation();
+							line3OffsetY.stopAnimation();
+							contentOffsetY.stopAnimation();
+							lottieProgress.stopAnimation();
+						}}
+					/>
+				</Animated.View>
+				<Animated.View
+					style={{
+						alignItems: "center",
+						left: 0,
+						right: 0,
+						gap: 10,
+						top: 60,
+						paddingTop: 5,
+						zIndex: 100,
+						transform: [{ translateY: contentOffsetY }],
+					}}>
 					<View>
 						<Text
 							style={{
@@ -90,29 +310,84 @@ export default function CreatePartyPage({ route, navigation }) {
 								color: Colors.primary,
 								textAlign: "center",
 							}}>
-							{joinCode}
+							{/* @ts-expect-error */}
+							{data.inviteCode}
 						</Text>
 					</View>
+					<Text
+						style={{
+							fontFamily: Fonts.body.fontFamily,
+							fontSize: Fonts.body.fontSize,
+						}}>
+						Or they can use the in-app scanner
+					</Text>
+					<View
+						style={{
+							shadowColor: "#000",
+							shadowOffset: {
+								width: 0,
+								height: 2,
+							},
+							shadowOpacity: 0.25,
+							shadowRadius: 3.84,
+							elevation: 5,
+						}}>
+						<View
+							style={{
+								height: Dim.width - 130,
+								width: Dim.width - 130,
+								alignItems: "center",
+								justifyContent: "center",
+								borderRadius: 10,
+								backgroundColor: Colors.background,
+								overflow: "hidden",
+							}}>
+							{/* @ts-expect-error */}
+							<QRCode value={data.inviteCode} size={Dim.width - 150} />
+						</View>
+					</View>
+					<TouchableOpacity
+						onPress={() => {
+							navigation.navigate("PartySettings", { eventId });
+						}}
+						style={{
+							zIndex: 50,
+							width: Dim.width - 130,
+							...ButtonStyles.button,
+							...ButtonStyles.outlinedTextSecondary,
+						}}>
+						<Icon name="settings" color={Colors.textSecondary} />
+						<Text
+							style={{
+								...ButtonStyles.buttonText,
+								color: Colors.textSecondary,
+							}}>
+							Adjust Party Settings
+						</Text>
+					</TouchableOpacity>
+
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Camera", { eventId })}
 						style={{
-							...ButtonStyles.buttonLarge,
+							marginTop: 40,
 							...ButtonStyles.primary,
+							width: 80,
+							height: 80,
+							borderRadius: 40,
+							alignItems: "center",
+							justifyContent: "center",
 						}}>
-						<Icon name="camera" size={20} type="Feather" color="white" />
-						<Text style={{ ...ButtonStyles.buttonTextLarge }}>
-							Take the First Picture
-						</Text>
+						<Icon name="camera" size={40} type="Feather" color="white" />
 					</TouchableOpacity>
-					<TouchableOpacity
-						onPress={() => navigation.navigate("Party", { eventId })}>
-						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
-							Skip to Party
-						</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={{ height: 400 }}></View>
-			</ScrollView>
-		</SafeAreaView>
+					<Text
+						style={{
+							fontFamily: Fonts.title.fontFamily,
+							fontSize: Fonts.subTitle.fontSize,
+						}}>
+						Take the First Picture
+					</Text>
+				</Animated.View>
+			</SafeAreaView>
+		</>
 	);
 }

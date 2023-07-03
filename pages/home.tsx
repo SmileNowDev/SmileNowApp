@@ -2,34 +2,25 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
 	SafeAreaView,
 	Text,
-	TouchableOpacity,
 	View,
 	FlatList,
-	StyleSheet,
 	RefreshControl,
 	ActivityIndicator,
 } from "react-native";
 import { Fonts, Colors } from "../styles/theme";
-import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
+import { Dim } from "../styles/styles";
 import PartyListItem from "../components/home/partyListItem";
 import HomeHeader from "../components/layout/homeHeader";
 import eventApi from "../api/post/event";
 import * as Notifications from "expo-notifications";
-import FriendsPage, { getInitials } from "./friends";
+import { getInitials } from "./friends";
 import ScreenWrapper from "../components/core/screenWrapper";
 import WelcomeMessage from "../components/info/welcomeMessage";
-import ModalWrapper from "../components/core/modalWrapper";
-import JoinPartyPage from "./joinParty";
 import { registerForPushNotificationsAsync } from "../lib/notifications";
-import {
-	useQuery,
-	useInfiniteQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
-import AnimatedLottieView from "lottie-react-native";
 type EventType = {
 	_id: string;
 	title: string;
@@ -58,6 +49,7 @@ export default function HomePage({ navigation }) {
 		getNextPageParam: (lastPage) => {
 			return hasNextPage ? page + 1 : undefined;
 		},
+		//somehow the pagination is broken, i still the response to include hasNextPage: boolean
 		enabled: isFocused,
 		staleTime: 1000 * 60 * 5, // data is considered fresh for 5 minutes
 		cacheTime: 1000 * 60 * 30, // data is cached for 30 minutes

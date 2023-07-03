@@ -35,15 +35,15 @@ export type RootStackParamList = {
 	Splash: undefined;
 	Home: undefined;
 	Terms: undefined;
-	Party: { partyId: string; justCreated?: boolean };
+	Party: { eventId: string; justCreated?: boolean };
 	Post: { postId: string; eventId: string; page: number };
-	CreateParty: undefined;
+	CreateParty: { eventId: string };
 	JoinParty: undefined;
 	InviteToParty: { eventId: string };
 	PartyAttendees: { eventId: string; isHost: boolean; name: string };
 	Friends: undefined;
 	PartySettings: { eventId: string };
-	Camera: { partyId: string };
+	Camera: { eventId: string };
 	TakeProfilePicture: undefined;
 	Profile: undefined;
 	EditProfile: undefined;

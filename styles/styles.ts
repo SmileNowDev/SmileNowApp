@@ -50,7 +50,7 @@ export const ButtonStyles = StyleSheet.create({
 	outlinedBlack: {
 		borderWidth: 1.5,
 		borderStyle: "solid",
-		borderColor: "#FFFFFF",
+		borderColor: "#000000",
 		backgroundColor: "transparent",
 	},
 	buttonTextSmall: {
@@ -82,6 +82,12 @@ export const ButtonStyles = StyleSheet.create({
 	outlined: {
 		backgroundColor: "transparent",
 		borderColor: Colors.border,
+		borderWidth: 1,
+		borderStyle: "solid",
+	},
+	outlinedTextSecondary: {
+		backgroundColor: "transparent",
+		borderColor: Colors.textSecondary,
 		borderWidth: 1,
 		borderStyle: "solid",
 	},

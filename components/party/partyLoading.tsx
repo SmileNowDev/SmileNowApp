@@ -136,6 +136,7 @@ export default function PartyLoading({ variant, message }: PartyLoadingProps) {
 						height: Dim.height * 1.5,
 						alignItems: "center",
 						justifyContent: "center",
+						position: "absolute",
 					}}
 					colors={[
 						Colors.background,
@@ -146,10 +147,7 @@ export default function PartyLoading({ variant, message }: PartyLoadingProps) {
 					locations={[0, 0.4, 0.5, 0.9]}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 1 }}>
-					<View
-						style={{
-							position: "absolute",
-						}}>
+					<View>
 						<Animated.View
 							style={{
 								transform: [

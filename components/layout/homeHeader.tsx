@@ -13,13 +13,18 @@ import friendApi from "../../api/user/friend";
 
 import { UserType } from "../../pages/profile";
 type UserDataType = {
+	name: string;
 	pic: string;
+	username: string;
 };
 export default function HomeHeader() {
 	const navigation = useNavigation();
 	const queryClient = useQueryClient();
 	const { userId } = useContext(Context);
-	const userData: UserDataType = queryClient.getQueryData(["user", userId]);
+	// const userData: UserDataType = queryClient.ensureQueryData({
+	// 	queryKey: ["user", userId],
+	// 	queryFn: getUser,
+	// });
 	const { isLoading, data } = useQuery({
 		queryKey: ["user", userId],
 		queryFn: getUser,
@@ -128,7 +133,7 @@ export default function HomeHeader() {
 							"Profile" as keyof RootStackParamList["Profile"]
 						)
 					}>
-					<Picture pic={userData?.pic || data?.pic} size={30} />
+					<Picture pic={data?.pic} size={30} />
 				</TouchableOpacity>
 			) : (
 				<></>

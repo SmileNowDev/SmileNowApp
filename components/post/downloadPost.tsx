@@ -31,11 +31,15 @@ export default function DownloadPost({
 			}}>
 			{/* images to download  */}
 			<View style={styles.imageOffScreen}>
-				<Image
-					ref={imageToSave}
-					source={{ uri: image }}
-					style={{ height: Dim.width - 40, width: Dim.width - 40 }}
-				/>
+				<View style={{ position: "relative" }} ref={imageToSave}>
+					<Image
+						source={{ uri: image }}
+						style={{ height: Dim.width - 40, width: Dim.width - 40 }}
+					/>
+					<Text style={{ ...styles.waterMarkText, fontSize: 15 }}>
+						Smile Now
+					</Text>
+				</View>
 			</View>
 			<View
 				style={styles.imageWithCaptionOffScreen}

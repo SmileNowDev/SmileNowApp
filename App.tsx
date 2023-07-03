@@ -12,8 +12,6 @@ import {
 	QueryClientProvider,
 	focusManager,
 } from "@tanstack/react-query";
-// @ts-ignore
-import { GOOGLE_API_KEY } from "@env";
 import { ToastProvider } from "react-native-toast-notifications";
 const queryClient = new QueryClient({
 	defaultOptions: { queries: { retry: 2 } },
@@ -49,7 +47,13 @@ export default function App() {
 		return (
 			<MyProvider>
 				<StatusBar style="dark" />
-				<ToastProvider placement="bottom" offsetTop={50}>
+				<ToastProvider
+					placement="bottom"
+					offsetTop={50}
+					offsetBottom={40}
+					style={{
+						borderRadius: 20,
+					}}>
 					<QueryClientProvider client={queryClient}>
 						<NavigationContainer>
 							<RootNavigator />

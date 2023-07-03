@@ -25,8 +25,8 @@ export default function NameAndDescription({
 }) {
 	const toast = useToast();
 	const queryClient = useQueryClient();
-	const [clientDescription, setClientDescription] = useState(description);
-	const [clientTitle, setClientTitle] = useState(title);
+	const [clientDescription, setClientDescription] = useState(description || "");
+	const [clientTitle, setClientTitle] = useState(title || "");
 	const [isLoading, setIsLoading] = useState(false);
 	const [initialTitle, setInitialTitle] = useState(title);
 	const [initialDescription, setInitialDescription] = useState(description);
@@ -75,8 +75,8 @@ export default function NameAndDescription({
 				{
 					text: "Yes, Revert Changes",
 					onPress: () => {
-						setClientTitle(initialTitle);
-						setClientDescription(initialDescription);
+						setClientTitle(initialTitle || "");
+						setClientDescription(initialDescription || "");
 						//@ts-expect-error
 						detailsMutation.mutate({
 							id,
@@ -244,7 +244,7 @@ export default function NameAndDescription({
 						numberOfLines={4}
 						clearButtonMode="always"
 						value={clientDescription}
-						placeholder="Enter a party Name"
+						placeholder="Enter a party description"
 						onChangeText={(newDescription) => {
 							setClientDescription(newDescription);
 						}}

@@ -1,25 +1,16 @@
 import Icon from "../../core/icons";
 import eventApi from "../../../api/post/event";
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import {
-	ActivityIndicator,
-	Alert,
-	Button,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import { ButtonStyles, Dim, GlobalStyles } from "../../../styles/styles";
+import React, { useContext } from "react";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { ButtonStyles } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
-import { debounce } from "lodash";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "react-native-toast-notifications";
 import { IEvent } from "../../../pages/party/party";
 import { useNavigation } from "@react-navigation/native";
 import archiveApi from "../../../api/post/archive";
 import { Context } from "../../../providers/provider";
-import attendeeApi from "../../../api/post/attendee";
+
 function SettingsButton({ title, description, icon, buttonText, onPress }) {
 	return (
 		<View
