@@ -88,8 +88,8 @@ export default function PostPage({ route }) {
 	} = useInfiniteQuery({
 		queryKey: ["comments", postId, page],
 		queryFn: getComments,
-		getNextPageParam: (lastPage) => {
-			return hasNextPage ? page + 1 : undefined;
+		getNextPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
 		},
 	});
 	async function getComments({ pageParam = 1 }) {
@@ -98,10 +98,17 @@ export default function PostPage({ route }) {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			console.log(result.data);
-			return result.data;
+			console.log("comments", result.data);
+			// @ts-expect-error
+			return { comments: result.data.data, hasNextPage: result.data.next };
 		}
 	}
+	useEffect(() => {
+		if (commentData) {
+			let _comments = commentData.pages.flat()[0].comments;
+			setComments(_comments);
+		}
+	}, [commentData]);
 
 	async function handleComment() {
 		if (!comment || comment.trim().length == 0) {
@@ -139,6 +146,7 @@ export default function PostPage({ route }) {
 			setPost(cachedPostData);
 		}
 	}, [cachedPostData, postData]);
+
 	if (!post && isPostLoading) {
 		//todo: pretty loading screen
 		return (
@@ -236,30 +244,41 @@ export default function PostPage({ route }) {
 						</TouchableOpacity>
 					</View>
 					{/* Comments */}
-					<FlatList
-						data={commentData?.pages?.flat()}
-						renderItem={({ item, index }) => {
-							let comment = item as CommentType;
-							return (
-								<View
-									style={{
-										backgroundColor:
-											index % 2 == 0 ? Colors.background : Colors.foreground,
-										marginVertical: 4,
-										borderRadius: 10,
-									}}>
-									<Comment
-										commentId={comment._id}
-										pic={comment.user.src}
-										name={comment.user.name}
-										comment={comment.text}
-										date={comment.createdAt}
-										userId={comment.user._id}
-									/>
-								</View>
-							);
-						}}
-					/>
+					{isCommentsLoading ? (
+						<ActivityIndicator size="large" color={Colors.primary} />
+					) : (
+						<FlatList
+							data={comments}
+							renderItem={({ item, index }) => {
+								let comment = item as CommentType;
+								return (
+									<View
+										style={{
+											backgroundColor:
+												index % 2 == 0 ? Colors.background : Colors.foreground,
+											marginVertical: 4,
+											borderRadius: 10,
+										}}>
+										<Comment
+											commentId={comment._id}
+											pic={comment.user.src}
+											name={comment.user.name}
+											comment={comment.text}
+											date={comment.createdAt}
+											userId={comment.user._id}
+										/>
+									</View>
+								);
+							}}
+							onEndReached={() => {
+								if (hasNextPage) {
+									fetchNextPage();
+								}
+							}}
+							onEndReachedThreshold={0.25}
+						/>
+					)}
+
 					<View style={{ height: Dim.height / 2 }}></View>
 				</ScreenWrapper>
 				<ModalWrapper

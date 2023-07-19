@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
@@ -8,7 +8,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Colors } from "../../styles/theme";
 export default function RequestsSentTab() {
 	const [page, setPage] = useState(1);
-
+	const [requests, setRequests] = useState([]);
 	const {
 		data,
 		isLoading,
@@ -21,8 +21,8 @@ export default function RequestsSentTab() {
 	} = useInfiniteQuery<any>({
 		queryKey: ["my_requests_sent"],
 		queryFn: getList,
-		getNextPageParam: (lastPage) => {
-			return hasNextPage ? page + 1 : undefined;
+		getNextPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
 		},
 	});
 	async function getList({ pageParam = 1 }) {
@@ -31,9 +31,20 @@ export default function RequestsSentTab() {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			return result.data;
+			return {
+				// @ts-expect-error
+				requests: result.data.data,
+				// @ts-expect-error`
+				hasNextPage: result.data.next,
+			};
 		}
 	}
+	useEffect(() => {
+		if (data) {
+			let _requests = data.pages.flat()[0].requests;
+			setRequests(_requests);
+		}
+	}, [data]);
 
 	if (isLoading || isRefetching) {
 		return (
@@ -50,7 +61,7 @@ export default function RequestsSentTab() {
 			onBottomScroll={fetchNextPage}
 			bottomLoading={isFetchingNextPage}>
 			<Text style={GlobalStyles.tabScreenTitle}>Requests Sent</Text>
-			{data.pages.flat().length == 0 ? (
+			{requests.length == 0 ? (
 				<View>
 					<Text>You haven't sent any requests</Text>
 					<Text>Don't be shy, tap a person's profile and say hi!</Text>
@@ -58,7 +69,7 @@ export default function RequestsSentTab() {
 			) : (
 				<FlatList
 					style={{ padding: 10 }}
-					data={data.pages.flat()}
+					data={requests}
 					scrollEnabled={false}
 					keyExtractor={(item) => item._id}
 					renderItem={({ item }) => {
@@ -72,6 +83,11 @@ export default function RequestsSentTab() {
 								id={item.recipient._id}
 							/>
 						);
+					}}
+					onEndReached={() => {
+						if (hasNextPage) {
+							fetchNextPage();
+						}
 					}}
 					onEndReachedThreshold={0.5}
 				/>

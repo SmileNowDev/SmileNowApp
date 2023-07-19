@@ -25,16 +25,9 @@ import {
 export default function CameraPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId } = route.params;
-	// console.log("eventId: ", eventId);
-	// const existingPostData = queryClient.getQueryData(["posts", eventId, 1]);
-	// console.log("existing posts: ", existingPostData);
+
 	const [loading, setLoading] = useState(false);
 	const [caption, setCaption] = useState("");
-	const opacity = useRef(new Animated.Value(1)).current;
-
-	const offset = useRef(new Animated.Value(0)).current;
-	const keyboardOffset = useRef(new Animated.Value(0)).current;
-
 	const [cameraType, setCameraType] = useState(CameraType.back);
 	const [flashMode, setFlashMode] = useState(FlashMode.off);
 	const [isPreviewing, setIsPreviewing] = useState(false);
@@ -44,6 +37,8 @@ export default function CameraPage({ route, navigation }) {
 	const [endTime, setEndTime] = useState("");
 	const [getPostCacheFired, setGetPostCacheFired] = useState(false);
 	const [expired, setExpired] = useState(false);
+
+	const keyboardOffset = useRef(new Animated.Value(0)).current;
 
 	async function getPostCache() {
 		const result = await postApi.getPostCache({ eventId });
@@ -97,29 +92,6 @@ export default function CameraPage({ route, navigation }) {
 			setIsPreviewing(true);
 		}
 	};
-	function handleAnimation() {
-		if (isPreviewing) {
-			Animated.parallel([
-				Animated.timing(offset, {
-					toValue: 1,
-					duration: 2000,
-					useNativeDriver: false,
-				}),
-				Animated.timing(opacity, {
-					toValue: 0,
-					duration: 4000,
-					useNativeDriver: false,
-					delay: 1000,
-				}),
-			]).start();
-		} else {
-			offset.setValue(0);
-			opacity.setValue(1);
-		}
-	}
-	useEffect(() => {
-		handleAnimation();
-	}, [isPreviewing]);
 
 	const retakePhoto = () => {
 		setIsPreviewing(false);
@@ -376,6 +348,7 @@ export default function CameraPage({ route, navigation }) {
 								</TouchableOpacity>
 							</View>
 							<Animated.View
+								// keyboard handling animated view
 								style={{
 									transform: [
 										{
@@ -386,123 +359,85 @@ export default function CameraPage({ route, navigation }) {
 										},
 									],
 								}}>
-								<Animated.View
-									style={{
-										marginTop: 20,
-										backgroundColor: Colors.background,
-										alignItems: "center",
-										padding: 10,
-										borderRadius: 3.5,
-										...GlobalStyles.shadow,
-
-										transform: [
-											{
-												translateY: offset.interpolate({
-													inputRange: [0, 1],
-													outputRange: [-imageHeight * 1.5, 0], // adjust this value to move as much as you need
-												}),
-											},
-										],
-									}}>
-									{loading ? (
-										<ActivityIndicator
-											size={"large"}
-											color={Colors.primary}
-											style={{
-												height: Dim.width - 20,
-												width: Dim.width - 20,
-												position: "absolute",
-												top: (Dim.width - 20) / 2,
-												zIndex: 100,
-											}}
-										/>
-									) : (
-										<></>
-									)}
-									<View
+								{loading ? (
+									<ActivityIndicator
+										// if we're waiting for the image url to be returned
+										size={"large"}
+										color={Colors.primary}
 										style={{
-											height: imageHeight,
-											width: imageWidth,
-											borderRadius: 5,
-											position: "relative",
-											overflow: "hidden",
-										}}>
-										<Animated.View
-											style={{
-												position: "absolute",
-												top: 0,
-												left: 0,
-												zIndex: 100,
-												borderRadius: 5,
-												height: imageHeight,
-												width: imageWidth,
-												opacity: opacity,
-												backgroundColor: "black",
-											}}
-										/>
-										<Image
-											source={{ uri: photo?.uri }}
-											style={{ width: "100%", height: "100%", borderRadius: 5 }}
-										/>
-									</View>
-									<TextInput
-										placeholderTextColor={Colors.textSecondary}
-										style={{
-											...GlobalStyles.textInput,
-											marginTop: 10,
-											height: 60,
-											width: imageWidth,
-										}}
-										placeholder="Caption Your Photo"
-										onBlur={() => {
-											console.log("HERE 1");
-											// set offset back to 0
-											Animated.timing(keyboardOffset, {
-												toValue: 0,
-												duration: 500,
-												useNativeDriver: false,
-											}).start();
-											console.log(keyboardOffset);
-										}}
-										onFocus={() => {
-											// set offset to move image above keyboard
-											console.log("HERE 2");
-											Animated.timing(keyboardOffset, {
-												toValue: 1,
-												duration: 500,
-												useNativeDriver: false,
-											}).start();
-											console.log(keyboardOffset);
-										}}
-										value={caption}
-										onChangeText={setCaption}
-										returnKeyType="done"
-									/>
-									<TouchableOpacity
-										onPress={() => retakePhoto()}
-										style={{
+											height: Dim.width - 20,
+											width: Dim.width - 20,
 											position: "absolute",
-											top: 20,
-											left: 20,
-											zIndex: 150,
-											...ButtonStyles.buttonSmall,
-											backgroundColor: Colors.foreground,
+											top: (Dim.width - 20) / 2,
+											zIndex: 100,
+										}}
+									/>
+								) : (
+									<></>
+								)}
+
+								<Image
+									source={{ uri: photo?.uri }}
+									style={{ width: "100%", height: "100%", borderRadius: 5 }}
+								/>
+
+								<TextInput
+									placeholderTextColor={Colors.textSecondary}
+									style={{
+										...GlobalStyles.textInput,
+										marginTop: 10,
+										height: 60,
+										width: imageWidth,
+									}}
+									placeholder="Caption Your Photo"
+									onBlur={() => {
+										console.log("HERE 1");
+										// set offset back to 0
+										Animated.timing(keyboardOffset, {
+											toValue: 0,
+											duration: 500,
+											useNativeDriver: false,
+										}).start();
+										console.log(keyboardOffset);
+									}}
+									onFocus={() => {
+										// set offset to move image above keyboard
+										console.log("HERE 2");
+										Animated.timing(keyboardOffset, {
+											toValue: 1,
+											duration: 500,
+											useNativeDriver: false,
+										}).start();
+										console.log(keyboardOffset);
+									}}
+									value={caption}
+									onChangeText={setCaption}
+									returnKeyType="done"
+								/>
+								<TouchableOpacity
+									onPress={() => retakePhoto()}
+									style={{
+										position: "absolute",
+										top: 20,
+										left: 20,
+										zIndex: 150,
+										...ButtonStyles.buttonSmall,
+										backgroundColor: Colors.foreground,
+									}}>
+									<Icon
+										name="image-remove"
+										size={20}
+										type={"MaterialCommunity"}
+										color={Colors.textSecondary}
+									/>
+									<Text
+										style={{
+											...ButtonStyles.buttonTextSmall,
+											color: Colors.textSecondary,
 										}}>
-										<Icon
-											name="image-remove"
-											size={20}
-											type={"MaterialCommunity"}
-											color={Colors.textSecondary}
-										/>
-										<Text
-											style={{
-												...ButtonStyles.buttonTextSmall,
-												color: Colors.textSecondary,
-											}}>
-											Retake
-										</Text>
-									</TouchableOpacity>
-								</Animated.View>
+										Retake
+									</Text>
+								</TouchableOpacity>
 							</Animated.View>
 						</>
 					)}

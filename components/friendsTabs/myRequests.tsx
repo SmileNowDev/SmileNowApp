@@ -16,6 +16,7 @@ import { Fonts, Colors } from "../../styles/theme";
 import { useIsFocused } from "@react-navigation/native";
 export default function RequestsTab() {
 	const isFocused = useIsFocused();
+	const [requests, setRequests] = useState([]);
 	const {
 		data,
 		isLoading,
@@ -46,6 +47,12 @@ export default function RequestsTab() {
 			refetch();
 		}
 	}, [isFocused]);
+	useEffect(() => {
+		if (data) {
+			let _requests = data.pages.flat()[0].requests;
+			setRequests(_requests);
+		}
+	}, [data]);
 
 	// function AcceptButton({ userId }) {
 	// 	return (
@@ -88,12 +95,12 @@ export default function RequestsTab() {
 			onBottomScroll={fetchNextPage}
 			bottomLoading={isFetchingNextPage}>
 			<Text style={GlobalStyles.tabScreenTitle}>Requesting Me</Text>
-			{data.pages.flat().length == 0 ? (
-				<View style={{ margin: 15 }}>
+			{requests.length == 0 ? (
+				<View style={{ margin: 15, paddingTop: 20 }}>
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize + 4,
+							fontSize: Fonts.body.fontSize + 2,
 							color: Colors.textSecondary,
 						}}>
 						No Friend Requests
@@ -111,7 +118,7 @@ export default function RequestsTab() {
 					<FlatList
 						style={{ padding: 10 }}
 						scrollEnabled={false}
-						data={data.pages.flat()}
+						data={requests}
 						keyExtractor={(item) => item._id}
 						renderItem={({ item }) => {
 							console.log(item);

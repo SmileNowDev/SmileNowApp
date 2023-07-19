@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	SafeAreaView,
 	Text,
@@ -9,6 +9,7 @@ import {
 	Image,
 	Alert,
 	TouchableWithoutFeedback,
+	Animated,
 } from "react-native";
 import PartyHeader from "../../components/layout/partyHeader";
 import Photo from "../../components/post/photo";
@@ -29,6 +30,10 @@ import {
 import ActivateParty from "../../components/party/activateParty";
 import TakePhoto from "../../components/party/takePhoto";
 import { useIsFocused } from "@react-navigation/native";
+import { imageHeight } from "../post";
+import NewPost from "../../components/party/newPosts";
+import PostingIndicator from "../../components/party/postingIndicator";
+import NewPosts from "../../components/party/newPosts";
 export type NotificationFrequencyType = "slow" | "normal" | "fast";
 export interface IEvent {
 	_id: string;
@@ -45,9 +50,11 @@ export interface IEvent {
 export default function PartyPage({ route, navigation }) {
 	const isFocused = useIsFocused();
 	const queryClient = useQueryClient();
-	const { eventId, justCreated } = route.params;
+	const { eventId, justCreated, posting = true } = route.params;
+	const [newPosts, setNewPosts] = useState([]);
 	const [page, setPage] = useState(1);
 	const [posts, setPosts] = useState([]);
+	const [donePosting, setDonePosting] = useState(false);
 	useEffect(() => {
 		if (isFocused) {
 			refetch();
@@ -241,6 +248,15 @@ export default function PartyPage({ route, navigation }) {
 									<EmptyPartyMessage isHost={data.isHost} />
 								) : (
 									<>
+										<PostingIndicator
+											posting={posting}
+											donePosting={donePosting}
+										/>
+										<NewPosts
+											posts={newPosts}
+											doneLoading={false}
+											eventId={eventId}
+										/>
 										<FlatList
 											data={posts}
 											keyExtractor={(item) => item._id}
@@ -253,7 +269,6 @@ export default function PartyPage({ route, navigation }) {
 															navigation.navigate("Post", {
 																postId: item._id,
 																eventId: eventId,
-																page: page,
 															});
 														}}>
 														<Photo

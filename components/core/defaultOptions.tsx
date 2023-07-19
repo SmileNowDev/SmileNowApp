@@ -132,19 +132,6 @@ export default function DefaultOptions({
 				) : (
 					<></>
 				)}
-				{/* <TouchableOpacity style={styles.optionButton}>
-					<Icon name='bookmark' size={25} color={Colors.textSecondary} />
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: 20,
-							textAlign: "left",
-						}}
-					>
-						Save
-					</Text>
-				</TouchableOpacity> */}
-
 				<TouchableOpacity
 					onPress={() => setModalVisible(false)}
 					style={{

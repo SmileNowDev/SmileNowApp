@@ -6,6 +6,7 @@ import * as Contacts from "expo-contacts";
 import userApi from "../../api/user/user";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ScreenWrapper from "../../components/core/screenWrapper";
+import { Colors } from "../../styles/theme";
 type ContactType = {
 	contactType: string;
 	firstName: string;
@@ -44,75 +45,46 @@ export default function AddFriendsTab(params) {
 		}
 	}
 
-	const {
-		data: contactsData,
-		isLoading,
-		refetch,
-		isRefetching,
-		status,
-		hasNextPage,
-		fetchNextPage,
-		isFetchingNextPage,
-	} = useInfiniteQuery({
+	const { data, isLoading, refetch, isRefetching, status } = useQuery({
 		queryKey: ["addFriends"],
-		queryFn: ({ pageParam }) => getContacts({ pageParam }),
-		getNextPageParam: (lastPage, allPages) => {
-			return lastPage.hasNextPage ? allPages.length + 1 : false;
-		},
+		queryFn: () => getContacts(),
 	});
-	useEffect(() => {
-		if (contactsData) {
-			let contacts = contactsData.pages.flat()[0].contacts as any[];
-			setContacts(contacts);
-		}
-	}, [contactsData]);
 
-	async function getContacts({ pageParam = 1 }) {
+	async function getContacts() {
 		let phoneNumbers = await useContacts();
 		const result = await userApi.getContacts({ phoneNumbers });
 		if (!result.ok) {
 			return result.problem;
 		} else {
-			return {
-				// @ts-expect-error
-				contacts: result.data.data as any[],
-				// @ts-expect-error
-				hasNextPage: result.data.next,
-			};
+			console.log("add friends data", result.data);
+			return result.data;
 		}
 	}
+
 	return (
 		<ScreenWrapper
 			loading={isLoading}
-			onBottomScroll={fetchNextPage}
-			bottomLoading={isFetchingNextPage}
 			onRefresh={onRefresh}
 			scrollEnabled={true}>
 			<Text style={GlobalStyles.tabScreenTitle}>Add Friends</Text>
 			{isLoading ? (
 				<>
-					<ActivityIndicator />
+					<ActivityIndicator size={"large"} color={Colors.primary} />
 				</>
 			) : (
 				<FlatList
 					style={{ padding: 10 }}
 					scrollEnabled={false}
-					data={contacts}
+					data={data as any[]}
 					keyExtractor={(item) => item._id}
 					renderItem={({ item }) => (
 						<UserCard
 							profilePicture={item.src}
-							name={item.name}
+							name={item.name || "No Name Yet"}
 							username={item.username}
 							id={item._id}
 						/>
 					)}
-					onEndReached={() => {
-						if (hasNextPage) {
-							fetchNextPage();
-						}
-					}}
-					onEndReachedThreshold={0.25}
 				/>
 			)}
 		</ScreenWrapper>
