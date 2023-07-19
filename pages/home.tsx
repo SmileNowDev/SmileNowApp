@@ -21,7 +21,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
-type EventType = {
+export type EventType = {
 	_id: string;
 	title: string;
 	canPost: boolean;
@@ -31,23 +31,22 @@ type EventType = {
 export default function HomePage({ navigation }) {
 	const isFocused = useIsFocused();
 	const queryClient = useQueryClient();
-	const [page, setPage] = useState(1);
 	const [refreshing, setRefreshing] = useState(false);
 	const [events, setEvents] = useState<EventType[]>([]);
 	const {
 		data,
 		isLoading,
 		fetchNextPage,
-		hasNextPage,
 		isFetchingNextPage,
+		hasNextPage,
 		status,
 		refetch,
 		isFetching,
 	} = useInfiniteQuery({
-		queryKey: ["events", page],
+		queryKey: ["events"],
 		queryFn: ({ pageParam = 1 }) => getEvents({ pageParam }),
-		getNextPageParam: (lastPage) => {
-			return hasNextPage ? page + 1 : undefined;
+		getNextPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
 		},
 		//somehow the pagination is broken, i still the response to include hasNextPage: boolean
 		enabled: isFocused,
@@ -55,13 +54,17 @@ export default function HomePage({ navigation }) {
 		cacheTime: 1000 * 60 * 30, // data is cached for 30 minutes
 	});
 	useEffect(() => {
+		// console.log("data", data);
+	}, [data]);
+	useEffect(() => {
 		if (isFocused) {
 			onRefresh();
 		}
 	}, [isFocused]);
 	useEffect(() => {
-		if (data?.pages?.length > 0) {
-			setEvents(data.pages.flat() as EventType[]);
+		if (data) {
+			let events = data.pages.flat()[0].events as EventType[];
+			setEvents(events);
 		}
 	}, [data]);
 
@@ -73,12 +76,16 @@ export default function HomePage({ navigation }) {
 		setRefreshing(false);
 	}, []);
 	async function getEvents({ pageParam = 1 }) {
-		setPage(pageParam);
 		const result = await eventApi.getEvents({ page: pageParam });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		}
-		return result.data;
+		return {
+			//@ts-expect-error
+			events: result.data.data,
+			//@ts-expect-error
+			hasNextPage: result.data.next,
+		};
 	}
 
 	useEffect(() => {
@@ -117,7 +124,7 @@ export default function HomePage({ navigation }) {
 				scrollEnabled={true}
 				loading={isLoading}
 				style={{ paddingHorizontal: 0 }}>
-				{data?.pages?.length === 0 ? (
+				{!data ? (
 					<>
 						<WelcomeMessage />
 					</>
@@ -183,9 +190,10 @@ export default function HomePage({ navigation }) {
 									);
 								}}
 								onEndReached={() => {
+									console.log("end reached");
 									if (hasNextPage) fetchNextPage();
 								}}
-								onEndReachedThreshold={0.5}
+								onEndReachedThreshold={0.25}
 								ListFooterComponent={
 									<View
 										style={{

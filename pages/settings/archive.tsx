@@ -1,27 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
 	SafeAreaView,
-	Text,
-	TouchableOpacity,
 	View,
-	Platform,
 	FlatList,
 	ActivityIndicator,
+	Text,
 } from "react-native";
-import { Fonts, Colors } from "../../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { Colors, Fonts } from "../../styles/theme";
 import PartyListItem from "../../components/home/partyListItem";
-import HomeHeader from "../../components/layout/homeHeader";
-import eventApi from "../../api/post/event";
-import Constants from "expo-constants";
-import * as Notifications from "expo-notifications";
-import userApi from "../../api/user/user";
-import * as Device from "expo-device";
+
 import { getInitials } from "../friends";
 import ScreenWrapper from "../../components/core/screenWrapper";
-import WelcomeMessage from "../../components/info/welcomeMessage";
-import ModalWrapper from "../../components/core/modalWrapper";
-import JoinPartyPage from "../joinParty";
 import archiveApi from "../../api/post/archive";
 import Header from "../../components/layout/header";
 import {
@@ -30,27 +19,44 @@ import {
 	useQueryClient,
 } from "@tanstack/react-query";
 import { useIsFocused } from "@react-navigation/native";
+import { EventType } from "../home";
+import { Dim } from "../../styles/styles";
 export default function ArchivePage({ navigation }) {
 	//todo: test the pagination on this page
 	const isFocused = useIsFocused();
 	const queryClient = useQueryClient();
 	const [refreshing, setRefreshing] = useState(false);
 	const [page, setPage] = useState(1);
-	const [hasNextPage, setHasNextPage] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [bottomLoading, setBottomLoading] = useState(false);
+	const [events, setEvents] = useState([]);
 
 	// ... (other functions)
-	const { data, isLoading, status, refetch, isFetching } = useQuery({
+	const {
+		data,
+		isLoading,
+		status,
+		refetch,
+		isFetching,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery({
 		queryKey: ["archived_events", page],
 		queryFn: ({ pageParam = 1 }) => getEvents({ pageParam }),
+		getPreviousPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
+		},
 	});
 	useEffect(() => {
 		if (isFocused) {
 			onRefresh();
 		}
 	}, [isFocused]);
-
+	useEffect(() => {
+		if (data) {
+			let events = data.pages.flat()[0].events as EventType[];
+			setEvents(events);
+		}
+	}, [data]);
 	const onRefresh = useCallback(() => {
 		setRefreshing(true);
 		queryClient.invalidateQueries(["events"]);
@@ -64,7 +70,12 @@ export default function ArchivePage({ navigation }) {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			return result.data;
+			return {
+				//@ts-expect-error
+				events: result.data.data,
+				//@ts-expect-error-
+				hasNextPage: result.data.next,
+			};
 		}
 	}
 
@@ -81,8 +92,7 @@ export default function ArchivePage({ navigation }) {
 				<>
 					<FlatList
 						style={{ paddingTop: 20 }}
-						//@ts-expect-error
-						data={data}
+						data={events}
 						keyExtractor={(item) => item._id}
 						ListHeaderComponent={
 							<View>
@@ -117,6 +127,30 @@ export default function ArchivePage({ navigation }) {
 								{/* todo: add action buttons here to unarchive and delete */}
 							</View>
 						)}
+						onEndReached={() => {
+							console.log("end reached");
+							if (hasNextPage) fetchNextPage();
+						}}
+						onEndReachedThreshold={0.25}
+						ListFooterComponent={
+							<View
+								style={{
+									height: 150,
+									width: Dim.width,
+									justifyContent: "center",
+								}}>
+								{isFetchingNextPage && (
+									<Text
+										style={{
+											textAlign: "center",
+											fontFamily: Fonts.body.fontFamily,
+											fontSize: Fonts.body.fontSize,
+										}}>
+										Getting More Parties... 🎉
+									</Text>
+								)}
+							</View>
+						}
 					/>
 				</>
 			</ScreenWrapper>

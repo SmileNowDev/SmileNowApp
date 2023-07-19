@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import UserCard from "../userCard";
 import * as Contacts from "expo-contacts";
@@ -18,6 +18,7 @@ type ContactType = {
 };
 export default function AddFriendsTab(params) {
 	const [refreshing, setRefreshing] = useState(false);
+	const [contacts, setContacts] = useState([]);
 	const onRefresh = () => {
 		console.log("refreshing");
 		setRefreshing(true);
@@ -54,15 +55,30 @@ export default function AddFriendsTab(params) {
 		isFetchingNextPage,
 	} = useInfiniteQuery({
 		queryKey: ["addFriends"],
-		queryFn: getContacts,
+		queryFn: ({ pageParam }) => getContacts({ pageParam }),
+		getNextPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
+		},
 	});
+	useEffect(() => {
+		if (contactsData) {
+			let contacts = contactsData.pages.flat()[0].contacts as any[];
+			setContacts(contacts);
+		}
+	}, [contactsData]);
+
 	async function getContacts({ pageParam = 1 }) {
 		let phoneNumbers = await useContacts();
 		const result = await userApi.getContacts({ phoneNumbers });
 		if (!result.ok) {
 			return result.problem;
 		} else {
-			return result.data as any[];
+			return {
+				// @ts-expect-error
+				contacts: result.data.data as any[],
+				// @ts-expect-error
+				hasNextPage: result.data.next,
+			};
 		}
 	}
 	return (
@@ -70,16 +86,18 @@ export default function AddFriendsTab(params) {
 			loading={isLoading}
 			onBottomScroll={fetchNextPage}
 			bottomLoading={isFetchingNextPage}
-			onRefresh={refetch}
+			onRefresh={onRefresh}
 			scrollEnabled={true}>
 			<Text style={GlobalStyles.tabScreenTitle}>Add Friends</Text>
 			{isLoading ? (
-				<></>
+				<>
+					<ActivityIndicator />
+				</>
 			) : (
 				<FlatList
 					style={{ padding: 10 }}
 					scrollEnabled={false}
-					data={contactsData.pages.flat()}
+					data={contacts}
 					keyExtractor={(item) => item._id}
 					renderItem={({ item }) => (
 						<UserCard
@@ -89,6 +107,12 @@ export default function AddFriendsTab(params) {
 							id={item._id}
 						/>
 					)}
+					onEndReached={() => {
+						if (hasNextPage) {
+							fetchNextPage();
+						}
+					}}
+					onEndReachedThreshold={0.25}
 				/>
 			)}
 		</ScreenWrapper>

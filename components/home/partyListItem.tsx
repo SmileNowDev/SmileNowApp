@@ -40,10 +40,6 @@ export default function PartyListItem({
 	return (
 		<LinearGradient
 			colors={[Colors.background, Colors.foreground]}
-			// colors={[
-			// 	generateColorFromLetters(initials),
-			// 	generateSecondaryColorFromLetters(initials),
-			// ]}
 			style={styles.gradientStyles}>
 			<TouchableWithoutFeedback
 				onPress={() => {
@@ -55,8 +51,8 @@ export default function PartyListItem({
 					style={{
 						flexDirection: "row",
 						alignItems: "center",
-						padding: 8,
-						gap: 10,
+						padding: 6,
+						gap: 8,
 						justifyContent: "space-between",
 					}}>
 					<LinearGradient
@@ -87,15 +83,16 @@ export default function PartyListItem({
 									zIndex: 50,
 									height: 20,
 									width: 20,
+									borderWidth: 2,
+									borderColor: "#ffaa00",
+									backgroundColor: "#fcba03",
 
 									shadowOffset: { width: 0, height: 0 },
 									shadowOpacity: 0.5,
 									shadowRadius: 5,
-									backgroundColor: "#fcba03",
 									borderRadius: 10,
 									alignItems: "center",
 									justifyContent: "center",
-									// shadowColor: "#fcba03",
 									elevation: 3,
 
 									transform: [
@@ -111,6 +108,7 @@ export default function PartyListItem({
 									size={10}
 									type={"FontAwesome5"}
 									style={{
+										backgroundColor: "transparent",
 										shadowOpacity: 0.25,
 										shadowOffset: { width: 0, height: 0 },
 										shadowRadius: 5,
@@ -135,9 +133,6 @@ export default function PartyListItem({
 								display: "flex",
 								justifyContent: "center",
 								alignItems: "center",
-								shadowOpacity: 0.25,
-								shadowOffset: { width: 0, height: 0 },
-								shadowRadius: 5,
 								elevation: 0,
 							}}>
 							<Text style={{ fontSize: 22 }}>{initials}</Text>
@@ -197,7 +192,7 @@ const styles = StyleSheet.create({
 	gradientStyles: {
 		flex: 1,
 		borderRadius: 10,
-		marginHorizontal: 10,
+		marginHorizontal: 4,
 	},
 	avatarContainer: {
 		width: 55,

@@ -11,17 +11,11 @@ import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
-import {
-	QueryClient,
-	useInfiniteQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fonts, Colors } from "../../styles/theme";
 import { useIsFocused } from "@react-navigation/native";
 export default function RequestsTab() {
 	const isFocused = useIsFocused();
-	const queryClient = useQueryClient();
-	const [page, setPage] = useState(1); // Add this state
 	const {
 		data,
 		isLoading,
@@ -33,18 +27,18 @@ export default function RequestsTab() {
 		isFetchingNextPage,
 	} = useInfiniteQuery<any>({
 		queryKey: ["friend_requests"],
-		queryFn: getList,
-		getNextPageParam: (lastPage) => {
-			return hasNextPage ? page + 1 : undefined;
+		queryFn: ({ pageParam = 1 }) => getList({ pageParam }),
+		getNextPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
 		},
 	});
 	async function getList({ pageParam = 1 }) {
-		setPage(pageParam);
 		const result = await friendApi.getRequestingMe({ page: pageParam });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			return result.data;
+			// @ts-expect-error
+			return { requests: result.data.data, hasNextPage: result.data.next };
 		}
 	}
 	useEffect(() => {

@@ -45,7 +45,7 @@ type CommentType = {
 export default function PostPage({ route }) {
 	const queryClient = useQueryClient();
 
-	const { postId, eventId, page: queryPage } = route.params;
+	const { postId, eventId } = route.params;
 	const [post, setPost] = useState<any>();
 
 	const [refreshing, setRefreshing] = useState(false);
@@ -122,7 +122,7 @@ export default function PostPage({ route }) {
 		setRefreshing(false);
 	}
 
-	const allPagesData = queryClient.getQueryData(["posts", eventId, queryPage]);
+	const allPagesData = queryClient.getQueryData(["posts", eventId]);
 	// @ts-expect-error
 	const cachedPostData = allPagesData?.pages
 		.flat()
@@ -196,7 +196,6 @@ export default function PostPage({ route }) {
 						isLiked={post?.isLiked}
 						comments={post?.comments}
 						refresh={onRefresh}
-						delay={0}
 					/>
 
 					<View

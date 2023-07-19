@@ -386,6 +386,9 @@ export default function CreatePartyPage({ route, navigation }) {
 						}}>
 						Take the First Picture
 					</Text>
+					<Text>My friends don't have the app yet ☹️</Text>
+					{/* TODO - add a view with information on how to get people to download it and get started*/}
+					{/* much later TODO: an interactive guide that explains the joys of the app that can be easily shared - maybe a  video */}
 				</Animated.View>
 			</SafeAreaView>
 		</>

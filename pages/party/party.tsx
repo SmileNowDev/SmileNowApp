@@ -47,6 +47,7 @@ export default function PartyPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId, justCreated } = route.params;
 	const [page, setPage] = useState(1);
+	const [posts, setPosts] = useState([]);
 	useEffect(() => {
 		if (isFocused) {
 			refetch();
@@ -96,6 +97,7 @@ export default function PartyPage({ route, navigation }) {
 			return data;
 		}
 	}
+
 	// POSTS
 	const {
 		data: postsData,
@@ -105,20 +107,29 @@ export default function PartyPage({ route, navigation }) {
 		isFetchingNextPage,
 		status,
 	} = useInfiniteQuery<any>({
-		queryKey: ["posts", eventId, page],
-		queryFn: getPosts,
-		getNextPageParam: (lastPage) => {
-			return hasNextPage ? page + 1 : undefined;
+		queryKey: ["posts", eventId],
+		queryFn: ({ pageParam = 1 }) => getPosts({ pageParam }),
+		getNextPageParam: (lastPage, allPages) => {
+			return lastPage.hasNextPage ? allPages.length + 1 : false;
 		},
 	});
-
+	useEffect(() => {
+		if (postsData) {
+			let posts = postsData.pages.flat()[0].posts as any[];
+			setPosts(posts);
+		}
+	}, [postsData]);
 	async function getPosts({ pageParam = 1 }) {
-		setPage(pageParam);
 		const result = await postApi.getPosts({ eventId, page: pageParam });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		}
-		return result.data;
+		return {
+			//@ts-expect-error
+			posts: result.data.data,
+			//@ts-expect-error
+			hasNextPage: result.data.next,
+		};
 	}
 
 	if (error) {
@@ -226,12 +237,12 @@ export default function PartyPage({ route, navigation }) {
 							</View>
 						) : (
 							<>
-								{postsData?.pages.flat().length === 0 ? (
+								{!postsData ? (
 									<EmptyPartyMessage isHost={data.isHost} />
 								) : (
 									<>
 										<FlatList
-											data={postsData?.pages.flat()}
+											data={posts}
 											keyExtractor={(item) => item._id}
 											renderItem={({ item, index }) => {
 												return (

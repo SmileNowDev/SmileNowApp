@@ -25,9 +25,9 @@ import {
 export default function CameraPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId } = route.params;
-	console.log("eventId: ", eventId);
-	let existingPostData = queryClient.getQueryData(["posts", eventId, 1]);
-	console.log("existing posts: ", existingPostData);
+	// console.log("eventId: ", eventId);
+	// const existingPostData = queryClient.getQueryData(["posts", eventId, 1]);
+	// console.log("existing posts: ", existingPostData);
 	const [loading, setLoading] = useState(false);
 	const [caption, setCaption] = useState("");
 	const opacity = useRef(new Animated.Value(1)).current;
@@ -149,9 +149,12 @@ export default function CameraPage({ route, navigation }) {
 		console.log("Uploading image");
 		let formData = createFormData(photo);
 		const result = await postApi.uploadImage({ formData, postId });
+		//@ts-expect-error;
+		console.log("upload image result: ", result.data.uri);
 		if (result.ok) {
-			console.log("image uploaded, result: ", result.data);
-			navigation.navigate("Party", { eventId });
+			//@ts-expect-error;
+			return result.data.uri;
+			// navigation.navigate("Party", { eventId });
 		}
 	}
 	type PostType = {
@@ -171,19 +174,29 @@ export default function CameraPage({ route, navigation }) {
 		() => postApi.create({ eventId, caption }),
 		{
 			onSuccess: (newPost) => {
-				console.log("new post: ", newPost.data);
-				//@ts-expect-error
-				uploadImage(newPost.data._id);
+				console.log("inside of on success of the post mutation");
+				let newPostData: Object = newPost?.data;
+				console.log("new post: ", newPostData);
+				// @ts-expect-error
+				let imageSrc = uploadImage(newPost.data._id);
 				queryClient.setQueryData(["posts", eventId, 1], (oldData) => {
+					let _newPost = {
+						...newPostData,
+						src: imageSrc,
+					};
+					//@ts-expect-error
+					if (!oldData?.pages || !Array.isArray(oldData.pages)) {
+						return {
+							pageParams: 1,
+							pages: [_newPost],
+						}; // Return the new data as the only page
+					}
 					//@ts-expect-error
 					console.log("oldData: ", oldData.pages[0]);
 					console.log("new post: ", newPost.data);
+
 					//@ts-expect-error
-					if (!oldData?.pages || !Array.isArray(oldData.pages)) {
-						return [[newPost.data]]; // Return the new data as the only page
-					}
-					//@ts-expect-error
-					const firstPage = [newPost.data, ...oldData.pages[0]];
+					const firstPage = [_newPost, ...oldData.pages[0]];
 					//@ts-expect-error
 					const newPages = [firstPage, ...oldData.pages.slice(1)];
 					return {
