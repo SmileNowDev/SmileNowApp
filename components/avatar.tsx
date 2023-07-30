@@ -1,20 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	View,
 	Image,
 	TouchableOpacity,
 	Text,
 	ActivityIndicator,
+	Animated,
 } from "react-native";
 import { Context } from "../providers/provider";
 import { useNavigation } from "@react-navigation/native";
 import ModalWrapper from "./core/modalWrapper";
 import { ButtonStyles } from "../styles/styles";
 import { Fonts, Colors } from "../styles/theme";
-import friendApi from "../api/user/friend";
 import OtherProfile from "./otherProfile";
 import DefaultOptions from "./core/defaultOptions";
 import Icon from "./core/icons";
+import { LinearGradient } from "expo-linear-gradient";
 interface AvatarProps {
 	pic: string;
 	size: number;
@@ -31,6 +32,64 @@ export function Picture({ size, pic }) {
 		} else {
 			return 20;
 		}
+	}
+
+	function LoadingAnimation({ loading }: { loading: boolean }) {
+		const loaderOpacity = new Animated.Value(0);
+		const loaderOffsetX = new Animated.Value(-2 * size);
+		Animated.loop(
+			Animated.timing(loaderOffsetX, {
+				toValue: size,
+				duration: 1000,
+				useNativeDriver: true,
+			})
+		).start();
+		useEffect(() => {
+			if (!loading) {
+				Animated.timing(loaderOpacity, {
+					toValue: 1,
+					duration: 500,
+					useNativeDriver: true,
+				}).start();
+			}
+		}, [loading]);
+		const backgroundColor = loaderOpacity.interpolate({
+			inputRange: [0, 1],
+			outputRange: ["rgba(20, 20, 20, 0.8)", "rgba(20, 20, 20, 0)"], // Light gray to transparent
+		});
+		if (loading) {
+			return (
+				<>
+					<Animated.View
+						style={{
+							height: size,
+							width: size,
+							backgroundColor,
+							position: "absolute",
+							borderRadius: size / 2,
+							zIndex: 100,
+							overflow: "hidden",
+						}}>
+						<Animated.View
+							style={{
+								height: size * 3,
+								width: size - 15,
+								// backgroundColor: Colors.textSecondary + "50",
+								transform: [{ rotate: "45deg" }, { translateX: loaderOffsetX }],
+							}}>
+							<LinearGradient
+								colors={[
+									Colors.textSecondary + "00",
+									Colors.textSecondary + "80",
+									Colors.textSecondary + "00",
+								]}
+								style={{ height: "100%", width: "100%" }}></LinearGradient>
+						</Animated.View>
+					</Animated.View>
+				</>
+			);
+		}
+		return <></>;
 	}
 
 	return (
@@ -67,24 +126,7 @@ export function Picture({ size, pic }) {
 				</View>
 			) : (
 				<>
-					<View style={{ position: "absolute", height: size, width: size }}>
-						{photoLoading ? (
-							<ActivityIndicator
-								size={getLoaderSize()}
-								color={Colors.primary}
-								style={{
-									zIndex: 100,
-									position: "absolute",
-									top: 0,
-									bottom: 0,
-									right: 0,
-									left: 0,
-								}}
-							/>
-						) : (
-							<></>
-						)}
-					</View>
+					<LoadingAnimation loading={photoLoading} />
 					<Image
 						source={{ uri: pic }}
 						style={{
@@ -93,7 +135,11 @@ export function Picture({ size, pic }) {
 							borderRadius: size / 2,
 							zIndex: 50,
 						}}
-						onLoadStart={() => setPhotoLoading(true)}
+						onLoadStart={() => {
+							if (!pic) {
+								setPhotoLoading(true);
+							}
+						}}
 						onLoad={() => setPhotoLoading(false)}
 					/>
 				</>

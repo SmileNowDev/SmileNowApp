@@ -2,7 +2,7 @@ import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
+import { Text, TouchableOpacity, View, Alert } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -66,7 +66,7 @@ export default function CreateJoin({ navigation }) {
 					zIndex: 40,
 				}}
 			/>
-			<View style={styles.createJoinContainer}>
+			<View style={GlobalStyles.footerButtonContainer}>
 				<TouchableOpacity
 					onPress={() => setJoining(true)}
 					style={{
@@ -105,30 +105,3 @@ export default function CreateJoin({ navigation }) {
 		</>
 	);
 }
-const styles = StyleSheet.create({
-	createJoinContainer: {
-		position: "absolute",
-		zIndex: 50,
-		bottom: 30,
-		left: 0,
-		right: 0,
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: 2.5,
-		paddingVertical: 12,
-		...GlobalStyles.Container,
-		backgroundColor: "transparent",
-		shadowColor: Colors.text,
-		shadowOffset: {
-			width: 0,
-			height: 5,
-		},
-		shadowOpacity: 0.5,
-		shadowRadius: 10,
-		elevation: 5,
-		flex: 0,
-		borderColor: "transparent",
-	},
-});

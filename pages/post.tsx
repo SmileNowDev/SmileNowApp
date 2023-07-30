@@ -58,23 +58,49 @@ export default function PostPage({ route }) {
 	const [editing, setEditing] = useState(false);
 	const [caption, setCaption] = useState("");
 	const { userId } = useContext(Context);
-
+	type PostType = {
+		_id: string;
+		src: string;
+		caption: string;
+		image: string;
+		owner: {
+			_id: string;
+			name: string;
+			picture: string;
+		};
+		date: string;
+		likes: number;
+		comments: number;
+	};
 	const {
 		data: postData,
 		refetch: refetchPost,
 		isLoading: isPostLoading,
-	} = useQuery({
+	} = useQuery<PostType>({
 		queryKey: ["post", postId],
 		queryFn: getPost,
 	});
 
-	async function getPost() {
+	async function getPost(): Promise<PostType> {
 		console.log("fetching post");
 		const result = await postApi.getPost({ postId });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			return result.data;
+			const data: PostType = result.data as PostType;
+			// if (
+			// 	typeof data._id !== "number" ||
+			// 	typeof data.caption !== "string" ||
+			// 	typeof data.image !== "string" ||
+			// 	typeof data.owner !== "object" ||
+			// 	typeof data.date !== "string" ||
+			// 	typeof data.likes !== "number" ||
+			// 	typeof data.comments !== "number"
+			// ) {
+			// 	throw new Error("Invalid data");
+			// }
+			console.log("post", data);
+			return data;
 		}
 	}
 	const {
@@ -192,17 +218,17 @@ export default function PostPage({ route }) {
 					keyboardShouldPersistTaps="handled">
 					<Photo
 						postId={postId}
-						image={post?.src}
-						caption={post?.caption}
+						image={postData?.src}
+						caption={postData?.caption}
 						owner={{
-							name: post?.user.name,
-							picture: post?.user.src,
-							id: post?.user._id,
+							name: postData?.user.name,
+							picture: postData?.user.src,
+							id: postData?.user._id,
 						}}
-						date={post?.createdAt}
-						likes={post?.likes}
-						isLiked={post?.isLiked}
-						comments={post?.comments}
+						date={postData?.createdAt}
+						likes={postData?.likes}
+						isLiked={postData?.isLiked}
+						comments={postData?.comments}
 						refresh={onRefresh}
 					/>
 

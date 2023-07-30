@@ -129,53 +129,44 @@ export default function CameraPage({ route, navigation }) {
 			// navigation.navigate("Party", { eventId });
 		}
 	}
-	type PostType = {
-		_id: string;
-		caption: string;
-		image: string;
-		owner: {
-			_id: string;
-			name: string;
-			picture: string;
-		};
-		date: string;
-		likes: number;
-		comments: number;
-	};
-	const { status, error, mutate, isLoading } = useMutation(
+
+	const { mutate, status, error, isLoading } = useMutation(
 		() => postApi.create({ eventId, caption }),
 		{
-			onSuccess: (newPost) => {
+			onSuccess: async (newPost) => {
 				console.log("inside of on success of the post mutation");
 				let newPostData: Object = newPost?.data;
 				console.log("new post: ", newPostData);
 				// @ts-expect-error
-				let imageSrc = uploadImage(newPost.data._id);
-				queryClient.setQueryData(["posts", eventId, 1], (oldData) => {
+				let imageSrc = await uploadImage(newPost.data._id);
+				queryClient.setQueryData(["posts", eventId], (oldData) => {
+					console.log("oldData: ", oldData);
 					let _newPost = {
 						...newPostData,
 						src: imageSrc,
 					};
+					console.log("new post in cache", _newPost);
 					//@ts-expect-error
 					if (!oldData?.pages || !Array.isArray(oldData.pages)) {
+						console.log("no old data");
 						return {
 							pageParams: 1,
 							pages: [_newPost],
 						}; // Return the new data as the only page
-					}
-					//@ts-expect-error
-					console.log("oldData: ", oldData.pages[0]);
-					console.log("new post: ", newPost.data);
+					} else {
+						console.log("new post: ", newPost.data);
 
-					//@ts-expect-error
-					const firstPage = [_newPost, ...oldData.pages[0]];
-					//@ts-expect-error
-					const newPages = [firstPage, ...oldData.pages.slice(1)];
-					return {
-						//@ts-expect-error,
-						pageParams: oldData.pageParams,
-						pages: newPages,
-					};
+						//@ts-expect-error
+						const firstPage = [_newPost, ...(oldData.pages[0].posts || [])];
+
+						//@ts-expect-error
+						const newPages = [firstPage, ...oldData.pages.slice(1)];
+						return {
+							//@ts-expect-error,
+							pageParams: oldData.pageParams,
+							pages: newPages,
+						};
+					}
 				});
 			},
 		}
@@ -201,6 +192,38 @@ export default function CameraPage({ route, navigation }) {
 			}
 		})();
 	}, []);
+	function ExpiredMessage() {
+		return (
+			<View style={{ justifyContent: "center", height: "100%" }}>
+				<Text
+					style={{
+						fontFamily: Fonts.title.fontFamily,
+						fontSize: 40,
+						textAlign: "center",
+					}}>
+					EXPIRED
+				</Text>
+				<Text
+					style={{
+						fontFamily: Fonts.body.fontFamily,
+						fontSize: 20,
+						textAlign: "center",
+					}}>
+					Sorry! You waited too long...
+				</Text>
+				<TouchableOpacity
+					style={{
+						marginTop: 20,
+						width: Dim.width - 20,
+						...ButtonStyles.buttonLarge,
+						...ButtonStyles.primary,
+					}}
+					onPress={() => navigation.goBack()}>
+					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Go Back</Text>
+				</TouchableOpacity>
+			</View>
+		);
+	}
 
 	return (
 		<SafeAreaView
@@ -209,34 +232,7 @@ export default function CameraPage({ route, navigation }) {
 				alignItems: "center",
 			}}>
 			{expired ? (
-				<View style={{ justifyContent: "center", height: "100%" }}>
-					<Text
-						style={{
-							fontFamily: Fonts.title.fontFamily,
-							fontSize: 40,
-							textAlign: "center",
-						}}>
-						EXPIRED
-					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: 20,
-							textAlign: "center",
-						}}>
-						Sorry! You waited too long...
-					</Text>
-					<TouchableOpacity
-						style={{
-							marginTop: 20,
-							width: Dim.width - 20,
-							...ButtonStyles.buttonLarge,
-							...ButtonStyles.primary,
-						}}
-						onPress={() => navigation.goBack()}>
-						<Text style={{ ...ButtonStyles.buttonTextLarge }}>Go Back</Text>
-					</TouchableOpacity>
-				</View>
+				<ExpiredMessage />
 			) : (
 				<>
 					{!isPreviewing ? (
@@ -350,6 +346,16 @@ export default function CameraPage({ route, navigation }) {
 							<Animated.View
 								// keyboard handling animated view
 								style={{
+									padding: 10,
+									paddingBottom: 10,
+									shadowOpacity: 0.25,
+									shadowOffset: { width: 0, height: 4 },
+									shadowRadius: 2,
+									elevation: 2,
+									shadowColor: "rgba(0, 0, 0, 0.25)",
+									backgroundColor: Colors.background,
+									borderRadius: 4,
+									marginTop: 10,
 									transform: [
 										{
 											translateY: keyboardOffset.interpolate({
@@ -361,7 +367,6 @@ export default function CameraPage({ route, navigation }) {
 								}}>
 								{loading ? (
 									<ActivityIndicator
-										// if we're waiting for the image url to be returned
 										size={"large"}
 										color={Colors.primary}
 										style={{
@@ -378,7 +383,11 @@ export default function CameraPage({ route, navigation }) {
 
 								<Image
 									source={{ uri: photo?.uri }}
-									style={{ width: "100%", height: "100%", borderRadius: 5 }}
+									style={{
+										width: imageWidth,
+										height: imageHeight,
+										borderRadius: 5,
+									}}
 								/>
 
 								<TextInput

@@ -165,14 +165,6 @@ export default function HomePage({ navigation }) {
 										<View
 											key={item._id}
 											style={{
-												shadowColor: "#000",
-												shadowOffset: {
-													width: 0,
-													height: 2,
-												},
-												shadowOpacity: 0.125,
-												shadowRadius: 3,
-												elevation: 2,
 												marginBottom: 15,
 											}}>
 											<PartyListItem

@@ -49,10 +49,8 @@ export interface IEvent {
 
 export default function PartyPage({ route, navigation }) {
 	const isFocused = useIsFocused();
-	const queryClient = useQueryClient();
 	const { eventId, justCreated, posting = true } = route.params;
 	const [newPosts, setNewPosts] = useState([]);
-	const [page, setPage] = useState(1);
 	const [posts, setPosts] = useState([]);
 	const [donePosting, setDonePosting] = useState(false);
 	useEffect(() => {
@@ -231,6 +229,8 @@ export default function PartyPage({ route, navigation }) {
 								style={{
 									position: "absolute",
 									left: 0,
+									top: 0,
+									bottom: 0,
 									right: 0,
 									flex: 1,
 									height: Dim.height,

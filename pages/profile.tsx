@@ -28,7 +28,6 @@ export default function ProfilePage({ navigation }) {
 	const { isLoading, data, error, isRefetching, refetch } = useQuery({
 		queryKey: ["user", userId],
 		queryFn: getUser,
-		staleTime: Infinity,
 	});
 	async function getUser() {
 		const result = await userApi.get({ userId });

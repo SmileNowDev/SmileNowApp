@@ -82,7 +82,7 @@ export default function CameraPage({ route, navigation }) {
 			},
 		}
 	);
-	const createFormData = (photo, body = {}) => {
+	const createFormData = (photo) => {
 		let formData = new FormData();
 		let filename = photo.uri.split("/").pop();
 		let match = /\.(\w+)$/.exec(filename);
@@ -92,21 +92,16 @@ export default function CameraPage({ route, navigation }) {
 		return formData;
 	};
 
-	async function uploadImage(postId: string) {
-		let formData = createFormData(photo);
-		const result = await postApi.uploadImage({ formData, postId });
-		if (result.ok) {
-			Alert.alert("Image Uploaded Successfully");
-			setLoading(false);
-			navigation.navigate("Home");
-		}
-	}
 	async function handleSave() {
 		let formData = createFormData(photo);
 		//@ts-expect-error
 		console.log("formData", formData._parts[0][1]);
 		// @ts-expect-error
-		mutate(formData);
+		mutate(formData, {
+			onSuccess: (data) => {
+				navigation.navigate("Profile");
+			},
+		});
 	}
 	useEffect(() => {
 		(async () => {

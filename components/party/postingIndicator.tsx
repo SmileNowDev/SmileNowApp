@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { Dim } from "../../styles/styles";
 interface PostingIndicator {
@@ -10,6 +10,16 @@ export default function PostingIndicator({
 	donePosting,
 }: PostingIndicator) {
 	const animatedWidth = useRef(new Animated.Value(0)).current;
+	function startAnimation() {
+		Animated.loop(
+			// @ts-expect-error
+			animatedWidth.setValue(0.5)
+		);
+		console.log("animating");
+	}
+	useEffect(() => {
+		startAnimation();
+	}, []);
 	if (!posting) {
 		return <></>;
 	} else {
