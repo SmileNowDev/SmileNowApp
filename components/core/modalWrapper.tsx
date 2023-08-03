@@ -10,6 +10,7 @@ interface ModalProps {
 	fullHeight?: boolean;
 	scrollable?: boolean;
 	noSwipe?: boolean;
+	type?: "center" | "bottom";
 	onClose?: () => void;
 }
 export default function ModalWrapper({
@@ -19,21 +20,38 @@ export default function ModalWrapper({
 	fullHeight = false,
 	scrollable = false,
 	noSwipe = false,
+	type = "bottom",
 	onClose = () => {},
 }) {
-	const containerStyle = {
-		paddingHorizontal: 20,
-		height: fullHeight ? Dim.height * 0.85 : Dim.height * 0.6,
-		backgroundColor: Colors.background,
-		alignContent: "center",
-		justifyContent: "center",
-		position: "absolute",
-		borderTopRightRadius: 20,
-		borderTopLeftRadius: 20,
-		bottom: 0,
-		left: 0,
-		right: 0,
-	};
+	const containerStyle =
+		type === "bottom"
+			? {
+					paddingHorizontal: 20,
+					height: fullHeight ? Dim.height * 0.85 : Dim.height * 0.6,
+					backgroundColor: Colors.background,
+					alignContent: "center",
+					justifyContent: "center",
+					position: "absolute",
+					borderTopRightRadius: 20,
+					borderTopLeftRadius: 20,
+					bottom: 0,
+					left: 0,
+					right: 0,
+			  }
+			: {
+					height: Dim.height * 0.85,
+					paddingHorizontal: 10,
+					marginHorizontal: 10,
+					backgroundColor: Colors.background,
+					display: "flex",
+					alignContent: "center",
+					justifyContent: "center",
+					borderRadius: 20,
+					top: 0,
+					bottom: 0,
+					left: 0,
+					right: 0,
+			  };
 	const swipeToClose = {
 		width: 150,
 		height: 5,
@@ -78,15 +96,19 @@ export default function ModalWrapper({
 			}}>
 			{/* @ts-expect-error */}
 			<View style={containerStyle}>
-				{/* @ts-expect-error */}
-				<View style={swipeToClose} />
+				{type === "bottom" && !noSwipe && (
+					<>
+						{/* @ts-expect-error */}
+						<View style={swipeToClose} />
+					</>
+				)}
 				{scrollable ? (
 					<ScrollView>
 						{children}
 						<View style={{ height: Dim.height }} />
 					</ScrollView>
 				) : (
-					<View>{children}</View>
+					<>{children}</>
 				)}
 			</View>
 		</Modal>

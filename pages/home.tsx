@@ -21,6 +21,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
+import WelcomeMessageModal from "../components/engagement/welcomeMessageModal";
 export type EventType = {
 	_id: string;
 	title: string;
@@ -53,9 +54,7 @@ export default function HomePage({ navigation }) {
 		staleTime: 1000 * 60 * 5, // data is considered fresh for 5 minutes
 		cacheTime: 1000 * 60 * 30, // data is cached for 30 minutes
 	});
-	useEffect(() => {
-		// console.log("data", data);
-	}, [data]);
+
 	useEffect(() => {
 		if (isFocused) {
 			onRefresh();
@@ -118,6 +117,7 @@ export default function HomePage({ navigation }) {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<HomeHeader />
+			<WelcomeMessageModal />
 			<CreateJoin navigation={navigation} />
 			<ScreenWrapper
 				onRefresh={onRefresh}

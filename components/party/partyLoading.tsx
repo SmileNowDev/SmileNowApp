@@ -5,10 +5,13 @@ import { Dim } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import { LinearGradient } from "expo-linear-gradient";
 type PartyLoadingProps = {
-	variant: "pink_backdrop" | "white_backdrop";
+	variant?: "pink_backdrop" | "white_backdrop";
 	message?: string;
 };
-export default function PartyLoading({ variant, message }: PartyLoadingProps) {
+export default function PartyLoading({
+	variant = "white_backdrop",
+	message,
+}: PartyLoadingProps) {
 	const rotation = new Animated.Value(0);
 	Animated.loop(
 		Animated.timing(rotation, {

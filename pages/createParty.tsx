@@ -108,12 +108,12 @@ export default function CreatePartyPage({ route, navigation }) {
 			Animated.parallel([
 				Animated.timing(contentOffsetY, {
 					toValue: 0,
-					duration: 1000,
+					duration: 500,
 					useNativeDriver: true,
 				}),
 				Animated.timing(skipAnimationOffsetY, {
 					toValue: -Dim.height,
-					duration: 1000,
+					duration: 500,
 					useNativeDriver: true,
 				}),
 			]),
@@ -366,10 +366,17 @@ export default function CreatePartyPage({ route, navigation }) {
 						</Text>
 					</TouchableOpacity>
 
+					<Text
+						style={{
+							marginTop: 40,
+							fontFamily: Fonts.title.fontFamily,
+							fontSize: Fonts.subTitle.fontSize,
+						}}>
+						Take the First Picture!
+					</Text>
 					<TouchableOpacity
 						onPress={() => navigation.navigate("Camera", { eventId })}
 						style={{
-							marginTop: 40,
 							...ButtonStyles.primary,
 							width: 80,
 							height: 80,
@@ -379,14 +386,7 @@ export default function CreatePartyPage({ route, navigation }) {
 						}}>
 						<Icon name="camera" size={40} type="Feather" color="white" />
 					</TouchableOpacity>
-					<Text
-						style={{
-							fontFamily: Fonts.title.fontFamily,
-							fontSize: Fonts.subTitle.fontSize,
-						}}>
-						Take the First Picture
-					</Text>
-					<Text>My friends don't have the app yet ☹️</Text>
+					{/* <Text>My friends don't have the app yet ☹️</Text> */}
 					{/* TODO - add a view with information on how to get people to download it and get started*/}
 					{/* much later TODO: an interactive guide that explains the joys of the app that can be easily shared - maybe a  video */}
 				</Animated.View>

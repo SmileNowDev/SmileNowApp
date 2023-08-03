@@ -1,27 +1,13 @@
-import React, { createRef, useEffect, useRef, useState } from "react";
-import {
-	View,
-	Animated,
-	Text,
-	ActivityIndicator,
-	Image,
-	Easing,
-} from "react-native";
-import { DeviceMotion } from "expo-sensors";
-import dayjs from "dayjs";
+import React, { createRef, useState } from "react";
+import { View, Image } from "react-native";
 import { imageHeight, imageWidth } from "../../pages/post";
-import { Gravity } from "expo-sensors/build/DeviceMotion";
 import ReactNativeZoomableView from "@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView";
-import { Colors } from "../../styles/theme";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import PolaroidLoader from "../../components/core/polaroidLoader";
 interface PolaroidProps {
 	imageUri: string;
 	takenAt: string;
 	postId: string;
 }
-// left TODO: for the fade
 
 export default function Polaroid({ imageUri, takenAt, postId }: PolaroidProps) {
 	const zoomableViewRef = createRef<ReactNativeZoomableView>();

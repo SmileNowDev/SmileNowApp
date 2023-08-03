@@ -11,9 +11,7 @@ apiClient.addAsyncRequestTransform(async (request) => {
 	const refreshToken = await authStorage.getRefreshToken();
 
 	if (!accessToken || !refreshToken) return;
-	//@ts-expect-error
 	request.headers["authorization"] = "Bearer " + accessToken;
-	//@ts-expect-error
 	request.headers["x-refresh"] = refreshToken;
 });
 
