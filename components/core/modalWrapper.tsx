@@ -105,7 +105,7 @@ export default function ModalWrapper({
 				{scrollable ? (
 					<ScrollView>
 						{children}
-						<View style={{ height: Dim.height }} />
+						<View style={{ height: Dim.height / 2 }} />
 					</ScrollView>
 				) : (
 					<>{children}</>

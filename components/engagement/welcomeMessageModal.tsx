@@ -70,98 +70,117 @@ export default function WelcomeMessageModal() {
 	useEffect(() => {
 		getNewMessages();
 	}, []);
+	if (welcomeMessages.length === 0)
+		return (
+			<>
+				{/* <TouchableOpacity
+					onPress={() => {
+						handleClearLocalStorage();
+					}}>
+					<Text>Clear Local Storage</Text>
+				</TouchableOpacity> */}
+			</>
+		);
 	return (
 		<>
-			{/* <TouchableOpacity
-				onPress={() => {
-					handleClearLocalStorage();
-				}}>
-				<Text>Clear Local Storage</Text>
-			</TouchableOpacity> */}
-			<ModalWrapper
-				visible={modalVisible}
-				setVisible={setModalVisible}
-				scrollable={true}
-				noSwipe={true}
-				type={"center"}>
-				<>
-					<TouchableOpacity
-						onPress={() => setModalVisible(false)}
-						style={{
-							position: "absolute",
-							top: 0,
-							right: 0,
-							padding: 10,
-							zIndex: 100,
-						}}>
-						<Icon name="close" size={30} color={Colors.textSecondary} />
-					</TouchableOpacity>
-					<View style={{ gap: 20 }}>
-						{welcomeMessages.map((message) => {
-							return (
-								<View
+			{welcomeMessages.map((message) => {
+				return (
+					<ModalWrapper
+						visible={modalVisible}
+						setVisible={setModalVisible}
+						scrollable={true}
+						noSwipe={false}
+						onClose={() => {
+							readMessage(message._id);
+							setModalVisible(false);
+						}}
+						type={"center"}>
+						<View
+							style={{
+								position: "relative",
+								height: "100%",
+								borderRadius: 10,
+								maxHeight: Dim.height - 160,
+							}}>
+							<TouchableOpacity
+								onPress={() => {
+									readMessage(message._id);
+									setModalVisible(false);
+								}}
+								style={{
+									position: "absolute",
+									zIndex: 100,
+									top: 0,
+									right: 0,
+									padding: 10,
+								}}>
+								<Icon name="close" size={30} color={Colors.textSecondary} />
+							</TouchableOpacity>
+							<View
+								style={{
+									width: Dim.width - 40,
+									justifyContent: "center",
+									alignItems: "center",
+									position: "absolute",
+									bottom: 0,
+									zIndex: 100,
+								}}>
+								<TouchableOpacity
+									onPress={() => readMessage(message._id)}
 									style={{
-										height: Dim.height * 0.9 - 60, // created 30 padding on top and bottom of modal;
-										justifyContent: "space-between",
+										width: "80%",
+										...ButtonStyles.buttonLarge,
+										backgroundColor: Colors.primary,
 									}}>
-									<View
+									<Text
 										style={{
-											borderRadius: 20,
-											width: Dim.width * 0.9,
-											justifyContent: "flex-start",
-											alignItems: "center",
-											paddingTop: 30,
+											...ButtonStyles.buttonTextLarge,
 										}}>
-										<WelcomeMessage key={message._id + "1"} message={message} />
-									</View>
-									<View
-										style={{
-											width: Dim.width - 40,
-											justifyContent: "center",
-											alignItems: "center",
-										}}>
+										{message.buttonCTA || welcomeMessages.length === 1
+											? "Close"
+											: "Next"}
+									</Text>
+								</TouchableOpacity>
+								{welcomeMessages.length >= 2 ? (
+									<>
 										<TouchableOpacity
-											onPress={() => readMessage(message._id)}
+											onPress={() => handleSkipAll()}
 											style={{
-												width: "80%",
-												...ButtonStyles.buttonLarge,
-												backgroundColor: Colors.primary,
+												...ButtonStyles.button,
+												marginTop: 10,
 											}}>
 											<Text
 												style={{
-													...ButtonStyles.buttonTextLarge,
+													fontSize: 15,
 												}}>
-												{message.buttonCTA || welcomeMessages.length === 1
-													? "Close"
-													: "Next"}
+												Close All
 											</Text>
 										</TouchableOpacity>
-										{welcomeMessages.length >= 2 ? (
-											<>
-												<TouchableOpacity
-													onPress={() => handleSkipAll()}
-													style={{
-														...ButtonStyles.button,
-														marginTop: 10,
-													}}>
-													<Text
-														style={{
-															fontSize: 15,
-														}}>
-														Close All
-													</Text>
-												</TouchableOpacity>
-											</>
-										) : (
-											<></>
-										)}
-									</View>
+									</>
+								) : (
+									<></>
+								)}
+							</View>
+							<View
+								style={{
+									maxHeight: Dim.height - 160,
+								}}>
+								<View
+									style={{
+										borderRadius: 20,
+										width: Dim.width * 0.9,
+										justifyContent: "flex-start",
+										alignItems: "center",
+										paddingTop: 30,
+										height: Dim.height - 160,
+									}}>
+									<WelcomeMessage key={message._id + "1"} message={message} />
 								</View>
-							);
-						})}
-					</View>
-				</>
-			</ModalWrapper>
+							</View>
+						</View>
+					</ModalWrapper>
+				);
+			})}
 		</>
 	);
 }

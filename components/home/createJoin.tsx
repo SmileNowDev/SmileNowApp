@@ -55,6 +55,7 @@ export default function CreateJoin({ navigation }) {
 				<JoinPartyPage setVisible={setJoining} />
 			</ModalWrapper>
 			<LinearGradient
+				pointerEvents="none"
 				colors={["transparent", Colors.textSecondary]}
 				locations={[0.15, 1]}
 				style={{

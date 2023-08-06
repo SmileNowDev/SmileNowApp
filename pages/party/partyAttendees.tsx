@@ -13,6 +13,7 @@ import {
 import { ButtonStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Header from "../../components/layout/header";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export default function PartyAttendees({ route, navigation }) {
 	const { eventId, isHost, name } = route.params;
@@ -20,17 +21,49 @@ export default function PartyAttendees({ route, navigation }) {
 
 	const [attendees, setAttendees] = useState([]);
 	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(true);
 	const [bottomLoading, setBottomLoading] = useState(false);
-	const [loading, setLoading] = useState(false);
-	async function getAttendees() {
-		const result = await attendeeApi.getAttendees({ eventId, page: 1 });
-		if (result.ok) {
-			//@ts-expect-error
-			setAttendees(result.data);
+
+	async function getAttendees({ pageParam = 1 }) {
+		setPage(pageParam);
+		const result = await attendeeApi.getAttendees({ eventId, page: pageParam });
+		if (!result.ok) {
+			throw new Error(result.problem);
+		} else {
+			return {
+				// @ts-expect-error
+				attendees: result.data.data,
+				// @ts-expect-error
+				hasNextPage: result.data.next,
+			};
 		}
 	}
 
+	const {
+		data,
+		isLoading,
+		fetchNextPage,
+		isFetchingNextPage,
+		refetch,
+		isRefetching,
+		error,
+	} = useInfiniteQuery({
+		queryKey: ["attendees", eventId],
+		queryFn: ({ pageParam = 1 }) => getAttendees({ pageParam }),
+		getNextPageParam: (lastPage, allPages) => {
+			console.log({ lastPage, allPages });
+			if (lastPage.hasNextPage) {
+				return allPages.length + 1;
+			} else {
+				return false;
+			}
+		},
+	});
+	useEffect(() => {
+		if (data) {
+			let _attendees = data.pages.flat()[0].attendees as any[];
+			setAttendees(_attendees);
+		}
+	}, [data]);
 	async function demoteToMember(id: string) {
 		const result = await attendeeApi.update({
 			eventId,
@@ -38,7 +71,7 @@ export default function PartyAttendees({ route, navigation }) {
 			isHost: false,
 		});
 		if (result.ok) {
-			getAttendees();
+			getAttendees({ pageParam: page });
 		}
 	}
 	async function promoteToHost(id: string) {
@@ -49,7 +82,7 @@ export default function PartyAttendees({ route, navigation }) {
 		});
 		console.log({ result });
 		if (result.ok) {
-			getAttendees();
+			getAttendees({ pageParam: page });
 		}
 	}
 	function PromoteAndDemote({ attendeeIsHost, id }) {
@@ -61,11 +94,9 @@ export default function PartyAttendees({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonSmall,
 						...ButtonStyles.primaryOutlined,
-					}}
-				>
+					}}>
 					<Text
-						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}
-					>
+						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}>
 						Demote to Member
 					</Text>
 				</TouchableOpacity>
@@ -77,60 +108,33 @@ export default function PartyAttendees({ route, navigation }) {
 					style={{
 						...ButtonStyles.buttonSmall,
 						...ButtonStyles.secondaryOutlined,
-					}}
-				>
+					}}>
 					<Text
 						style={{
 							...ButtonStyles.buttonTextSmall,
 							color: Colors.secondary,
-						}}
-					>
+						}}>
 						Promote to Host
 					</Text>
 				</TouchableOpacity>
 			);
 		}
 	}
-	async function loadMore() {
-		if (!hasMore) {
-			return;
-		}
 
-		setBottomLoading(true);
-		const nextPage = page + 1;
-		const result = await attendeeApi.getAttendees({ eventId, page: nextPage });
-
-		if (result.ok) {
-			// @ts-expect-error
-			if (result.data.length > 0) {
-				//@ts-expect-error
-				setAttendees((prevEvents) => [...prevEvents, ...result.data]);
-				setPage(nextPage);
-			} else {
-				setHasMore(false);
-			}
-		}
-
-		setBottomLoading(false);
-	}
-	useEffect(() => {
-		getAttendees();
-	}, [eventId]);
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header title={`${name} Attendees`} goBack />
 			<ScreenWrapper
 				onRefresh={() => {
-					getAttendees();
+					refetch();
 				}}
 				style={{ width: "100%", backgroundColor: "white" }}
 				scrollEnabled={true}
 				bottomLoading={bottomLoading}
-				loading={loading}
+				loading={isLoading}
 				onBottomScroll={() => {
-					loadMore();
-				}}
-			>
+					fetchNextPage();
+				}}>
 				<View>
 					<FlatList
 						style={{ width: "100%", paddingHorizontal: 10 }}
