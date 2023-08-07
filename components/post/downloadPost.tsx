@@ -5,19 +5,18 @@ import { Colors, Fonts } from "../../styles/theme";
 
 import dayjs from "dayjs";
 import { Dim } from "../../styles/styles";
+import { downloadImage } from "../../utils/downloadView";
 interface DownloadPostProps {
 	image: string;
 	caption: string;
 	date: string;
 	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-	download: (ref: any) => void;
 }
 export default function DownloadPost({
 	image,
 	caption,
 	date,
 	setModalVisible,
-	download,
 }: DownloadPostProps) {
 	const imageToSave = useRef();
 	const imageToSaveWithCaption = useRef();
@@ -123,7 +122,7 @@ export default function DownloadPost({
 							backgroundColor: "transparent",
 						}}>
 						<TouchableOpacity
-							onPress={() => download(imageToSave)}
+							onPress={() => downloadImage(imageToSave)}
 							style={{
 								position: "relative",
 								shadowOpacity: 0.25,
@@ -143,7 +142,7 @@ export default function DownloadPost({
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
-						onPress={() => download(imageToSave)}
+						onPress={() => downloadImage(imageToSave)}
 						style={{
 							display: "flex",
 							flexDirection: "column",
@@ -170,7 +169,7 @@ export default function DownloadPost({
 						alignItems: "center",
 					}}>
 					<TouchableOpacity
-						onPress={() => download(imageToSaveWithCaption)}
+						onPress={() => downloadImage(imageToSaveWithCaption)}
 						style={styles.photoDownload}>
 						<View style={{ position: "relative" }}>
 							<Image
@@ -205,7 +204,7 @@ export default function DownloadPost({
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => download(imageToSaveWithCaption)}
+						onPress={() => downloadImage(imageToSaveWithCaption)}
 						style={{
 							display: "flex",
 							flexDirection: "column",

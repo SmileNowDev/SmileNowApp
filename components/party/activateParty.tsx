@@ -35,6 +35,7 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 	else {
 		return (
 			<LinearGradient
+				pointerEvents="none"
 				colors={["transparent", Colors.textSecondary]}
 				locations={[0.15, 1]}
 				style={{
@@ -56,7 +57,13 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 								justifyContent: "center",
 								alignItems: "center",
 								gap: 10,
-								marginBottom: 10,
+								paddingBottom: 15,
+								paddingTop: 4,
+								marginBottom: -10,
+								flex: 0,
+								backgroundColor: Colors.foreground,
+								borderTopRightRadius: 5,
+								borderTopLeftRadius: 5,
 							}}>
 							<Text
 								style={{
@@ -82,6 +89,14 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 								...ButtonStyles.buttonLarge,
 								...ButtonStyles.primary,
 								width: "100%",
+								shadowOffset: {
+									width: 0,
+									height: -1,
+								},
+								shadowOpacity: 0.25,
+								shadowRadius: 5,
+								elevation: 0,
+								shadowColor: Colors.text,
 							}}>
 							<Image
 								source={require("../../assets/logo_white.png")}

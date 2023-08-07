@@ -7,13 +7,13 @@ import Icon from "../../components/core/icons";
 interface EditCaptionProps {
 	postId: string;
 	caption: string;
-	setCaption: React.Dispatch<React.SetStateAction<string>>;
+	refresh: () => void;
 	setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function EditCaption({
 	postId,
 	caption,
-	setCaption,
+	refresh,
 	setVisible,
 }: EditCaptionProps) {
 	const [editCaption, setEditCaption] = useState(caption);
@@ -21,8 +21,9 @@ export default function EditCaption({
 	async function updateCaption() {
 		const result = await postApi.updatePost({ postId, caption: editCaption });
 		if (result.ok) {
-			setCaption(editCaption);
+			refresh();
 			setVisible(false);
+			// toast
 			Alert.alert("Caption Updated");
 		}
 	}

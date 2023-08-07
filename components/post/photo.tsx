@@ -1,25 +1,16 @@
-import React, { createRef, useState } from "react";
-import {
-	Image,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-	Alert,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import likeApi from "../../api/interaction/like";
 import Avatar from "../avatar";
 import DefaultOptions from "../core/defaultOptions";
-import { captureRef } from "react-native-view-shot";
-import * as MediaLibrary from "expo-media-library";
+
 import ModalWrapper from "../core/modalWrapper";
 import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Polaroid from "./polaroid";
-import { useQueryClient } from "@tanstack/react-query";
 dayjs.extend(relativeTime);
 export interface PhotoProps {
 	postId: string;
@@ -51,9 +42,6 @@ export default function Photo({
 	const [downloadModalVisible, setDownloadModalVisible] = useState(false);
 	const [liked, setLiked] = useState(isLiked ? true : false);
 	const [likesCount, setLikesCount] = useState(likes);
-	function handleOpen() {
-		console.log("open");
-	}
 
 	async function handleLike() {
 		if (!liked) {
@@ -78,28 +66,6 @@ export default function Photo({
 		// refresh();
 	}
 
-	const downloadImage = async (ref: React.MutableRefObject<undefined>) => {
-		try {
-			// react-native-view-shot caputures component
-			const uri = await captureRef(ref, {
-				format: "png",
-				quality: 1,
-			});
-
-			// cameraroll saves image
-			const image = MediaLibrary.saveToLibraryAsync(uri);
-			if (image) {
-				Alert.alert(
-					"Image saved",
-					"Successfully saved image to your gallery.",
-					[{ text: "OK", onPress: () => {} }],
-					{ cancelable: false }
-				);
-			}
-		} catch (error) {
-			console.log("error", error);
-		}
-	};
 	function handleEndZoom() {
 		console.log("end zoom");
 	}
@@ -188,7 +154,6 @@ export default function Photo({
 					caption={caption}
 					date={date}
 					setModalVisible={setDownloadModalVisible}
-					download={downloadImage}
 				/>
 			</ModalWrapper>
 		</>

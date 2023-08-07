@@ -34,11 +34,14 @@ export default function PartyHeader({
 					alignItems: "center",
 					gap: 10,
 					flex: 1,
-					overflow: "hidden",
+					paddingRight: 10,
+					maxWidth: "60%",
 				}}>
 				<Icon name={"chevron-left"} size={30} />
 
 				<Text
+					numberOfLines={1}
+					ellipsizeMode="tail"
 					style={{
 						fontFamily: Fonts.title.fontFamily,
 						fontSize: 20,

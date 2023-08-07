@@ -48,13 +48,9 @@ export default function PostPage({ route }) {
 	const { postId, eventId } = route.params;
 	const [post, setPost] = useState<any>();
 
-	const [refreshing, setRefreshing] = useState(false);
 	const [comment, setComment] = useState("");
 	const [comments, setComments] = useState([]);
 	const [page, setPage] = useState<number>(1);
-	const [hasMore, setHasMore] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [bottomLoading, setBottomLoading] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [caption, setCaption] = useState("");
 	const { userId } = useContext(Context);
@@ -147,13 +143,6 @@ export default function PostPage({ route }) {
 			}
 		}
 	}
-	async function onRefresh() {
-		console.log("Refetching");
-		setRefreshing(true);
-		refetchPost();
-		refetchComments();
-		setRefreshing(false);
-	}
 
 	const allPagesData = queryClient.getQueryData(["posts", eventId]);
 	// @ts-expect-error
@@ -186,12 +175,15 @@ export default function PostPage({ route }) {
 				<Header
 					goBack
 					rightContent={
-						post?.user._id === userId ? (
+						// @ts-expect-error
+						postData?.user._id === userId ? (
 							<TouchableOpacity
 								onPress={() => setEditing(true)}
 								style={{
 									...ButtonStyles.buttonSmall,
 									...ButtonStyles.outlined,
+									position: "absolute",
+									right: 0,
 								}}>
 								<Icon name="edit" size={20} color={Colors.text} />
 								<Text
@@ -206,7 +198,10 @@ export default function PostPage({ route }) {
 					}
 				/>
 				<ScreenWrapper
-					onRefresh={onRefresh}
+					onRefresh={() => {
+						refetchPost();
+						refetchComments();
+					}}
 					scrollEnabled={true}
 					loading={isPostLoading}
 					onBottomScroll={() => {
@@ -229,7 +224,7 @@ export default function PostPage({ route }) {
 						likes={postData?.likes}
 						isLiked={postData?.isLiked}
 						comments={postData?.comments}
-						refresh={onRefresh}
+						refresh={refetchPost}
 					/>
 
 					<View
@@ -313,8 +308,8 @@ export default function PostPage({ route }) {
 					fullHeight={true}>
 					<EditCaption
 						postId={postId}
-						caption={caption}
-						setCaption={setCaption}
+						caption={postData.caption}
+						refresh={refetchPost}
 						setVisible={setEditing}
 					/>
 				</ModalWrapper>
