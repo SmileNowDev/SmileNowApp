@@ -47,7 +47,6 @@ export default function EditProfilePage({ navigation }) {
 			return;
 		} else {
 			const result = await userApi.updateUser({ name, username });
-			console.log(result);
 			if (result.ok) {
 				navigation.goBack();
 			} else {

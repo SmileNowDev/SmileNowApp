@@ -128,7 +128,7 @@ export default function ArchivePage({ navigation }) {
 							</View>
 						)}
 						onEndReached={() => {
-							console.log("end reached");
+							// console.log("end reached");
 							if (hasNextPage) fetchNextPage();
 						}}
 						onEndReachedThreshold={0.25}

@@ -266,7 +266,6 @@ export default function PartyPage({ route, navigation }) {
 													<TouchableOpacity
 														delayPressIn={500}
 														onPress={() => {
-															console.log("Clicked");
 															navigation.navigate("Post", {
 																postId: item._id,
 																eventId: eventId,

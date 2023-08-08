@@ -12,7 +12,6 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation((eventId) => eventApi.start({ eventId }), {
 		onSuccess: () => {
-			console.log("success");
 			queryClient.setQueryData(["event", eventId], (oldData) => {
 				//@ts-expect-error
 				return { ...oldData, isActive: true };

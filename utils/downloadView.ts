@@ -8,9 +8,7 @@ export const downloadImage = async (ref: any) => {
 			format: "png",
 			quality: 1,
 		});
-		console.log("uri", uri);
-		let image = await MediaLibrary.saveToLibraryAsync(uri);
-		console.log("image", image);
+		await MediaLibrary.saveToLibraryAsync(uri);
 		Alert.alert(
 			"Image saved",
 			"Successfully saved image to your gallery.",

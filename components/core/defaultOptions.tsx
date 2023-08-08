@@ -43,7 +43,6 @@ export default function DefaultOptions({
 
 	async function unblock() {
 		const result = await blockApi.deleteBlocks({ userId: id });
-		console.log({ result });
 		if (result.ok) {
 			Alert.alert("Unblock Successful", "You have unblocked this user");
 			setModalVisible(false);

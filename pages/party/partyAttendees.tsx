@@ -50,7 +50,7 @@ export default function PartyAttendees({ route, navigation }) {
 		queryKey: ["attendees", eventId],
 		queryFn: ({ pageParam = 1 }) => getAttendees({ pageParam }),
 		getNextPageParam: (lastPage, allPages) => {
-			console.log({ lastPage, allPages });
+			// console.log({ lastPage, allPages });
 			if (lastPage.hasNextPage) {
 				return allPages.length + 1;
 			} else {
@@ -80,7 +80,7 @@ export default function PartyAttendees({ route, navigation }) {
 			userId: id,
 			isHost: true,
 		});
-		console.log({ result });
+		// console.log({ result });
 		if (result.ok) {
 			getAttendees({ pageParam: page });
 		}

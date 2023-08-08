@@ -400,24 +400,24 @@ export default function CameraPage({ route, navigation }) {
 									}}
 									placeholder="Caption Your Photo"
 									onBlur={() => {
-										console.log("HERE 1");
+										// console.log("HERE 1");
 										// set offset back to 0
 										Animated.timing(keyboardOffset, {
 											toValue: 0,
 											duration: 500,
 											useNativeDriver: false,
 										}).start();
-										console.log(keyboardOffset);
+										// console.log(keyboardOffset);
 									}}
 									onFocus={() => {
 										// set offset to move image above keyboard
-										console.log("HERE 2");
+										// console.log("HERE 2");
 										Animated.timing(keyboardOffset, {
 											toValue: 1,
 											duration: 500,
 											useNativeDriver: false,
 										}).start();
-										console.log(keyboardOffset);
+										// console.log(keyboardOffset);
 									}}
 									value={caption}
 									onChangeText={setCaption}

@@ -17,7 +17,6 @@ export default function NotificationFrequencyButton({
 		<TouchableOpacity
 			disabled={disabled}
 			onPress={() => {
-				console.log("pressing : ", mode);
 				setNotificationFrequency(mode);
 			}}
 			style={{

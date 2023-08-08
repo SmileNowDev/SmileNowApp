@@ -39,7 +39,6 @@ export default function OtherProfile({ id }) {
 	}
 	const acceptRequest = useMutation(() => friendApi.accept({ userId: id }), {
 		onSuccess: (data) => {
-			console.log("success", data);
 			setFriendStatus("accepted");
 			queryClient.setQueryData(["friend_requests"], (oldData) => {
 				//@ts-expect-error
@@ -50,7 +49,6 @@ export default function OtherProfile({ id }) {
 				return { ...oldData, pages: updatedPages };
 			});
 			queryClient.setQueryData(["requests"], (oldData) => {
-				console.log("oldData", oldData);
 				//@ts-expect-error
 				if (oldData > 0) {
 					//@ts-expect-error

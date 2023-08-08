@@ -121,7 +121,6 @@ export default function RequestsTab() {
 						data={requests}
 						keyExtractor={(item) => item._id}
 						renderItem={({ item }) => {
-							console.log(item);
 							let user = item as any; //todo: as UserType
 							return (
 								<UserCard
@@ -130,7 +129,6 @@ export default function RequestsTab() {
 									username={user.requester.username}
 									id={user.requester._id}
 									onClose={() => {
-										console.log("close");
 										refetch();
 									}}
 								/>

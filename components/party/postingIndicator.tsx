@@ -15,7 +15,6 @@ export default function PostingIndicator({
 			// @ts-expect-error
 			animatedWidth.setValue(0.5)
 		);
-		console.log("animating");
 	}
 	useEffect(() => {
 		startAnimation();

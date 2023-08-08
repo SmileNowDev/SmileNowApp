@@ -12,7 +12,6 @@ export default function CreateJoin({ navigation }) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(() => eventApi.create(), {
 		onSuccess: (data) => {
-			console.log("data: ", data.data);
 			//@ts-expect-error
 			queryClient.setQueryData(["event", data.data._id], data.data);
 			queryClient.setQueryData(["events", 1], (oldData) => {
@@ -34,8 +33,6 @@ export default function CreateJoin({ navigation }) {
 	async function createEvent() {
 		mutation.mutate(null, {
 			onSuccess: async (data) => {
-				//@ts-expect-error
-				console.log("created event: ", data.data._id);
 				navigation.navigate("CreateParty", {
 					//@ts-expect-error
 					eventId: data.data._id,

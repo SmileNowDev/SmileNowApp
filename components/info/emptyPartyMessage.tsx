@@ -12,7 +12,6 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 	const [showTutorials, setShowTutorials] = useState(false);
 	useEffect(() => {
 		AsyncStorage.getItem("showPartyTutorials").then((value) => {
-			console.log({ value });
 			if (value) setShowTutorials(true);
 			else setShowTutorials(false);
 		});

@@ -50,13 +50,13 @@ export default function NameAndDescription({
 					placement: "bottom",
 					duration: 1000,
 				});
-				console.log("data: ", data);
+				// console.log("data: ", data);
 				queryClient.setQueryData(["event", id], (oldData) => ({
 					...(oldData as IEvent),
 					//@ts-expect-error
 					...data.data, // update this event's state
 				}));
-				console.log("updated event: ", data);
+				// console.log("updated event: ", data);
 			},
 		}
 	);
@@ -93,7 +93,7 @@ export default function NameAndDescription({
 		// save the new name and description to the database
 		//while temporarily saving the original name and description to provide an "revert changes" option;
 
-		console.log("saving");
+		// console.log("saving");
 		//@ts-expect-error
 		detailsMutation.mutate({
 			id,

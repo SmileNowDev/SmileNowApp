@@ -78,7 +78,6 @@ export default function PostPage({ route }) {
 	});
 
 	async function getPost(): Promise<PostType> {
-		console.log("fetching post");
 		const result = await postApi.getPost({ postId });
 		if (!result.ok) {
 			throw new Error(result.problem);
@@ -95,7 +94,6 @@ export default function PostPage({ route }) {
 			// ) {
 			// 	throw new Error("Invalid data");
 			// }
-			console.log("post", data);
 			return data;
 		}
 	}
@@ -120,7 +118,6 @@ export default function PostPage({ route }) {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			console.log("comments", result.data);
 			// @ts-expect-error
 			return { comments: result.data.data, hasNextPage: result.data.next };
 		}

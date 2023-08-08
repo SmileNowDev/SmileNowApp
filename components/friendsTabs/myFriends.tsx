@@ -31,8 +31,6 @@ export default function MyFriendsTab() {
 		if (!result.ok) {
 			throw new Error(result.problem);
 		} else {
-			// @ts-expect-error
-			console.log("Friends", result.data.data);
 			return {
 				// @ts-expect-error
 				friends: result.data.data,

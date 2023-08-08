@@ -44,9 +44,7 @@ export default function NotificationsSettings({
 			onSuccess: (data) => {
 				//@ts-expect-error
 				let muted = !data.data.muted;
-				console.log("muted was:", isMuted);
 
-				console.log("success - muted: ", muted);
 				setIsMuted(muted);
 				let message = muted
 					? "Your notifications are off 🤫"
@@ -68,7 +66,6 @@ export default function NotificationsSettings({
 		}
 	);
 	async function handleMuting() {
-		console.log("here");
 		muteMutation.mutate(
 			//@ts-expect-error
 			{ eventId, userId, muteStatus: isMuted }
@@ -99,7 +96,7 @@ export default function NotificationsSettings({
 		},
 	});
 	async function handleNotificationStatusChange() {
-		console.log("here");
+		// console.log("here");
 		// api to switch notification status
 		activeMutation.mutate(eventId);
 	}
@@ -139,7 +136,7 @@ export default function NotificationsSettings({
 		}
 	);
 	function handleFrequencyChange(frequency) {
-		console.log("new notification frequency: ", frequency);
+		// console.log("new notification frequency: ", frequency);
 		setNewNotificationFrequency(frequency);
 
 		notificationFrequencyMutation.mutate(

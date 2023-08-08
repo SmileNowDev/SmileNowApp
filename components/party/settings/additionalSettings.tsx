@@ -73,8 +73,8 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 		({ eventId }) => archiveApi.create({ eventId }),
 		{
 			onSuccess: (data) => {
-				console.log("success - now this is archived");
-				console.log("data", data.data);
+				// console.log("success - now this is archived");
+				// console.log("data", data.data);
 				queryClient.invalidateQueries(["events"]);
 				// queryClient.setQueryData(["events"], (oldData) => ({
 				// 	...(oldData as IEvent[]).filter((event) => event._id !== eventId),
@@ -101,8 +101,8 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 		({ eventId }) => archiveApi.deleteArchive({ eventId }),
 		{
 			onSuccess: (data) => {
-				console.log("success - event brought back");
-				console.log("data", data.data);
+				// console.log("success - event brought back");
+				// console.log("data", data.data);
 				queryClient.setQueryData(["events"], (oldData) => ({
 					...(oldData as IEvent[]),
 					data,
@@ -122,11 +122,11 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 	);
 	async function toggleArchive() {
 		if (!archived) {
-			console.log("archiving a active party");
+			// console.log("archiving a active party");
 			//@ts-expect-error
 			archiveMutation.mutate({ eventId });
 		} else {
-			console.log("bringing an archived party back");
+			// console.log("bringing an archived party back");
 			//@ts-expect-error
 			unArchiveMutation.mutate({ eventId });
 		}
@@ -136,7 +136,7 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 		({ eventId }) => eventApi.deleteEvent({ eventId }),
 		{
 			onSuccess: (data) => {
-				console.log("success - event deleted");
+				// console.log("success - event deleted");
 				toast.show("Your party has been deleted", { placement: "top" });
 				//@ts-expect-error
 				navigation.navigate("Home");
@@ -168,7 +168,7 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 		({ eventId }) => eventApi.deleteEvent({ eventId }),
 		{
 			onSuccess: (data) => {
-				console.log("success - event deleted");
+				// console.log("success - event deleted");
 				toast.show("You have been removed from the event", {
 					placement: "top",
 				});

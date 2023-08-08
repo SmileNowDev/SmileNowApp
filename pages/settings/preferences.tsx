@@ -21,13 +21,11 @@ export default function Preferences({}) {
 		const [showTutorials, setShowTutorials] = useState(false);
 		useEffect(() => {
 			AsyncStorage.getItem("showPartyTutorials").then((value) => {
-				console.log({ value });
 				if (value) setShowTutorials(true);
 				else setShowTutorials(false);
 			});
 		}, []);
 		function toggleControls() {
-			console.log("clicked");
 			if (showTutorials) {
 				AsyncStorage.removeItem("showPartyTutorials").then(() => {
 					setShowTutorials(false);

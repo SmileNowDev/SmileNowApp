@@ -10,7 +10,6 @@ export default function WelcomeMessage({
 	key: string;
 	message: any;
 }) {
-	console.log("message", message);
 	return (
 		<View
 			key={message._id}

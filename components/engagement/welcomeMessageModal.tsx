@@ -32,21 +32,16 @@ export default function WelcomeMessageModal() {
 		let _messages = [];
 		for (let i = 0; i < messages.length; i++) {
 			let seen = await AsyncStorage.getItem(messages[i]._id);
-			console.log("Local value", seen);
 			if (seen) {
-				console.log("SEEN ALREADY", messages[i]._id);
 			} else {
-				console.log("NOT SEEN YET", messages[i]._id);
 				_messages.push(messages[i]);
 			}
 		}
-		console.log("messages", _messages);
 		setWelcomeMessages(_messages);
 		if (_messages.length > 0) setModalVisible(true);
 		else if (_messages.length === 0) setModalVisible(false);
 	};
 	async function readMessage(id: string) {
-		console.log("readMessage", id);
 		await AsyncStorage.setItem(id, "seen");
 		// filter out that recently read message from the list
 		let newMessages = welcomeMessages.filter((message) => message._id !== id);

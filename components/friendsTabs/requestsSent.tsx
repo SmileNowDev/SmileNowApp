@@ -73,8 +73,6 @@ export default function RequestsSentTab() {
 					scrollEnabled={false}
 					keyExtractor={(item) => item._id}
 					renderItem={({ item }) => {
-						console.log(item);
-
 						return (
 							<UserCard
 								profilePicture={item.recipient.src}
