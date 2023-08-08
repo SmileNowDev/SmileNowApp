@@ -1,5 +1,5 @@
 import { downloadImage } from "../../../utils/downloadView";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
 	View,
 	Text,
@@ -8,6 +8,7 @@ import {
 	Button,
 	Image,
 	Alert,
+	Switch,
 } from "react-native";
 import { ButtonStyles, Dim } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
@@ -16,6 +17,7 @@ import Icon from "../../core/icons";
 // @ts-expect-error
 import appStore from "../../../assets/appStore.png";
 import LogoBackground from "./logoBackground";
+import PostPage from "pages/post";
 const appStoreURL =
 	"https://apps.apple.com/us/app/smile-now-party-pics/id6449005895";
 export default function InvitePoster({
@@ -25,6 +27,7 @@ export default function InvitePoster({
 	code: string;
 	name: string;
 }) {
+	const [saveInk, setSaveInk] = useState(false);
 	const scale = 5;
 	const downloadRef = useRef(null);
 	const exampleRef = useRef(null);
@@ -88,7 +91,9 @@ export default function InvitePoster({
 							style={{
 								position: "absolute",
 								width: Dim.width * scale,
-								backgroundColor: Colors.primary + "30",
+								backgroundColor: saveInk
+									? Colors.border
+									: Colors.primary + "30",
 								height: 60 * scale,
 							}}></View>
 						<Text
@@ -130,6 +135,9 @@ export default function InvitePoster({
 								style={{
 									width: 126 * scale,
 									height: 36 * scale,
+									opacity: saveInk ? 0.3 : 1,
+									backgroundColor: Colors.text,
+									borderRadius: 4 * scale,
 								}}
 							/>
 							<View
@@ -160,7 +168,9 @@ export default function InvitePoster({
 								style={{
 									width: 126 * scale,
 									height: 36 * scale,
-									backgroundColor: Colors.secondary,
+									backgroundColor: saveInk
+										? Colors.secondary + "50"
+										: Colors.secondary,
 									borderRadius: 4 * scale,
 									justifyContent: "center",
 									alignItems: "center",
@@ -199,7 +209,12 @@ export default function InvitePoster({
 							3. Have Fun!
 						</Text>
 					</View>
-					<LogoBackground scale={scale} />
+					<View
+						style={{
+							opacity: saveInk ? 0 : 1,
+						}}>
+						<LogoBackground scale={scale} />
+					</View>
 				</View>
 			</View>
 		);
@@ -232,24 +247,40 @@ export default function InvitePoster({
 					}}>
 					<Poster />
 				</View>
-
-				<TouchableOpacity
-					style={{
-						position: "absolute",
-						bottom: 0,
-						...ButtonStyles.primary,
-						...ButtonStyles.buttonLarge,
-					}}
-					onPress={() => {
-						downloadImage(downloadRef);
-					}}>
-					<Text
+				<View style={{ position: "absolute", bottom: 0 }}>
+					<View
 						style={{
-							...ButtonStyles.buttonTextLarge,
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+							marginBottom: 10,
 						}}>
-						Save to Camera Roll
-					</Text>
-				</TouchableOpacity>
+						<Text
+							style={{
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+							}}>
+							Save Ink?
+						</Text>
+						<Switch value={saveInk} onValueChange={setSaveInk} />
+					</View>
+
+					<TouchableOpacity
+						style={{
+							...ButtonStyles.primary,
+							...ButtonStyles.buttonLarge,
+						}}
+						onPress={() => {
+							downloadImage(downloadRef);
+						}}>
+						<Text
+							style={{
+								...ButtonStyles.buttonTextLarge,
+							}}>
+							Save to Camera Roll
+						</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</>
 	);
