@@ -7,7 +7,8 @@ import Header from "../../components/layout/header";
 import eventApi from "../../api/post/event";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import ModalWrapper from "../../components/core/modalWrapper";
-import InvitePoster from "../../components/party/invitePoster";
+import InvitePoster from "../../components/party/engagement/invitePoster";
+import Icon from "../../components/core/icons";
 export default function InviteToParty({ route, navigation }) {
 	const { eventId } = route.params;
 	const [joinCode, setJoinCode] = useState("ABCDE");
@@ -36,6 +37,15 @@ export default function InviteToParty({ route, navigation }) {
 				visible={posterVisible}
 				setVisible={setPosterVisible}
 				type="center">
+				<TouchableOpacity
+					style={{
+						position: "absolute",
+						top: 10,
+						right: 10,
+					}}
+					onPress={() => {}}>
+					<Icon name="close" size={30} />
+				</TouchableOpacity>
 				<InvitePoster code={joinCode} name={name} />
 			</ModalWrapper>
 			<Header goBack title={`Invite to ${name}`} />

@@ -224,6 +224,7 @@ export default function PartyPage({ route, navigation }) {
 						) : (
 							<></>
 						)}
+
 						{postsLoading ? (
 							<View
 								style={{
@@ -244,7 +245,7 @@ export default function PartyPage({ route, navigation }) {
 							</View>
 						) : (
 							<>
-								{!postsData ? (
+								{!posts.length ? (
 									<EmptyPartyMessage isHost={data.isHost} />
 								) : (
 									<>

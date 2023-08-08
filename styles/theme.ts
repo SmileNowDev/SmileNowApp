@@ -25,6 +25,10 @@ export const Fonts = {
 		fontFamily: "Exo_500Medium",
 		fontSize: 30,
 	},
+	titleBold: {
+		fontFamily: "Exo_700Bold",
+		fontSize: 30,
+	},
 	subTitle: {
 		fontFamily: "Exo_400Regular",
 		fontSize: 24,

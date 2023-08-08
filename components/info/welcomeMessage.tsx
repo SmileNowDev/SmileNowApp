@@ -1,22 +1,55 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { GlobalStyles } from "../../styles/styles";
+import { Dim } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
+import AnimatedLottieView from "lottie-react-native";
+import wave from "../../assets/animations/wave.json";
 export default function WelcomeMessage() {
 	return (
-		<View style={{ padding: 10 }}>
+		<View style={{ paddingBottom: 150 }}>
 			<View style={styles.container}>
-				<Text
+				<View
 					style={{
-						fontFamily: Fonts.title.fontFamily,
-						fontSize: Fonts.title.fontSize,
+						height: 100,
+						width: "100%",
+						position: "relative",
 					}}>
-					Welcome to Smile Now!
-				</Text>
+					<Text
+						style={{
+							position: "absolute",
+							top: 30,
+							left: 0,
+							right: 0,
+							bottom: 0,
+							textAlign: "center",
+							zIndex: 2,
+							fontFamily: Fonts.titleBold.fontFamily,
+							fontSize: Fonts.titleBold.fontSize + 10,
+							color: Colors.text,
+						}}>
+						Welcome!
+					</Text>
+					<AnimatedLottieView
+						source={wave}
+						autoPlay
+						speed={1.5}
+						loop
+						style={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							width: Dim.width,
+							height: 200,
+							marginTop: -25,
+						}}
+					/>
+				</View>
 				<Text
 					style={{
+						marginTop: -10,
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize,
+						color: Colors.textSecondary,
 					}}>
 					Here's how it all works:
 				</Text>
@@ -26,6 +59,8 @@ export default function WelcomeMessage() {
 							style={{
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
+								...styles.number,
+								backgroundColor: Colors.primary,
 							}}>
 							1.
 						</Text>
@@ -38,6 +73,8 @@ export default function WelcomeMessage() {
 							style={{
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
+								...styles.number,
+								backgroundColor: Colors.tertiary,
 							}}>
 							2.
 						</Text>
@@ -49,6 +86,8 @@ export default function WelcomeMessage() {
 							style={{
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
+								...styles.number,
+								backgroundColor: Colors.secondary,
 							}}>
 							3.
 						</Text>
@@ -56,21 +95,14 @@ export default function WelcomeMessage() {
 							When its your turn, get notified to take a photo
 						</Text>
 					</View>
-					<View style={styles.step}>
-						<Text
-							style={{
-								...styles.description,
-								color: Colors.textSecondary,
-								marginLeft: 25,
-							}}>
-							We send notifications to people one at a time
-						</Text>
-					</View>
+
 					<View style={styles.step}>
 						<Text
 							style={{
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
+								...styles.number,
+								backgroundColor: Colors.success,
 							}}>
 							4.
 						</Text>
@@ -86,31 +118,42 @@ export default function WelcomeMessage() {
 
 const styles = StyleSheet.create({
 	container: {
-		...GlobalStyles.Container,
-		
-		marginTop: 50,
+		overflow: "hidden",
+		alignItems: "center",
+		marginTop: 20,
 	},
 	stepsContainer: {
-		marginTop: 20,
 		width: "100%",
 		display: "flex",
 		overflow: "hidden",
 		gap: 10,
+		paddingVertical: 20,
+		paddingHorizontal: 20,
 	},
 
 	step: {
 		width: "100%",
 		display: "flex",
-		flexDirection: "row",
-		alignItems: "flex-start",
+		flexDirection: "column",
+		alignItems: "center",
 		justifyContent: "flex-start",
 		gap: 10,
+		marginTop: 20,
 	},
 	description: {
 		fontFamily: Fonts.body.fontFamily,
-		fontSize: Fonts.body.fontSize,
+		fontSize: Fonts.body.fontSize + 2,
+		textAlign: "center",
 		color: Colors.text,
-
 		flex: 1,
+	},
+	number: {
+		height: 40,
+		width: 40,
+		borderRadius: 20,
+		overflow: "hidden",
+		textAlign: "center",
+		alignContent: "center",
+		lineHeight: 40,
 	},
 });

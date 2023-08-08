@@ -1,75 +1,101 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { GlobalStyles } from "../../styles/styles";
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Image, Alert } from "react-native";
+import { ButtonStyles, GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
-
+// @ts-expect-error
+import logo from "../../assets/logo_color.png";
+import AnimatedLottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TouchableOpacity } from "react-native-gesture-handler";
 export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
-	if (isHost) {
+	const [showTutorials, setShowTutorials] = useState(false);
+	useEffect(() => {
+		AsyncStorage.getItem("showPartyTutorials").then((value) => {
+			console.log({ value });
+			if (value) setShowTutorials(true);
+			else setShowTutorials(false);
+		});
+	}, []);
+
+	if (isHost && showTutorials) {
 		return (
-			<View style={styles.container}>
-				<View
-					style={{ flexDirection: "row", justifyContent: "flex-end", gap: 5 }}>
-					<Text
+			<>
+				<View style={styles.container}>
+					<View
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							textAlign: "right",
+							alignItems: "center",
+							gap: 20,
+							marginVertical: 20,
 						}}>
-						Access these options on the Top Right
-					</Text>
-					<Icon
-						name="arrow-up-right"
-						type="MaterialCommunity"
-						size={25}
+						<Image source={logo} style={{ width: 60, height: 60 }} />
+
+						<Text
+							style={{
+								fontFamily: Fonts.subTitle.fontFamily,
+								fontSize: Fonts.subTitle.fontSize,
+							}}>
+							Welcome to your party!
+						</Text>
+					</View>
+					<View style={styles.step}>
+						<Icon name="people" size={25} color={Colors.textSecondary} />
+						<Text
+							style={{
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+							}}>
+							See Your Attendees
+						</Text>
+					</View>
+					<View style={styles.step}>
+						<Icon name="qr-code" size={25} color={Colors.textSecondary} />
+						<Text
+							style={{
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+							}}>
+							Invite your friends to join
+						</Text>
+					</View>
+					<View style={styles.step}>
+						<Icon
+							name="settings"
+							type="Feather"
+							size={25}
+							color={Colors.textSecondary}
+						/>
+						<Text
+							style={{
+								fontFamily: Fonts.body.fontFamily,
+								fontSize: Fonts.body.fontSize,
+							}}>
+							Edit the name or notification settings
+						</Text>
+					</View>
+					<TouchableOpacity
 						style={{
-							transform: [{ translateY: -10 }],
+							...ButtonStyles.button,
+							marginTop: 20,
 						}}
-						color={Colors.textSecondary}
-					/>
-				</View>
-				<Text
-					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-					}}>
-					Let's get this party started!
-				</Text>
-				<View style={styles.step}>
-					<Icon name="people" size={25} color={Colors.textSecondary} />
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
+						onPress={() => {
+							AsyncStorage.setItem("showPartyTutorial", "false");
+							setShowTutorials(false);
+							Alert.alert(
+								"We won't show you this again",
+								"Go to settings to change this"
+							);
 						}}>
-						See Your Attendees
-					</Text>
+						<Text
+							style={{
+								...ButtonStyles.buttonText,
+								color: Colors.textSecondary,
+							}}>
+							Don't Show Again
+						</Text>
+					</TouchableOpacity>
 				</View>
-				<View style={styles.step}>
-					<Icon name="qr-code" size={25} color={Colors.textSecondary} />
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}>
-						Invite your friends to join
-					</Text>
-				</View>
-				<View style={styles.step}>
-					<Icon
-						name="settings"
-						type="Feather"
-						size={25}
-						color={Colors.textSecondary}
-					/>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}>
-						Edit the name or notification settings
-					</Text>
-				</View>
-			</View>
+			</>
 		);
 	} else {
 		return (
@@ -78,14 +104,22 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize,
+						textAlign: "center",
 					}}>
-					This party is just started!
+					This party is just getting started!
 				</Text>
+				<AnimatedLottieView
+					source={require("../../assets/animations/no-photos.json")}
+					autoPlay
+					loop
+					style={{ width: 200, height: 200 }}
+				/>
 
 				<Text
 					style={{
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
+						textAlign: "center",
 					}}>
 					Who's going to take the first picture?
 				</Text>
@@ -95,8 +129,14 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 }
 const styles = StyleSheet.create({
 	container: {
-		...GlobalStyles.Container,
+		...GlobalStyles.shadow,
+		backgroundColor: Colors.background,
 		marginTop: 50,
+		justifyContent: "center",
+		alignItems: "center",
+		paddingVertical: 20,
+		borderRadius: 20,
+		paddingHorizontal: 20,
 	},
 	stepsContainer: {
 		marginTop: 20,

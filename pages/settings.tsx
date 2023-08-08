@@ -13,33 +13,8 @@ import Header from "../components/layout/header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../providers/provider";
 import authApi from "../api/user/auth";
+import SettingButton from "../components/settings/settingsButton";
 export default function Settings({ navigation }) {
-	type SettingsButtonProps = {
-		icon: React.ReactNode;
-		text: string;
-		onPress: () => void;
-		rightElement?: React.ReactNode;
-	};
-	function SettingButton({
-		icon,
-		text,
-		onPress,
-		rightElement,
-	}: SettingsButtonProps) {
-		return (
-			<TouchableOpacity onPress={onPress}>
-				<View style={styles.settingButton}>
-					{icon && icon}
-					<View style={styles.textContainer}>
-						<Text style={styles.text}>{text}</Text>
-					</View>
-					{rightElement ? (
-						<View style={styles.rightElementContainer}>{rightElement}</View>
-					) : null}
-				</View>
-			</TouchableOpacity>
-		);
-	}
 	const { setUserId, setLoggedIn } = useContext(Context);
 
 	async function logout() {
@@ -77,16 +52,30 @@ export default function Settings({ navigation }) {
 			icon: <Icon name="block" />,
 			text: "Blocked Users",
 			onPress: () => navigation.navigate("Blocked"),
+			rightElement: (
+				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
+			),
 		},
 		{
 			icon: <Icon name="archive" />,
 			text: "Event Archive",
 			onPress: () => navigation.navigate("Archive"),
+			rightElement: (
+				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
+			),
 		},
 		{
 			icon: <Icon name="delete" type="MaterialCommunity" />,
 			text: "Delete Account",
 			onPress: () => handleConfirmDelete(),
+		},
+		{
+			icon: <Icon name="person" />,
+			text: "Preferences",
+			onPress: () => navigation.navigate("Preferences"),
+			rightElement: (
+				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
+			),
 		},
 		{
 			icon: <Icon name="logout" type="MaterialCommunity" />,
@@ -103,24 +92,3 @@ export default function Settings({ navigation }) {
 		</SafeAreaView>
 	);
 }
-
-const styles = StyleSheet.create({
-	settingButton: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		padding: 16,
-		gap: 10,
-		backgroundColor: Colors.foreground,
-	},
-
-	textContainer: {
-		flex: 1,
-	},
-	text: {
-		fontFamily: Fonts.body.fontFamily,
-		fontSize: Fonts.body.fontSize,
-		color: Colors.text,
-	},
-	rightElementContainer: {},
-});

@@ -30,6 +30,7 @@ import PartySettings from "../pages/party/partySettings";
 import ForgotPassPage from "../pages/auth/forgotPass";
 import VerifyPassPage from "../pages/auth/verifyForgotPass";
 import ArchivePage from "../pages/settings/archive";
+import Preferences from "../pages/settings/preferences";
 
 export type RootStackParamList = {
 	Splash: undefined;
@@ -53,6 +54,7 @@ export type RootStackParamList = {
 	AccountDetails: undefined;
 	Settings: undefined;
 	Report: { type: string; id: string };
+	Preferences: undefined;
 	Blocked: undefined;
 	VerifyPass: { phone: string };
 	ForgotPass: undefined;
@@ -118,6 +120,7 @@ export default function RootNavigator() {
 			<Stack.Screen name="Report" component={ReportPage} />
 			<Stack.Screen name="Settings" component={Settings} />
 			<Stack.Screen name="Blocked" component={BlockedUsersPage} />
+			<Stack.Screen name="Preferences" component={Preferences} />
 			<Stack.Screen name="ForgotPass" component={ForgotPassPage} />
 			<Stack.Screen name="VerifyPass" component={VerifyPassPage} />
 			<Stack.Screen name="Archive" component={ArchivePage} />
