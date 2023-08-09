@@ -33,21 +33,25 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 	else if (isHost && isActive) return <></>;
 	else {
 		return (
-			<LinearGradient
-				pointerEvents="none"
-				colors={["transparent", Colors.textSecondary]}
-				locations={[0.15, 1]}
-				style={{
-					position: "absolute",
-					bottom: 0,
-					left: 0,
-					right: 0,
-					height: Dim.height * 0.45,
-					zIndex: 40,
-				}}>
+			<>
+				<LinearGradient
+					pointerEvents="none"
+					colors={["transparent", Colors.textSecondary]}
+					locations={[0.15, 1]}
+					style={{
+						position: "absolute",
+						bottom: 0,
+						left: 0,
+						right: 0,
+						height: Dim.height * 0.45,
+						zIndex: 40,
+					}}
+				/>
 				<View
 					style={{
 						...GlobalStyles.footerButtonContainer,
+						bottom: 40,
+						zIndex: 1000,
 					}}>
 					<View style={{ paddingBottom: 60 }}>
 						<View
@@ -110,7 +114,7 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 						</TouchableOpacity>
 					</View>
 				</View>
-			</LinearGradient>
+			</>
 		);
 	}
 }

@@ -346,7 +346,7 @@ export default function CreatePartyPage({ route, navigation }) {
 					</View>
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate("PartySettings", { eventId });
+							navigation.navigate("PartySettings", { eventId, isHost: true });
 						}}
 						style={{
 							zIndex: 50,

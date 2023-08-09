@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, TouchableOpacity, View, Text } from "react-native";
 import Header from "../../components/layout/header";
 import { GlobalStyles, Dim } from "../../styles/styles";
 import Icon from "../../components/core/icons";
@@ -16,7 +16,7 @@ type PartyDetailProps = StackScreenProps<RootStackParamList, "PartySettings">;
 
 export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	const queryClient = useQueryClient();
-	const { eventId } = route.params;
+	const { eventId, isHost } = route.params;
 	const data: IEvent = queryClient.getQueryData(["event", eventId]);
 
 	function handleRefresh() {
@@ -37,7 +37,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 			<ScreenWrapper scrollEnabled={true} onRefresh={handleRefresh}>
 				{/* Name and Description */}
 				<NameAndDescription
-					isHost={data.isHost}
+					isHost={isHost || data.isHost}
 					title={data.title}
 					description={data.description}
 					id={data._id}
@@ -49,13 +49,13 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 					title={data.title}
 					description={data.description}
 					notificationFrequency={data.notificationFrequency}
-					isHost={data.isHost}
+					isHost={data.isHost || isHost}
 					muted={data.muted}
 					active={data.isActive}
 				/>
 				<View style={GlobalStyles.hr} />
 				<AdditionalSettings
-					isHost={data.isHost}
+					isHost={data.isHost || isHost}
 					archived={data.archived}
 					eventId={data._id}
 				/>

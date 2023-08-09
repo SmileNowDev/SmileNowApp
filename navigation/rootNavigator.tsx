@@ -43,7 +43,7 @@ export type RootStackParamList = {
 	InviteToParty: { eventId: string };
 	PartyAttendees: { eventId: string; isHost: boolean; name: string };
 	Friends: undefined;
-	PartySettings: { eventId: string };
+	PartySettings: { eventId: string; isHost?: boolean };
 	Camera: { eventId: string };
 	TakeProfilePicture: undefined;
 	Profile: undefined;

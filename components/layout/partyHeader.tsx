@@ -80,7 +80,7 @@ export default function PartyHeader({
 				<TouchableOpacity
 					onPress={() =>
 						// @ts-expect-error
-						navigation.navigate("PartySettings", { eventId })
+						navigation.navigate("PartySettings", { eventId, isHost })
 					}>
 					<Icon
 						name="settings"

@@ -29,7 +29,7 @@ import {
 } from "@tanstack/react-query";
 import ActivateParty from "../../components/party/activateParty";
 import TakePhoto from "../../components/party/takePhoto";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { imageHeight } from "../post";
 import NewPost from "../../components/party/newPosts";
 import PostingIndicator from "../../components/party/postingIndicator";
@@ -178,7 +178,11 @@ export default function PartyPage({ route, navigation }) {
 					eventId={eventId}
 					isHost={data.isHost}
 				/>
-				<TakePhoto eventId={eventId} canPost={data.canPost} />
+				{data.isActive ? (
+					<TakePhoto eventId={eventId} canPost={data.canPost} />
+				) : (
+					<></>
+				)}
 				<ScreenWrapper
 					onRefresh={refetch}
 					loading={false}
