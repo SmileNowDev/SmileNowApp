@@ -17,7 +17,7 @@ export default function WelcomeMessageModal() {
 		if (result.ok) {
 			return result.data as any[];
 		} else {
-			console.log(result.problem);
+			// console.log(result.problem);
 		}
 	};
 	const getNewMessages = async () => {
@@ -82,14 +82,16 @@ export default function WelcomeMessageModal() {
 							readMessage(message._id);
 							setModalVisible(false);
 						}}
-						type={"center"}>
+						type={"center"}
+					>
 						<View
 							style={{
 								position: "relative",
 								height: "100%",
 								borderRadius: 10,
 								maxHeight: Dim.height - 160,
-							}}>
+							}}
+						>
 							<TouchableOpacity
 								onPress={() => {
 									readMessage(message._id);
@@ -101,8 +103,9 @@ export default function WelcomeMessageModal() {
 									top: 0,
 									right: 0,
 									padding: 10,
-								}}>
-								<Icon name="close" size={30} color={Colors.textSecondary} />
+								}}
+							>
+								<Icon name='close' size={30} color={Colors.textSecondary} />
 							</TouchableOpacity>
 							<View
 								style={{
@@ -112,18 +115,21 @@ export default function WelcomeMessageModal() {
 									position: "absolute",
 									bottom: 0,
 									zIndex: 100,
-								}}>
+								}}
+							>
 								<TouchableOpacity
 									onPress={() => readMessage(message._id)}
 									style={{
 										width: "80%",
 										...ButtonStyles.buttonLarge,
 										backgroundColor: Colors.primary,
-									}}>
+									}}
+								>
 									<Text
 										style={{
 											...ButtonStyles.buttonTextLarge,
-										}}>
+										}}
+									>
 										{message.buttonCTA || welcomeMessages.length === 1
 											? "Close"
 											: "Next"}
@@ -136,11 +142,13 @@ export default function WelcomeMessageModal() {
 											style={{
 												...ButtonStyles.button,
 												marginTop: 10,
-											}}>
+											}}
+										>
 											<Text
 												style={{
 													fontSize: 15,
-												}}>
+												}}
+											>
 												Close All
 											</Text>
 										</TouchableOpacity>
@@ -152,7 +160,8 @@ export default function WelcomeMessageModal() {
 							<View
 								style={{
 									maxHeight: Dim.height - 160,
-								}}>
+								}}
+							>
 								<View
 									style={{
 										borderRadius: 20,
@@ -161,7 +170,8 @@ export default function WelcomeMessageModal() {
 										alignItems: "center",
 										paddingTop: 30,
 										height: Dim.height - 160,
-									}}>
+									}}
+								>
 									<WelcomeMessage key={message._id + "1"} message={message} />
 								</View>
 							</View>

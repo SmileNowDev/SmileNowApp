@@ -20,7 +20,7 @@ export default function JoinPartyPage({ setVisible }) {
 
 	async function joinEvent(joinCode: string) {
 		const result = await attendeeApi.join({ code: joinCode });
-		console.log({ result });
+		// console.log({ result });
 		if (result.ok) {
 			setVisible(false);
 			//@ts-expect-error
@@ -58,7 +58,7 @@ export default function JoinPartyPage({ setVisible }) {
 				<Text>Enter the join code</Text>
 				<TextInput
 					value={joinCode}
-					placeholder="Code"
+					placeholder='Code'
 					placeholderTextColor={Colors.textSecondary + "50"}
 					onChangeText={setJoinCode}
 					style={{
@@ -87,7 +87,8 @@ export default function JoinPartyPage({ setVisible }) {
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Or Scan the QR Code
 				</Text>
 				{joinCode.length === 4 ? (
@@ -97,7 +98,8 @@ export default function JoinPartyPage({ setVisible }) {
 							marginTop: 50,
 							...ButtonStyles.buttonLarge,
 							...ButtonStyles.primary,
-						}}>
+						}}
+					>
 						<Text style={{ ...ButtonStyles.buttonTextLarge }}>
 							Join With Code
 						</Text>

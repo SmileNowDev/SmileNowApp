@@ -58,7 +58,7 @@ export default function NotificationsSettings({
 				}));
 			},
 			onError: (error) => {
-				console.log(error);
+				// console.log(error);
 				toast.show("Something went wrong, try again later", {
 					type: "danger",
 				});
@@ -89,7 +89,7 @@ export default function NotificationsSettings({
 			}));
 		},
 		onError: (error) => {
-			console.log(error);
+			// console.log(error);
 			toast.show("Something went wrong, try again later", {
 				type: "danger",
 			});
@@ -128,7 +128,7 @@ export default function NotificationsSettings({
 				}
 			},
 			onError: (error) => {
-				console.log(error);
+				// console.log(error);
 				toast.show("Something went wrong, try again later", {
 					type: "danger",
 				});
@@ -152,13 +152,15 @@ export default function NotificationsSettings({
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
-				}}>
+				}}
+			>
 				<Text
 					style={{
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.button.fontSize,
 						marginTop: 5,
-					}}>
+					}}
+				>
 					Notification Settings
 				</Text>
 				<QueryLoadingStatus
@@ -175,20 +177,22 @@ export default function NotificationsSettings({
 					justifyContent: "flex-start",
 					padding: 5,
 					marginTop: 10,
-				}}>
+				}}
+			>
 				{notificationStatus ? (
 					<View>
 						<PulseIndicator color={Colors.primary} size={20} />
 					</View>
 				) : (
-					<Icon name="circle" size={20} color={Colors.textSecondary} />
+					<Icon name='circle' size={20} color={Colors.textSecondary} />
 				)}
 				<View style={{ flex: 1 }}>
 					<Text
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
-						}}>
+						}}
+					>
 						This party is {notificationStatus ? "active" : "inactive"}
 					</Text>
 					<Text
@@ -197,7 +201,8 @@ export default function NotificationsSettings({
 							fontFamily: Fonts.small.fontFamily,
 							fontSize: Fonts.small.fontSize,
 							color: Colors.textSecondary,
-						}}>
+						}}
+					>
 						{notificationStatus
 							? "Notifications are being sent out randomly every few minutes"
 							: "No notifications are being sent out right now, activate the party to start notifications"}
@@ -224,7 +229,8 @@ export default function NotificationsSettings({
 					justifyContent: "flex-start",
 					padding: 5,
 					marginTop: 10,
-				}}>
+				}}
+			>
 				<Icon
 					name={isMuted ? "notifications-off" : "notifications"}
 					size={20}
@@ -235,7 +241,8 @@ export default function NotificationsSettings({
 						style={{
 							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize,
-						}}>
+						}}
+					>
 						Your notifications are {isMuted ? "muted" : "on"}
 					</Text>
 					<Text
@@ -243,7 +250,8 @@ export default function NotificationsSettings({
 							fontFamily: Fonts.small.fontFamily,
 							fontSize: Fonts.small.fontSize,
 							color: Colors.textSecondary,
-						}}>
+						}}
+					>
 						{isMuted
 							? "You will not receive any notifications from this party, even if its active"
 							: "You will receive notifications from this party when the party is active"}
@@ -267,14 +275,16 @@ export default function NotificationsSettings({
 							justifyContent: "space-between",
 							alignItems: "center",
 							width: "100%",
-						}}>
+						}}
+					>
 						<Text
 							style={{
 								fontFamily: Fonts.subTitle.fontFamily,
 								fontSize: Fonts.button.fontSize,
 
 								marginTop: 5,
-							}}>
+							}}
+						>
 							Notification Frequency: {newNotificationFrequency}
 						</Text>
 						<QueryLoadingStatus
@@ -284,7 +294,7 @@ export default function NotificationsSettings({
 					</View>
 					<View style={styles.frequencyContainer}>
 						<NotificationFrequencyButton
-							mode="fast"
+							mode='fast'
 							notificationFrequency={newNotificationFrequency}
 							setNotificationFrequency={handleFrequencyChange}
 							color={Colors.tertiary}
@@ -292,20 +302,20 @@ export default function NotificationsSettings({
 							subtext={"Every 5-10 Minutes"}
 							icon={
 								<Icon
-									name="rabbit"
+									name='rabbit'
 									size={30}
 									color={
 										newNotificationFrequency === "fast"
 											? Colors.tertiaryDark
 											: Colors.textSecondary
 									}
-									type="MaterialCommunity"
+									type='MaterialCommunity'
 								/>
 							}
 							disabled={notificationFrequencyMutation.isLoading}
 						/>
 						<NotificationFrequencyButton
-							mode="normal"
+							mode='normal'
 							notificationFrequency={newNotificationFrequency}
 							setNotificationFrequency={handleFrequencyChange}
 							color={Colors.primary}
@@ -313,7 +323,7 @@ export default function NotificationsSettings({
 							subtext={"Every 15-30 Minutes"}
 							icon={
 								<Icon
-									name="face"
+									name='face'
 									size={30}
 									color={
 										newNotificationFrequency === "normal"
@@ -325,7 +335,7 @@ export default function NotificationsSettings({
 							disabled={notificationFrequencyMutation.isLoading}
 						/>
 						<NotificationFrequencyButton
-							mode="slow"
+							mode='slow'
 							notificationFrequency={newNotificationFrequency}
 							setNotificationFrequency={handleFrequencyChange}
 							color={Colors.secondary}
@@ -333,14 +343,14 @@ export default function NotificationsSettings({
 							subtext={"Every 30-60 Minutes"}
 							icon={
 								<Icon
-									name="tortoise"
+									name='tortoise'
 									size={30}
 									color={
 										newNotificationFrequency === "slow"
 											? Colors.secondaryDark
 											: Colors.textSecondary
 									}
-									type="MaterialCommunity"
+									type='MaterialCommunity'
 								/>
 							}
 							disabled={notificationFrequencyMutation.isLoading}
