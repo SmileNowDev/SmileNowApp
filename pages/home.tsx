@@ -134,7 +134,7 @@ export default function HomePage({ navigation }) {
 						}}>
 						<PartyLoading
 							variant="white_backdrop"
-							message={"Getting all your pictures"}
+							message={"Gathering your parties"}
 						/>
 					</View>
 				) : (

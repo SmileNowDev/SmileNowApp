@@ -190,7 +190,7 @@ export default function PartyPage({ route, navigation }) {
 					}}
 					bottomLoading={isFetchingNextPage}>
 					<>
-						{!postsLoading ? (
+						{postsLoading ? (
 							<View
 								style={{
 									position: "absolute",
