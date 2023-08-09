@@ -31,10 +31,20 @@ export default function WelcomeMessage({
 						);
 					} else if (content.type === "image") {
 						return (
-							<Image
-								source={{ uri: content.content }}
-								style={{ width: 200, height: 200 }}
-							/>
+							<View
+								style={{
+									justifyContent: "center",
+									flexDirection: "row",
+								}}>
+								<Image
+									source={{ uri: content.content }}
+									style={{
+										...content.style,
+										width: content.style.width || 200,
+										height: content.style.height || 200,
+									}}
+								/>
+							</View>
 						);
 					}
 				})}

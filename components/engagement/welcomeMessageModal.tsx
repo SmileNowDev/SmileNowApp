@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import {
-	TouchableOpacity,
-	Text,
-	View,
-	Touchable,
-	ScrollView,
-	Button,
-} from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 import engagementApi from "../../api/user/engagement";
 import WelcomeMessage from "./welcomeMessage";
 import ModalWrapper from "../core/modalWrapper";
@@ -55,25 +48,25 @@ export default function WelcomeMessageModal() {
 		setWelcomeMessages([]);
 		setModalVisible(false);
 	}
-	// async function handleClearLocalStorage() {
-	// 	let messages = await handleGetMessages();
-	// 	for (let i = 0; i < messages.length; i++) {
-	// 		await AsyncStorage.removeItem(messages[i]._id);
-	// 	}
-	// 	console.log(`cleared ${messages.length} messages from local storage`);
-	// }
+	async function handleClearLocalStorage() {
+		let messages = await handleGetMessages();
+		for (let i = 0; i < messages.length; i++) {
+			await AsyncStorage.removeItem(messages[i]._id);
+		}
+		console.log(`cleared ${messages.length} messages from local storage`);
+	}
 	useEffect(() => {
 		getNewMessages();
 	}, []);
 	if (welcomeMessages.length === 0)
 		return (
 			<>
-				{/* <TouchableOpacity
+				<TouchableOpacity
 					onPress={() => {
 						handleClearLocalStorage();
 					}}>
 					<Text>Clear Local Storage</Text>
-				</TouchableOpacity> */}
+				</TouchableOpacity>
 			</>
 		);
 	return (
