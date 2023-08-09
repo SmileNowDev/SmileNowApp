@@ -16,7 +16,7 @@ export default function PartyHeader({
 	name,
 	isHost,
 }: HeaderProps) {
-	console.log({ title, eventId, name, isHost });
+	// console.log({ title, eventId, name, isHost });
 	const navigation = useNavigation();
 	return (
 		<View
