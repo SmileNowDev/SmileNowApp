@@ -41,13 +41,15 @@ export default function FriendsPage({ navigation }) {
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "space-between",
-				}}>
+				}}
+			>
 				<Text
 					style={{
 						fontFamily: Fonts.body.fontFamily,
 						fontSize: Fonts.body.fontSize,
 						color: Colors.textSecondary,
-					}}>
+					}}
+				>
 					Smile Now is more fun with friends!
 				</Text>
 				<TouchableOpacity
@@ -56,9 +58,10 @@ export default function FriendsPage({ navigation }) {
 						...ButtonStyles.primary,
 						paddingLeft: 25,
 					}}
-					onPress={() => navigation.navigate("Home")}>
+					onPress={() => navigation.navigate("Home")}
+				>
 					<Text style={{ ...ButtonStyles.buttonText }}>Back</Text>
-					<Icon name="chevron-right" size={20} color={Colors.background} />
+					<Icon name='chevron-right' size={20} color={Colors.background} />
 				</TouchableOpacity>
 			</View>
 
@@ -75,24 +78,25 @@ export default function FriendsPage({ navigation }) {
 					tabBarLabelStyle: {
 						textTransform: "none",
 					},
-				}}>
+				}}
+			>
 				<Tab.Screen
-					name="Add Friends"
+					name='Add Friends'
 					component={AddFriendsTab}
 					options={{
 						tabBarIcon: () => (
-							<Icon name="add" size={20} color={Colors.textSecondary} />
+							<Icon name='add' size={20} color={Colors.textSecondary} />
 						),
 					}}
 				/>
 				<Tab.Screen
-					name="Friend Requests"
+					name='Friend Requests'
 					component={RequestsTab}
 					options={{
 						tabBarIcon: () => (
 							<View>
 								<Icon
-									name="move-to-inbox"
+									name='move-to-inbox'
 									size={20}
 									color={Colors.textSecondary}
 								/>
@@ -108,14 +112,16 @@ export default function FriendsPage({ navigation }) {
 											right: 0,
 											marginRight: -7,
 											marginTop: -7,
-										}}>
+										}}
+									>
 										<Text
 											style={{
 												color: Colors.background,
 												fontSize: 12,
 												textAlign: "center",
 												fontFamily: Fonts.subTitle.fontFamily,
-											}}>
+											}}
+										>
 											{requestData}
 										</Text>
 									</View>
@@ -125,12 +131,12 @@ export default function FriendsPage({ navigation }) {
 					}}
 				/>
 				<Tab.Screen
-					name="My Friends"
+					name='My Friends'
 					component={MyFriendsTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name="account-heart"
+								name='account-heart'
 								type={"MaterialCommunity"}
 								size={20}
 								color={Colors.textSecondary}
@@ -139,14 +145,14 @@ export default function FriendsPage({ navigation }) {
 					}}
 				/>
 				<Tab.Screen
-					name="Requests Sent"
+					name='Requests Sent'
 					component={RequestsSentTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name="send"
+								name='send'
 								size={20}
-								type="FontAwesome"
+								type='FontAwesome'
 								color={Colors.textSecondary}
 							/>
 						),
