@@ -57,8 +57,8 @@ export default function CameraPage({ route, navigation }) {
 		(formData) => userApi.uploadAvatar({ formData }),
 		{
 			onSuccess: (data) => {
-				console.log("pfp uploaded");
-				console.log("postId", data.data);
+				// console.log("pfp uploaded");
+				// console.log("postId", data.data);
 				// uploadImage();
 				// uploadImage(data._id);
 				// let userData = queryClient.getQueryData(["user", userId]);
@@ -74,7 +74,7 @@ export default function CameraPage({ route, navigation }) {
 				});
 			},
 			onError: (error) => {
-				console.log("error", error);
+				// console.log("error", error);
 				Alert.alert(
 					"Image Upload Failed",
 					"Oops, something went wrong, please try again later."
@@ -94,8 +94,7 @@ export default function CameraPage({ route, navigation }) {
 
 	async function handleSave() {
 		let formData = createFormData(photo);
-		//@ts-expect-error
-		console.log("formData", formData._parts[0][1]);
+		// console.log("formData", formData._parts[0][1]);
 		// @ts-expect-error
 		mutate(formData, {
 			onSuccess: (data) => {

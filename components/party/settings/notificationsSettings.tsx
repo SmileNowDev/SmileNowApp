@@ -111,10 +111,10 @@ export default function NotificationsSettings({
 			}),
 		{
 			onSuccess: (data) => {
-				console.log(data.data);
+				// console.log(data.data);
 				let _newFrequency = newNotificationFrequency;
 				// console.log("muted was:", isMuted);
-				console.log("on success - frequency: ", _newFrequency);
+				// console.log("on success - frequency: ", _newFrequency);
 
 				let message = `Your notifications are now on ${_newFrequency}`;
 				toast.show(message, {

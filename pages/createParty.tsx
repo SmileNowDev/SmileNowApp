@@ -125,7 +125,6 @@ export default function CreatePartyPage({ route, navigation }) {
 			lottieProgress.setValue(0);
 			line3Scale.setValue(1);
 			skipAnimationOffsetY.setValue(-Dim.height);
-			console.log("done");
 		});
 	}, []);
 	if (!data) {
@@ -275,7 +274,6 @@ export default function CreatePartyPage({ route, navigation }) {
 							height: Dim.height,
 						}}
 						onPress={() => {
-							console.log("pressed");
 							line1OffsetY.stopAnimation();
 							line2OffsetY.stopAnimation();
 							line3OffsetY.stopAnimation();

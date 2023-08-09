@@ -1,34 +1,19 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Dim } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import AnimatedLottieView from "lottie-react-native";
 import wave from "../../assets/animations/wave.json";
 export default function WelcomeMessage() {
 	return (
-		<View style={{ paddingBottom: 150 }}>
-			<View style={styles.container}>
+		<ScrollView style={{ paddingBottom: 150 }}>
+			<View style={{ ...styles.container }}>
 				<View
 					style={{
 						height: 100,
 						width: "100%",
 						position: "relative",
 					}}>
-					<Text
-						style={{
-							position: "absolute",
-							top: 30,
-							left: 0,
-							right: 0,
-							bottom: 0,
-							textAlign: "center",
-							zIndex: 2,
-							fontFamily: Fonts.titleBold.fontFamily,
-							fontSize: Fonts.titleBold.fontSize + 10,
-							color: Colors.text,
-						}}>
-						Welcome!
-					</Text>
 					<AnimatedLottieView
 						source={wave}
 						autoPlay
@@ -46,6 +31,19 @@ export default function WelcomeMessage() {
 				</View>
 				<Text
 					style={{
+						left: 0,
+						right: 0,
+						bottom: 0,
+						textAlign: "center",
+						zIndex: 2,
+						fontFamily: Fonts.titleBold.fontFamily,
+						fontSize: Fonts.titleBold.fontSize + 10,
+						color: Colors.text,
+					}}>
+					Welcome!
+				</Text>
+				<Text
+					style={{
 						marginTop: -10,
 						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize,
@@ -60,6 +58,7 @@ export default function WelcomeMessage() {
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
 								...styles.number,
+								color: Colors.background,
 								backgroundColor: Colors.primary,
 							}}>
 							1.
@@ -74,6 +73,7 @@ export default function WelcomeMessage() {
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
 								...styles.number,
+								color: Colors.background,
 								backgroundColor: Colors.tertiary,
 							}}>
 							2.
@@ -87,6 +87,7 @@ export default function WelcomeMessage() {
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
 								...styles.number,
+								color: Colors.background,
 								backgroundColor: Colors.secondary,
 							}}>
 							3.
@@ -102,17 +103,22 @@ export default function WelcomeMessage() {
 								fontFamily: Fonts.button.fontFamily,
 								fontSize: Fonts.button.fontSize,
 								...styles.number,
+								color: Colors.background,
 								backgroundColor: Colors.success,
 							}}>
 							4.
 						</Text>
-						<Text style={styles.description}>
+						<Text
+							style={{
+								...styles.description,
+							}}>
 							Never forget to capture a moment again!
 						</Text>
 					</View>
 				</View>
 			</View>
-		</View>
+			<View style={{ height: 100 }} />
+		</ScrollView>
 	);
 }
 
@@ -121,6 +127,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		alignItems: "center",
 		marginTop: 20,
+		paddingBottom: 100,
 	},
 	stepsContainer: {
 		width: "100%",
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		gap: 10,
 		paddingVertical: 20,
-		paddingHorizontal: 20,
+		paddingHorizontal: 40,
 	},
 
 	step: {
@@ -144,7 +151,7 @@ const styles = StyleSheet.create({
 		fontFamily: Fonts.body.fontFamily,
 		fontSize: Fonts.body.fontSize + 2,
 		textAlign: "center",
-		color: Colors.text,
+		color: "black",
 		flex: 1,
 	},
 	number: {

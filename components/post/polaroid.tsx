@@ -45,7 +45,11 @@ export default function Polaroid({ imageUri, takenAt, postId }: PolaroidProps) {
 							borderRadius: 5,
 							zIndex: 50,
 						}}
-						onLoadStart={() => setLoading(true)}
+						onLoadStart={() => {
+							if (!!imageUri) {
+								setLoading(true);
+							}
+						}}
 						onLoad={() => setLoading(false)}
 					/>
 				</ReactNativeZoomableView>

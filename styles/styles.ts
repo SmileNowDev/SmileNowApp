@@ -154,7 +154,7 @@ export const GlobalStyles = StyleSheet.create({
 	footerButtonContainer: {
 		position: "absolute",
 		zIndex: 50,
-		bottom: 30,
+		bottom: 80,
 		left: 0,
 		right: 0,
 		display: "flex",

@@ -118,11 +118,10 @@ export default function CameraPage({ route, navigation }) {
 	};
 
 	async function uploadImage(postId: string) {
-		console.log("Uploading image");
+		// console.log("Uploading image");
 		let formData = createFormData(photo);
 		const result = await postApi.uploadImage({ formData, postId });
-		//@ts-expect-error;
-		console.log("upload image result: ", result.data.uri);
+		// console.log("upload image result: ", result.data.uri);
 		if (result.ok) {
 			//@ts-expect-error;
 			return result.data.uri;
@@ -134,35 +133,40 @@ export default function CameraPage({ route, navigation }) {
 		() => postApi.create({ eventId, caption }),
 		{
 			onSuccess: async (newPost) => {
-				console.log("inside of on success of the post mutation");
+				// console.log("inside of on success of the post mutation");
 				let newPostData: Object = newPost?.data;
-				console.log("new post: ", newPostData);
+				// console.log("new post: ", newPostData);
 				// @ts-expect-error
 				let imageSrc = await uploadImage(newPost.data._id);
 				queryClient.setQueryData(["posts", eventId], (oldData) => {
-					console.log("oldData: ", oldData);
+					// console.log("oldData: ", oldData);
 					let _newPost = {
 						...newPostData,
 						src: imageSrc,
 					};
-					console.log("new post in cache", _newPost);
+					// console.log("new post in cache", _newPost);
+
 					//@ts-expect-error
-					if (!oldData?.pages || !Array.isArray(oldData.pages)) {
-						console.log("no old data");
+					if (oldData === undefined && oldData?.pages.posts === undefined) {
 						return {
-							pageParams: 1,
-							pages: [_newPost],
-						}; // Return the new data as the only page
+							pageParams: [undefined, 1],
+							pages: [{ hasNextPage: false, posts: [_newPost] }], // Preserve the structure
+						};
 					} else {
-						console.log("new post: ", newPost.data);
+						// console.log("new post: ", newPost.data);
 
-						//@ts-expect-error
-						const firstPage = [_newPost, ...(oldData.pages[0].posts || [])];
-
-						//@ts-expect-error
+						const firstPagePosts = [
+							_newPost,
+							// @ts-expect-error
+							...(oldData.pages[0].posts || []),
+						];
+						// @ts-expect-error
+						const firstPage = { ...oldData.pages[0], posts: firstPagePosts };
+						// @ts-expect-error
 						const newPages = [firstPage, ...oldData.pages.slice(1)];
+
 						return {
-							//@ts-expect-error,
+							// @ts-expect-error
 							pageParams: oldData.pageParams,
 							pages: newPages,
 						};
@@ -175,11 +179,11 @@ export default function CameraPage({ route, navigation }) {
 	async function handlePost() {
 		mutate(null, {
 			onSuccess: (newPost) => {
-				console.log("new post: ", newPost.data);
+				// console.log("new post: ", newPost.data);
 				navigation.navigate("Party", { eventId, newPost: newPost.data });
 			},
 			onError: (error) => {
-				console.log("error: ", error);
+				// console.log("error: ", error);
 				Alert.alert("Error", "Something went wrong, please try again later.");
 			},
 		});

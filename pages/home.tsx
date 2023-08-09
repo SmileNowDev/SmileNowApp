@@ -6,6 +6,7 @@ import {
 	FlatList,
 	RefreshControl,
 	ActivityIndicator,
+	Alert,
 } from "react-native";
 import { Fonts, Colors } from "../styles/theme";
 import { Dim } from "../styles/styles";
@@ -32,8 +33,15 @@ export type EventType = {
 export default function HomePage({ navigation }) {
 	const isFocused = useIsFocused();
 	const queryClient = useQueryClient();
+	const [events, setEvents] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
-	const [events, setEvents] = useState<EventType[]>([]);
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+		queryClient.invalidateQueries(["events"]);
+		queryClient.invalidateQueries(["requests"]);
+		refetch();
+		setRefreshing(false);
+	}, []);
 	const {
 		data,
 		isLoading,
@@ -45,40 +53,32 @@ export default function HomePage({ navigation }) {
 		isFetching,
 	} = useInfiniteQuery({
 		queryKey: ["events"],
-		queryFn: ({ pageParam = 1 }) => getEvents({ pageParam }),
+		queryFn: ({ pageParam }) => getEvents({ pageParam }),
 		getNextPageParam: (lastPage, allPages) => {
-			return lastPage.hasNextPage ? allPages.length + 1 : false;
+			return lastPage.hasNextPage ? allPages.length + 1 : undefined;
 		},
-		//somehow the pagination is broken, i still the response to include hasNextPage: boolean
 		enabled: isFocused,
 		staleTime: 1000 * 60 * 5, // data is considered fresh for 5 minutes
 		cacheTime: 1000 * 60 * 30, // data is cached for 30 minutes
 	});
-
+	useEffect(() => {
+		if (data !== undefined) {
+			let events = data.pages.flat()[0].events as any[];
+			setEvents(events);
+		}
+	}, [data]);
 	useEffect(() => {
 		if (isFocused) {
 			onRefresh();
 		}
 	}, [isFocused]);
-	useEffect(() => {
-		if (data) {
-			let events = data.pages.flat()[0].events as EventType[];
-			setEvents(events);
-		}
-	}, [data]);
 
-	const onRefresh = useCallback(() => {
-		setRefreshing(true);
-		queryClient.invalidateQueries(["events"]);
-		queryClient.invalidateQueries(["requests"]);
-		refetch();
-		setRefreshing(false);
-	}, []);
 	async function getEvents({ pageParam = 1 }) {
 		const result = await eventApi.getEvents({ page: pageParam });
 		if (!result.ok) {
 			throw new Error(result.problem);
 		}
+
 		return {
 			//@ts-expect-error
 			events: result.data.data,
@@ -113,103 +113,121 @@ export default function HomePage({ navigation }) {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}, []);
-	if (isLoading) return <PartyLoading variant={"pink_backdrop"} />;
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
+		<SafeAreaView style={{ flex: 1, height: Dim.height, bottom: -50 }}>
 			<HomeHeader />
 			<WelcomeMessageModal />
 			<CreateJoin navigation={navigation} />
-			<ScreenWrapper
-				onRefresh={onRefresh}
-				scrollEnabled={true}
-				loading={isLoading}
-				style={{ paddingHorizontal: 0 }}>
-				{!data ? (
-					<>
-						<WelcomeMessage />
-					</>
+			<>
+				{isLoading ? (
+					<View
+						style={{
+							position: "absolute",
+							left: 0,
+							top: 0,
+							bottom: 0,
+							right: 0,
+							flex: 1,
+							height: Dim.height,
+							alignContent: "center",
+							justifyContent: "center",
+						}}>
+						<PartyLoading
+							variant="white_backdrop"
+							message={"Getting all your pictures"}
+						/>
+					</View>
 				) : (
 					<>
-						<View style={{ flex: 1 }}>
-							<FlatList
-								ListHeaderComponent={
-									<View
-										style={{
-											flexDirection: "row",
-											justifyContent: "space-between",
-											paddingRight: 20,
-										}}>
-										<Text
-											style={{
-												fontFamily: Fonts.title.fontFamily,
-												fontSize: Fonts.subTitle.fontSize,
-												padding: 10,
-											}}>
-											My Parties
-										</Text>
-
-										{isFetching && <ActivityIndicator color={Colors.primary} />}
-									</View>
-								}
-								refreshControl={
-									<RefreshControl
-										refreshing={refreshing}
-										onRefresh={onRefresh}
-									/>
-								}
-								style={{ flex: 1 }}
-								data={events}
-								keyExtractor={(item) => item._id}
-								renderItem={({ item }) => {
-									return (
+						{!events.length ? (
+							<WelcomeMessage />
+						) : (
+							<>
+								<FlatList
+									style={{ marginBottom: 40 }}
+									ListHeaderComponent={
 										<View
-											key={item._id}
 											style={{
-												marginBottom: 15,
+												flexDirection: "row",
+												justifyContent: "space-between",
+												paddingRight: 20,
 											}}>
-											<PartyListItem
-												initials={getInitials(
-													item.title?.split(" ")[0],
-													item.title?.split(" ")[1]
-												)}
-												name={item.title}
-												eventId={item._id}
-												canPost={item.canPost}
-												attendeeInfo={item.attendeeInfo}
-												isActive={item.isActive}
-											/>
-										</View>
-									);
-								}}
-								onEndReached={() => {
-									console.log("end reached");
-									if (hasNextPage) fetchNextPage();
-								}}
-								onEndReachedThreshold={0.25}
-								ListFooterComponent={
-									<View
-										style={{
-											height: 150,
-											width: Dim.width,
-											justifyContent: "center",
-										}}>
-										{isFetchingNextPage && (
 											<Text
 												style={{
-													textAlign: "center",
-													fontFamily: Fonts.body.fontFamily,
-													fontSize: Fonts.body.fontSize,
+													fontFamily: Fonts.title.fontFamily,
+													fontSize: Fonts.subTitle.fontSize,
+													padding: 10,
 												}}>
-												Getting More Parties... 🎉
+												My Parties
 											</Text>
-										)}
-									</View>
-								}
-							/>
-						</View>
+
+											{isFetching && (
+												<ActivityIndicator color={Colors.primary} />
+											)}
+										</View>
+									}
+									refreshControl={
+										<RefreshControl
+											refreshing={refreshing}
+											onRefresh={onRefresh}
+										/>
+									}
+									scrollEnabled={true}
+									onEndReached={() => {
+										if (hasNextPage) {
+											fetchNextPage();
+										}
+									}}
+									onEndReachedThreshold={0.2}
+									data={events}
+									keyExtractor={(item) => item._id}
+									renderItem={({ item }) => {
+										return (
+											<View
+												key={item._id}
+												style={{
+													marginBottom: 15,
+												}}>
+												<PartyListItem
+													initials={getInitials(
+														item.title?.split(" ")[0],
+														item.title?.split(" ")[1]
+													)}
+													name={item.title}
+													eventId={item._id}
+													canPost={item.canPost}
+													attendeeInfo={item.attendeeInfo}
+													isActive={item.isActive}
+												/>
+											</View>
+										);
+									}}
+									ListFooterComponent={
+										<View
+											style={{
+												height: 250,
+												width: Dim.width,
+												justifyContent: "flex-start",
+												alignItems: "center",
+											}}>
+											{isFetchingNextPage && (
+												<Text
+													style={{
+														textAlign: "center",
+														fontFamily: Fonts.body.fontFamily,
+														fontSize: Fonts.body.fontSize,
+													}}>
+													Getting More Parties... 🎉
+												</Text>
+											)}
+										</View>
+									}
+								/>
+							</>
+						)}
 					</>
 				)}
-			</ScreenWrapper>
+			</>
 		</SafeAreaView>
 	);
 }

@@ -21,7 +21,7 @@ export default function AddFriendsTab(params) {
 	const [refreshing, setRefreshing] = useState(false);
 	const [contacts, setContacts] = useState([]);
 	const onRefresh = () => {
-		console.log("refreshing");
+		// console.log("refreshing");
 		setRefreshing(true);
 		refetch();
 		setRefreshing(false);
@@ -56,7 +56,7 @@ export default function AddFriendsTab(params) {
 		if (!result.ok) {
 			return result.problem;
 		} else {
-			console.log("add friends data", result.data);
+			// console.log("add friends data", result.data);
 			return result.data;
 		}
 	}

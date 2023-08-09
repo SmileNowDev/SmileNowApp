@@ -42,7 +42,7 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 					bottom: 0,
 					left: 0,
 					right: 0,
-					height: Dim.height * 0.25,
+					height: Dim.height * 0.45,
 					zIndex: 40,
 				}}>
 				<View

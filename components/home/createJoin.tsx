@@ -57,7 +57,7 @@ export default function CreateJoin({ navigation }) {
 				locations={[0.15, 1]}
 				style={{
 					position: "absolute",
-					bottom: 0,
+					bottom: 50,
 					left: 0,
 					right: 0,
 					height: Dim.height * 0.25,

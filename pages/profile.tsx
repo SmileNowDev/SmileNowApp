@@ -32,7 +32,7 @@ export default function ProfilePage({ navigation }) {
 	async function getUser() {
 		const result = await userApi.get({ userId });
 		if (result.ok) {
-			console.log("user", result.data);
+			// console.log("user", result.data);
 			let user: UserType = {
 				//@ts-expect-error
 				name: result.data.name,

@@ -55,6 +55,7 @@ export default function PartyPage({ route, navigation }) {
 	const [donePosting, setDonePosting] = useState(false);
 	useEffect(() => {
 		if (isFocused) {
+			// console.log({ postsData });
 			refetch();
 		}
 	}, [isFocused]);
@@ -119,7 +120,7 @@ export default function PartyPage({ route, navigation }) {
 		},
 	});
 	useEffect(() => {
-		if (postsData) {
+		if (postsData !== undefined) {
 			let posts = postsData.pages.flat()[0].posts as any[];
 			setPosts(posts);
 		}
@@ -189,42 +190,6 @@ export default function PartyPage({ route, navigation }) {
 					}}
 					bottomLoading={isFetchingNextPage}>
 					<>
-						{justCreated ? (
-							<View>
-								<Text
-									style={{
-										textAlign: "center",
-										paddingVertical: 10,
-										fontFamily: Fonts.title.fontFamily,
-										fontSize: Fonts.title.fontSize,
-									}}>
-									Welcome to {data.title || "Your Party"}
-								</Text>
-								<Text
-									style={{
-										textAlign: "left",
-										paddingVertical: 10,
-										paddingHorizontal: 10,
-										fontFamily: Fonts.body.fontFamily,
-										fontSize: Fonts.body.fontSize,
-									}}>
-									{data.description || "Your Party Description"}
-								</Text>
-								<Text
-									style={{
-										textAlign: "center",
-										paddingVertical: 10,
-										paddingHorizontal: 40,
-										fontFamily: Fonts.body.fontFamily,
-										fontSize: Fonts.body.fontSize,
-									}}>
-									(You can change the name at anytime from the settings)
-								</Text>
-							</View>
-						) : (
-							<></>
-						)}
-
 						{postsLoading ? (
 							<View
 								style={{
