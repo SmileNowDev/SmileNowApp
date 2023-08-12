@@ -41,10 +41,8 @@ export default function InvitePoster({
 			<View
 				style={{
 					...style,
-					shadowColor: "black",
 					...styles.shadowWrapper,
-				}}
-			>
+				}}>
 				<View
 					style={{
 						width: downloadPosterWidth,
@@ -53,31 +51,29 @@ export default function InvitePoster({
 						backgroundColor: Colors.background,
 						overflow: "hidden",
 						justifyContent: "center",
-					}}
-				>
+					}}>
 					<View
 						style={{
 							flexDirection: "column",
 							justifyContent: "center",
 							alignItems: "center",
-						}}
-					>
+						}}>
 						<Text
 							style={{
 								fontSize: (Fonts.subTitle.fontSize - 2) * scale,
 								fontFamily: Fonts.subTitle.fontFamily,
 								textAlign: "center",
-							}}
-						>
+							}}>
 							Welcome to{" "}
-							<Text style={{ fontFamily: Fonts.title.fontFamily }}>{name}</Text>
+							<Text style={{ fontFamily: Fonts.title.fontFamily }}>
+								{name}!
+							</Text>
 						</Text>
 						<Text
 							style={{
 								fontSize: (Fonts.body.fontSize - 2) * scale,
 								fontFamily: Fonts.subTitle.fontFamily,
-							}}
-						>
+							}}>
 							A <Text style={{ fontStyle: "italic" }}>Smile Now</Text>{" "}
 							Experience
 						</Text>
@@ -87,12 +83,11 @@ export default function InvitePoster({
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",
-							marginVertical: 10 * scale,
+							marginVertical: 5 * scale,
 							gap: 10 * scale,
 							position: "relative",
-							height: 60 * scale,
-						}}
-					>
+							height: 55 * scale,
+						}}>
 						<View
 							style={{
 								position: "absolute",
@@ -101,16 +96,14 @@ export default function InvitePoster({
 									? Colors.border
 									: Colors.primary + "30",
 								height: 60 * scale,
-							}}
-						></View>
+							}}></View>
 						<Text
 							style={{
 								width: Dim.width * scale - 80 * scale,
 								fontFamily: Fonts.title.fontFamily,
 								fontSize: (Fonts.body.fontSize - 2) * scale,
 								textAlign: "center",
-							}}
-						>
+							}}>
 							Please help me create a memorable event by taking candid photos
 							with Smile Now
 						</Text>
@@ -123,22 +116,19 @@ export default function InvitePoster({
 							justifyContent: "center",
 							alignItems: "flex-start",
 							paddingVertical: 10 * scale,
-						}}
-					>
+						}}>
 						<View
 							style={{
 								flexDirection: "column",
 								justifyContent: "flex-start",
 								gap: 10 * scale,
 								alignItems: "center",
-							}}
-						>
+							}}>
 							<Text
 								style={{
 									fontFamily: Fonts.title.fontFamily,
 									fontSize: Fonts.body.fontSize * scale,
-								}}
-							>
+								}}>
 								1. Download App
 							</Text>
 							<Image
@@ -157,8 +147,7 @@ export default function InvitePoster({
 									borderRadius: 5 * scale,
 									padding: 5 * scale,
 									...styles.shadowWrapper,
-								}}
-							>
+								}}>
 								<QRCode value={appStoreURL} size={120 * scale} />
 							</View>
 						</View>
@@ -168,14 +157,12 @@ export default function InvitePoster({
 								justifyContent: "flex-start",
 								gap: 10 * scale,
 								alignItems: "center",
-							}}
-						>
+							}}>
 							<Text
 								style={{
 									fontFamily: Fonts.title.fontFamily,
 									fontSize: Fonts.body.fontSize * scale,
-								}}
-							>
+								}}>
 								2. Create Account
 							</Text>
 							<View
@@ -188,14 +175,12 @@ export default function InvitePoster({
 									borderRadius: 4 * scale,
 									justifyContent: "center",
 									alignItems: "center",
-								}}
-							>
+								}}>
 								<Text
 									style={{
 										fontFamily: Fonts.button.fontFamily,
 										fontSize: Fonts.body.fontSize * scale,
-									}}
-								>
+									}}>
 									Join Party
 								</Text>
 							</View>
@@ -205,8 +190,7 @@ export default function InvitePoster({
 									borderRadius: 5 * scale,
 									padding: 5 * scale,
 									...styles.shadowWrapper,
-								}}
-							>
+								}}>
 								<QRCode value={code} size={120 * scale} />
 							</View>
 						</View>
@@ -217,24 +201,17 @@ export default function InvitePoster({
 							justifyContent: "center",
 							alignItems: "center",
 							gap: 10 * scale,
-						}}
-					>
+						}}>
 						<Text
 							style={{
 								fontFamily: Fonts.titleBold.fontFamily,
 								fontSize: Fonts.subTitle.fontSize * scale,
-							}}
-						>
+							}}>
 							3. Have Fun!
 						</Text>
 					</View>
-					<View
-						style={{
-							opacity: saveInk ? 0 : 1,
-						}}
-					>
-						<LogoBackground scale={scale} />
-					</View>
+
+					{!saveInk && <LogoBackground scale={scale} />}
 				</View>
 			</View>
 		);
@@ -247,13 +224,11 @@ export default function InvitePoster({
 					height: Dim.height - 160,
 					justifyContent: "center",
 					alignItems: "center",
-				}}
-			>
+				}}>
 				<View
 					style={{
 						transform: [{ scale: 1 / scale }],
-					}}
-				>
+					}}>
 					<Poster
 						style={{
 							...styles.container,
@@ -266,8 +241,7 @@ export default function InvitePoster({
 					style={{
 						position: "absolute",
 						transform: [{ translateX: downloadPosterWidth * 15 }],
-					}}
-				>
+					}}>
 					<Poster />
 				</View>
 				<View style={{ position: "absolute", bottom: 0 }}>
@@ -277,14 +251,12 @@ export default function InvitePoster({
 							justifyContent: "space-between",
 							alignItems: "center",
 							marginBottom: 10,
-						}}
-					>
+						}}>
 						<Text
 							style={{
 								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize,
-							}}
-						>
+							}}>
 							Save Ink?
 						</Text>
 						<Switch value={saveInk} onValueChange={setSaveInk} />
@@ -297,13 +269,11 @@ export default function InvitePoster({
 						}}
 						onPress={() => {
 							downloadImage(downloadRef);
-						}}
-					>
+						}}>
 						<Text
 							style={{
 								...ButtonStyles.buttonTextLarge,
-							}}
-						>
+							}}>
 							Save to Camera Roll
 						</Text>
 					</TouchableOpacity>
