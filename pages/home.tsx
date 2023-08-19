@@ -23,6 +23,8 @@ import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
 import WelcomeMessageModal from "../components/engagement/welcomeMessageModal";
+import { Button } from "../components/core/button";
+import Icon from "../components/core/icons";
 export type EventType = {
 	_id: string;
 	title: string;
@@ -114,9 +116,16 @@ export default function HomePage({ navigation }) {
 		};
 	}, []);
 	return (
-		<SafeAreaView style={{ flex: 1, height: Dim.height, bottom: -50 }}>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				height: Dim.height,
+				bottom: -50,
+				backgroundColor: Colors.background,
+			}}>
 			<HomeHeader />
 			<WelcomeMessageModal />
+
 			<CreateJoin navigation={navigation} />
 			<>
 				{isLoading ? (
@@ -139,6 +148,11 @@ export default function HomePage({ navigation }) {
 					</View>
 				) : (
 					<>
+						<View
+							style={{
+								flex: 1,
+								width: "100%",
+							}}></View>
 						{!events.length ? (
 							<WelcomeMessage />
 						) : (
@@ -146,25 +160,65 @@ export default function HomePage({ navigation }) {
 								<FlatList
 									style={{ marginBottom: 40 }}
 									ListHeaderComponent={
-										<View
-											style={{
-												flexDirection: "row",
-												justifyContent: "space-between",
-												paddingRight: 20,
-											}}>
-											<Text
+										<>
+											<Button
+												variant={"solid"}
+												colorScheme={"primary"}
+												size={"md"}
+												onPress={() => Alert.alert("it worked")}
+												styles={{ width: 200, marginVertical: 10 }}>
+												Hello
+											</Button>
+											<Button
+												variant="outlined"
+												colorScheme={"secondary"}
+												size={"md"}
+												onPress={() => Alert.alert("it worked")}
+												styles={{ width: 200, marginVertical: 10 }}
+												leftIcon={
+													<Icon
+														name="person"
+														size={20}
+														color={Colors.secondary}
+													/>
+												}
+												rightIcon={
+													<Icon
+														name="person"
+														size={20}
+														color={Colors.secondary}
+													/>
+												}>
+												Hello
+											</Button>
+											<Button
+												variant={"ghost"}
+												colorScheme={"primary"}
+												size={"md"}
+												onPress={() => Alert.alert("it worked")}
+												styles={{ width: 200, marginVertical: 10 }}>
+												Hello
+											</Button>
+											<View
 												style={{
-													fontFamily: Fonts.title.fontFamily,
-													fontSize: Fonts.subTitle.fontSize,
-													padding: 10,
+													flexDirection: "row",
+													justifyContent: "space-between",
+													paddingRight: 20,
 												}}>
-												My Parties
-											</Text>
+												<Text
+													style={{
+														fontFamily: Fonts.title.fontFamily,
+														fontSize: Fonts.subTitle.fontSize,
+														padding: 10,
+													}}>
+													My Parties
+												</Text>
 
-											{isFetching && (
-												<ActivityIndicator color={Colors.primary} />
-											)}
-										</View>
+												{isFetching && (
+													<ActivityIndicator color={Colors.primary} />
+												)}
+											</View>
+										</>
 									}
 									refreshControl={
 										<RefreshControl

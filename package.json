@@ -13,6 +13,8 @@
     "@expo-google-fonts/exo": "^0.2.3",
     "@expo-google-fonts/fuzzy-bubbles": "^0.2.3",
     "@expo-google-fonts/libre-franklin": "^0.2.3",
+    "@react-native-aria/button": "^0.2.4",
+    "@react-native-aria/focus": "^0.2.8",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/material-top-tabs": "^6.6.2",
     "@react-navigation/native": "^6.1.6",

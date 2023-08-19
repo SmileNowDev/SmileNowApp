@@ -19,6 +19,7 @@ export const Colors = {
 	text: "#1F1F1F",
 	textSecondary: "#767676",
 	border: "#E5E5E5",
+	link: "#125fdb",
 };
 export const Fonts = {
 	title: {

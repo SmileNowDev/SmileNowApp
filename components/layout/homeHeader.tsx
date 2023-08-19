@@ -75,7 +75,7 @@ export default function HomeHeader() {
 				onPress={() =>
 					navigation.navigate("Friends" as keyof RootStackParamList["Friends"])
 				}>
-				<Icon name={"people"} size={30} />
+				<Icon name={"people"} size={35} />
 				{!isRequestsLoading && requests > 0 ? (
 					<View
 						style={{
@@ -120,7 +120,7 @@ export default function HomeHeader() {
 					style={{
 						textAlign: "center",
 						fontFamily: "Exo_700Bold",
-						fontSize: 20,
+						fontSize: 25,
 						color: Colors.primary,
 					}}>
 					Smile Now
@@ -133,7 +133,7 @@ export default function HomeHeader() {
 							"Profile" as keyof RootStackParamList["Profile"]
 						)
 					}>
-					<Picture pic={data?.pic} size={30} />
+					<Picture pic={data?.pic} size={35} />
 				</TouchableOpacity>
 			) : (
 				<></>
