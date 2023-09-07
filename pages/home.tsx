@@ -161,44 +161,101 @@ export default function HomePage({ navigation }) {
 									style={{ marginBottom: 40 }}
 									ListHeaderComponent={
 										<>
-											<Button
-												variant={"solid"}
-												colorScheme={"primary"}
-												size={"md"}
-												onPress={() => Alert.alert("it worked")}
-												styles={{ width: 200, marginVertical: 10 }}>
-												Hello
-											</Button>
-											<Button
-												variant="outlined"
-												colorScheme={"secondary"}
-												size={"md"}
-												onPress={() => Alert.alert("it worked")}
-												styles={{ width: 200, marginVertical: 10 }}
-												leftIcon={
-													<Icon
-														name="person"
-														size={20}
-														color={Colors.secondary}
-													/>
-												}
-												rightIcon={
-													<Icon
-														name="person"
-														size={20}
-														color={Colors.secondary}
-													/>
-												}>
-												Hello
-											</Button>
-											<Button
-												variant={"ghost"}
-												colorScheme={"primary"}
-												size={"md"}
-												onPress={() => Alert.alert("it worked")}
-												styles={{ width: 200, marginVertical: 10 }}>
-												Hello
-											</Button>
+											<View>
+												<View
+													style={{
+														display: "flex",
+														flexDirection: "row",
+														gap: 10,
+													}}>
+													<Button
+														variant={"solid"}
+														colorScheme={"primary"}
+														size={"xs"}
+														onPress={() => Alert.alert("it worked")}
+														styles={{ marginVertical: 10 }}>
+														Hello
+													</Button>
+													<Button
+														variant={"solid"}
+														colorScheme={"primary"}
+														size={"sm"}
+														onPress={() => Alert.alert("it worked")}
+														styles={{ marginVertical: 10 }}>
+														Hello
+													</Button>
+												</View>
+												<Button
+													variant={"solid"}
+													colorScheme={"primary"}
+													size={"md"}
+													onPress={() => Alert.alert("it worked")}
+													styles={{ marginVertical: 10 }}>
+													Hello
+												</Button>
+												<Button
+													variant={"solid"}
+													colorScheme={"primary"}
+													size={"lg"}
+													onPress={() => Alert.alert("it worked")}
+													styles={{ marginVertical: 10 }}>
+													Hello
+												</Button>
+												<Button
+													variant={"solid"}
+													colorScheme={"primary"}
+													size={"xl"}
+													onPress={() => Alert.alert("it worked")}
+													styles={{ marginVertical: 10 }}>
+													Hello
+												</Button>
+												<Button
+													variant="outlined"
+													colorScheme={"secondary"}
+													size={"md"}
+													styles={{ marginVertical: 10 }}
+													leftIcon={
+														<Icon
+															name="person"
+															size={20}
+															color={Colors.secondary}
+														/>
+													}
+													rightIcon={
+														<Icon
+															name="person"
+															size={20}
+															color={Colors.secondary}
+														/>
+													}>
+													Hello
+												</Button>
+												<Button
+													variant={"ghost"}
+													size={"md"}
+													haptic={"heavy"}
+													onPress={() => Alert.alert("it worked")}
+													styles={{ width: 200, marginVertical: 10 }}>
+													Hello
+												</Button>
+												<Button
+													variant={"link"}
+													size={"md"}
+													haptic={"heavy"}
+													onPress={() => Alert.alert("it worked")}
+													styles={{ marginVertical: 10 }}>
+													Hello
+												</Button>
+												<Button
+													variant={"unstyled"}
+													size={"md"}
+													haptic={"heavy"}
+													onPress={() => Alert.alert("it worked")}
+													styles={{ marginVertical: 10 }}>
+													Hello
+												</Button>
+											</View>
+
 											<View
 												style={{
 													flexDirection: "row",
