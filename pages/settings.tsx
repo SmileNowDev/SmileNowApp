@@ -82,6 +82,11 @@ export default function Settings({ navigation }) {
 			text: "Logout",
 			onPress: () => logout(),
 		},
+		{
+			icon: <Icon name="person" />,
+			text: "Component Library",
+			onPress: () => navigation.navigate("ComponentLibrary"),
+		},
 	];
 	return (
 		<SafeAreaView>

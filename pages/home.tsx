@@ -23,7 +23,7 @@ import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
 import WelcomeMessageModal from "../components/engagement/welcomeMessageModal";
-import { Button } from "../components/core/button";
+import { Button } from "../components/SmileNowUI/button";
 import Icon from "../components/core/icons";
 export type EventType = {
 	_id: string;
@@ -160,122 +160,25 @@ export default function HomePage({ navigation }) {
 								<FlatList
 									style={{ marginBottom: 40 }}
 									ListHeaderComponent={
-										<>
-											<View>
-												<View
-													style={{
-														display: "flex",
-														flexDirection: "row",
-														gap: 10,
-													}}>
-													<Button
-														variant={"solid"}
-														colorScheme={"primary"}
-														size={"xs"}
-														onPress={() => Alert.alert("it worked")}
-														styles={{ marginVertical: 10 }}>
-														Hello
-													</Button>
-													<Button
-														variant={"solid"}
-														colorScheme={"primary"}
-														size={"sm"}
-														onPress={() => Alert.alert("it worked")}
-														styles={{ marginVertical: 10 }}>
-														Hello
-													</Button>
-												</View>
-												<Button
-													variant={"solid"}
-													colorScheme={"primary"}
-													size={"md"}
-													onPress={() => Alert.alert("it worked")}
-													styles={{ marginVertical: 10 }}>
-													Hello
-												</Button>
-												<Button
-													variant={"solid"}
-													colorScheme={"primary"}
-													size={"lg"}
-													onPress={() => Alert.alert("it worked")}
-													styles={{ marginVertical: 10 }}>
-													Hello
-												</Button>
-												<Button
-													variant={"solid"}
-													colorScheme={"primary"}
-													size={"xl"}
-													onPress={() => Alert.alert("it worked")}
-													styles={{ marginVertical: 10 }}>
-													Hello
-												</Button>
-												<Button
-													variant="outlined"
-													colorScheme={"secondary"}
-													size={"md"}
-													styles={{ marginVertical: 10 }}
-													leftIcon={
-														<Icon
-															name="person"
-															size={20}
-															color={Colors.secondary}
-														/>
-													}
-													rightIcon={
-														<Icon
-															name="person"
-															size={20}
-															color={Colors.secondary}
-														/>
-													}>
-													Hello
-												</Button>
-												<Button
-													variant={"ghost"}
-													size={"md"}
-													haptic={"heavy"}
-													onPress={() => Alert.alert("it worked")}
-													styles={{ width: 200, marginVertical: 10 }}>
-													Hello
-												</Button>
-												<Button
-													variant={"link"}
-													size={"md"}
-													haptic={"heavy"}
-													onPress={() => Alert.alert("it worked")}
-													styles={{ marginVertical: 10 }}>
-													Hello
-												</Button>
-												<Button
-													variant={"unstyled"}
-													size={"md"}
-													haptic={"heavy"}
-													onPress={() => Alert.alert("it worked")}
-													styles={{ marginVertical: 10 }}>
-													Hello
-												</Button>
-											</View>
-
-											<View
+										<View
+											style={{
+												flexDirection: "row",
+												justifyContent: "space-between",
+												paddingRight: 20,
+											}}>
+											<Text
 												style={{
-													flexDirection: "row",
-													justifyContent: "space-between",
-													paddingRight: 20,
+													fontFamily: Fonts.title.fontFamily,
+													fontSize: Fonts.subTitle.fontSize,
+													padding: 10,
 												}}>
-												<Text
-													style={{
-														fontFamily: Fonts.title.fontFamily,
-														fontSize: Fonts.subTitle.fontSize,
-														padding: 10,
-													}}>
-													My Parties
-												</Text>
+												My Parties
+											</Text>
 
-												{isFetching && (
-													<ActivityIndicator color={Colors.primary} />
-												)}
-											</View>
-										</>
+											{isFetching && (
+												<ActivityIndicator color={Colors.primary} />
+											)}
+										</View>
 									}
 									refreshControl={
 										<RefreshControl
