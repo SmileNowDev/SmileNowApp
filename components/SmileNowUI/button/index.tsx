@@ -1,12 +1,10 @@
 import React from "react";
-import { useHover } from "@react-native-aria/interactions";
 import { useButton } from "@react-native-aria/button";
-import { useFocusRing } from "@react-native-aria/focus";
-import { useToggleState } from "@react-stately/toggle";
 import { Pressable, StyleProp, Text, View, StyleSheet } from "react-native";
 import { useRef } from "react";
 import { Colors, Fonts } from "../../../styles/theme";
 import * as Haptics from "expo-haptics";
+import { MaterialIndicator } from "react-native-indicators";
 import { ButtonSizes, getButtonVariant } from "./theme";
 
 export interface IButton {
@@ -20,24 +18,41 @@ export interface IButton {
 		| "success"
 		| "danger";
 	size?: "xs" | "sm" | "md" | "lg" | "xl";
-	styles?: StyleProp<any>;
+	style?: StyleProp<any>;
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;
 	haptic?: boolean | "light" | "medium" | "heavy" | "selection";
+	loading?: boolean;
+	loadingLocation?: "left" | "right";
+	loadingText?: string;
+	disabled?: boolean;
 	onPress?: () => void;
 }
-//todo: loading state
-
+function ButtonLoader({ size = 16, color = Colors.background }) {
+	return (
+		<View>
+			<MaterialIndicator
+				size={size}
+				color={color}
+				style={{ marginHorizontal: 5 }}
+			/>
+		</View>
+	);
+}
 export function Button({
 	children,
 	variant = "solid",
 	colorScheme = "primary",
 	size = "md",
-	styles,
+	style,
 	onPress,
 	leftIcon,
 	rightIcon,
 	haptic = false,
+	loading = false,
+	disabled = false,
+	loadingLocation = "left",
+	loadingText,
 	...props
 }: IButton) {
 	const ref = useRef(null);
@@ -48,6 +63,19 @@ export function Button({
 		isPressed,
 		colorScheme,
 	});
+	const textStyle: StyleProp<any> = {
+		fontFamily: Fonts.button.fontFamily,
+		color: buttonVariantStyles.color,
+		fontSize: ButtonSizes[size].fontSize,
+		textDecorationLine: variant === "link" ? "underline" : "none",
+	};
+	const buttonStyles: StyleProp<any> = {
+		...ButtonStyles.button,
+		...buttonVariantStyles,
+		...ButtonSizes[size],
+		borderWidth: variant === "link" || variant === "unstyled" ? 0 : 2,
+		opacity: disabled ? 0.5 : 1,
+	};
 	// styles specific to the variant
 	// sizes are handled handled by the constant buttonSizes, which doesn't require a hook
 	function hapticStyle() {
@@ -57,35 +85,19 @@ export function Button({
 		if (haptic === true) return Haptics.ImpactFeedbackStyle.Medium;
 		if (haptic === false) return Haptics.ImpactFeedbackStyle.Medium;
 	}
-	function generateTextStyle() {
-		let styles: StyleProp<any> = {
-			fontFamily: Fonts.button.fontFamily,
-			color: buttonVariantStyles.color,
-			fontSize: ButtonSizes[size].fontSize,
-			textDecorationLine: variant === "link" ? "underline" : "none",
-		};
-		return styles;
-	}
 
-	function generateStyle() {
-		let styles: StyleProp<any> = {
-			...ButtonStyles.button,
-			...buttonVariantStyles,
-			...ButtonSizes[size],
-			borderWidth: variant === "link" || variant === "unstyled" ? 0 : 2,
-		};
-		return styles;
-	}
 	return (
 		<Pressable
 			ref={ref}
 			{...buttonProps}
 			{...props}
 			style={{
+				display: "flex",
+				flexDirection: "row",
 				flex: 0,
-				justifyContent: "center",
-				alignItems: "center",
+				justifyContent: "flex-start",
 			}}
+			disabled={disabled || loading}
 			onPress={() => {
 				if (haptic && haptic !== "selection") {
 					Haptics.impactAsync(hapticStyle());
@@ -95,10 +107,30 @@ export function Button({
 				}
 				onPress?.();
 			}}>
-			<View style={[generateStyle(), styles, { alignSelf: "flex-start" }]}>
-				{!!leftIcon ? leftIcon : <></>}
-				<Text style={generateTextStyle()}>{children}</Text>
-				{!!rightIcon ? rightIcon : <></>}
+			<View style={[buttonStyles, style]}>
+				{(!!leftIcon && !loading) || loadingLocation === "right" ? (
+					leftIcon
+				) : (
+					<></>
+				)}
+				{loading && loadingLocation === "left" ? (
+					<ButtonLoader size={textStyle.fontSize - 4} color={textStyle.color} />
+				) : (
+					<></>
+				)}
+				<Text style={textStyle}>
+					{loading && loadingText ? loadingText : children}
+				</Text>
+				{(!!rightIcon && !loading) || loadingLocation === "left" ? (
+					rightIcon
+				) : (
+					<></>
+				)}
+				{loading && loadingLocation === "right" ? (
+					<ButtonLoader size={textStyle.fontSize - 4} color={textStyle.color} />
+				) : (
+					<></>
+				)}
 			</View>
 		</Pressable>
 	);
@@ -114,6 +146,6 @@ export const ButtonStyles = StyleSheet.create({
 		paddingHorizontal: 30,
 		flex: 0,
 		flexShrink: 1,
-		gap: 5,
+		gap: 10,
 	},
 });

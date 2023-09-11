@@ -5,11 +5,12 @@ import Header from "../../components/layout/header";
 import { Button } from "../../components/SmileNowUI/button";
 import Icon from "../../components/core/icons";
 import { Colors, Fonts } from "../../styles/theme";
+import { Dim } from "../../styles/styles";
 
 export default function ComponentLibrary(params) {
 	return (
 		<SafeAreaView>
-			<ScreenWrapper>
+			<ScreenWrapper scrollEnabled>
 				<Header title="Component Library" goBack />
 				<Text>SmileNow Component Library (and docs)</Text>
 				<Text
@@ -34,12 +35,12 @@ export default function ComponentLibrary(params) {
 						flexDirection: "row",
 						flexWrap: "wrap",
 						gap: 10,
+						marginVertical: 10,
 					}}>
 					<Button
 						variant={"solid"}
 						colorScheme={"primary"}
 						size={"sm"}
-						leftIcon={<Icon name="book" size={20} color={Colors.background} />}
 						onPress={() => Alert.alert("it worked")}>
 						Hello
 					</Button>
@@ -86,6 +87,7 @@ export default function ComponentLibrary(params) {
 						flexDirection: "row",
 						gap: 10,
 						flexWrap: "wrap",
+						marginVertical: 10,
 					}}>
 					<Button
 						variant={"outlined"}
@@ -126,27 +128,20 @@ export default function ComponentLibrary(params) {
 						Hello
 					</Button>
 				</View>
-				<Text>variant = "ghost"</Text>
+				<Text></Text>
 				<View
 					style={{
 						display: "flex",
 						flexDirection: "row",
 						gap: 10,
-					}}>
-					<Button
-						variant={"ghost"}
-						colorScheme={"primary"}
-						size={"sm"}
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-				</View>
-				<Text>variant = "link" & variant = "unstyled"</Text>
+					}}></View>
+				<Text>variant = "link" & variant = "unstyled" & variant = "ghost"</Text>
 				<View
 					style={{
 						display: "flex",
 						flexDirection: "row",
 						gap: 10,
+						marginVertical: 10,
 					}}>
 					<Button
 						variant={"link"}
@@ -162,12 +157,20 @@ export default function ComponentLibrary(params) {
 						onPress={() => Alert.alert("it worked")}>
 						Hello
 					</Button>
+					<Button
+						variant={"ghost"}
+						colorScheme={"primary"}
+						size={"sm"}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
 				</View>
 				<Text>Sizes: "xs" | "sm" | "md" | "lg" | "xl"</Text>
 				<View
 					style={{
 						display: "flex",
 						flexDirection: "row",
+						alignItems: "flex-end",
 						gap: 10,
 						marginVertical: 10,
 					}}>
@@ -203,6 +206,112 @@ export default function ComponentLibrary(params) {
 						Hello
 					</Button>
 				</View>
+				<Text style={{ fontSize: 18 }}>Special Features:</Text>
+				<Text>Loading & icons</Text>
+				<View
+					style={{
+						flexDirection: "column",
+						gap: 10,
+						marginVertical: 10,
+					}}>
+					<Text>loadingText="Loading..." loading=true, buttonText="hello"</Text>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						loadingText="Loading..."
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Text>No Icon, loading=true</Text>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Text>No Icon, loading=true, loadingLocation="right"</Text>
+
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						loadingLocation="right"
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Text>Left Icon, loading=true</Text>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						leftIcon={
+							<Icon name="person" size={20} color={Colors.background} />
+						}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Text>Right Icon, loading=true, loadingLocation="right"</Text>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						rightIcon={
+							<Icon name="chevron-right" size={20} color={Colors.background} />
+						}
+						loadingLocation="right"
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Text>left Icon, loading=true, loadingLocation="right"</Text>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						leftIcon={
+							<Icon name="person" size={20} color={Colors.background} />
+						}
+						loadingLocation="right"
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Text>right Icon, loading=true</Text>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						loading={true}
+						rightIcon={
+							<Icon name="chevron-right" size={20} color={Colors.background} />
+						}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+				</View>
+				<Text>Icons</Text>
+				<View
+					style={{
+						flexDirection: "row",
+						flexWrap: "wrap",
+						gap: 10,
+						marginVertical: 10,
+					}}>
+					<Button
+						leftIcon={
+							<Icon name="person" size={20} color={Colors.background} />
+						}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Button
+						rightIcon={
+							<Icon name="chevron-right" size={20} color={Colors.background} />
+						}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+				</View>
+				<Text>Haptic</Text>
 			</ScreenWrapper>
 		</SafeAreaView>
 	);
