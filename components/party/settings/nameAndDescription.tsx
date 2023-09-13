@@ -4,18 +4,18 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
 	ActivityIndicator,
 	Alert,
-	Button,
 	Text,
 	TextInput,
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { ButtonStyles, Dim, GlobalStyles } from "../../../styles/styles";
+import { GlobalStyles } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
 import { debounce } from "lodash";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "react-native-toast-notifications";
 import { IEvent } from "../../../pages/party/party";
+import { Button } from "../../SmileNowUI/button";
 export default function NameAndDescription({
 	title,
 	description,
@@ -171,21 +171,16 @@ export default function NameAndDescription({
 					</View>
 
 					{hasMadeEdits && (
-						<TouchableOpacity
+						<Button
 							onPress={() => abandonChanges()}
-							style={{
-								...ButtonStyles.buttonSmall,
-								...ButtonStyles.outlined,
-							}}>
-							<Icon name="refresh" size={12} color={Colors.textSecondary} />
-							<Text
-								style={{
-									...ButtonStyles.buttonTextSmall,
-									color: Colors.textSecondary,
-								}}>
-								Revert Changes
-							</Text>
-						</TouchableOpacity>
+							leftIcon={
+								<Icon name="refresh" size={12} color={Colors.textSecondary} />
+							}
+							size="sm"
+							variant="outlined"
+							colorScheme="gray">
+							Revert Changes
+						</Button>
 					)}
 				</View>
 

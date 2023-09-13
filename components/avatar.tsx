@@ -1,21 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-	View,
-	Image,
-	TouchableOpacity,
-	Text,
-	ActivityIndicator,
-	Animated,
-} from "react-native";
+import { View, Image, TouchableOpacity, Animated } from "react-native";
 import { Context } from "../providers/provider";
 import { useNavigation } from "@react-navigation/native";
 import ModalWrapper from "./core/modalWrapper";
-import { ButtonStyles } from "../styles/styles";
 import { Fonts, Colors } from "../styles/theme";
 import OtherProfile from "./otherProfile";
 import DefaultOptions from "./core/defaultOptions";
 import Icon from "./core/icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "./SmileNowUI/button";
 interface AvatarProps {
 	pic: string;
 	size: number;
@@ -175,27 +168,28 @@ export default function Avatar({ pic, size = 40, id }: AvatarProps) {
 				<View
 					style={{
 						position: "absolute",
-						right: 0,
-						top: 0,
+						right: 20,
+						top: 20,
 						zIndex: 100,
 					}}>
 					<DefaultOptions
 						type={"user"}
 						id={id}
-						size={20}
+						size={25}
 						onPress={() => setModalVisible(false)}
 					/>
 				</View>
 				<OtherProfile id={id} />
-				<TouchableOpacity
+				<Button
 					onPress={() => setModalVisible(false)}
+					variant="outlined"
+					colorScheme="gray"
 					style={{
-						...ButtonStyles.button,
-						...ButtonStyles.outlined,
+						flex: 1,
 						marginTop: 50,
 					}}>
-					<Text>Close</Text>
-				</TouchableOpacity>
+					Close
+				</Button>
 			</ModalWrapper>
 		</>
 	);

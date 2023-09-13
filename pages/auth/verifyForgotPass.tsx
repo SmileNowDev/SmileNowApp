@@ -1,8 +1,6 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
-	Button,
-	Image,
 	SafeAreaView,
 	Text,
 	TextInput,
@@ -11,12 +9,9 @@ import {
 	Alert,
 } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
-import Icon from "../../components/core/icons";
+import { GlobalStyles } from "../../styles/styles";
 import authApi from "../../api/user/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Context } from "../../providers/provider";
-import jwt_decode from "jwt-decode";
+import { Button } from "../../components/SmileNowUI/button";
 
 export default function VerifyPassPage({ route, navigation }) {
 	const { phone } = route.params;
@@ -107,19 +102,19 @@ export default function VerifyPassPage({ route, navigation }) {
 					}}>
 					(Password must be at least 8 characters)
 				</Text>
-				<TouchableOpacity
+				<Button
 					onPress={verifyAccount}
-					// disabled={code.length < 5 && password.length < 8}
+					variant="outlined"
+					size="lg"
+					colorScheme="white"
+					disabled={code.length < 5 && password.length < 8}
 					style={{
-						...ButtonStyles.button,
-						...ButtonStyles.outlinedWhite,
 						marginTop: 40,
 						opacity: code.length < 5 && password.length < 8 ? 0.5 : 1,
+						width: "100%",
 					}}>
-					<Text style={{ color: Colors.background, fontSize: 20 }}>
-						Confirm Password
-					</Text>
-				</TouchableOpacity>
+					Confirm Password
+				</Button>
 			</View>
 		</SafeAreaView>
 	);

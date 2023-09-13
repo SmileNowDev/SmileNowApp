@@ -1,19 +1,11 @@
 // File:
 // Default
 import React from "react";
-import {
-	Alert,
-	SafeAreaView,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { Alert, SafeAreaView, ScrollView, Text, View } from "react-native";
 // Libraries
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ScreenWrapper from "../components/core/screenWrapper";
-import { ButtonStyles } from "../styles/styles";
 import Header from "../components/layout/header";
+import { Button } from "../components/SmileNowUI/button";
 
 export default function TermsAndConditions({ navigation }) {
 	// Functions
@@ -287,11 +279,9 @@ export default function TermsAndConditions({ navigation }) {
 					email: info@quae.app
 				</Text>
 
-				<TouchableOpacity
-					onPress={close}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Accept</Text>
-				</TouchableOpacity>
+				<Button size="lg" onPress={close}>
+					Accept
+				</Button>
 				<View style={{ height: 100 }} />
 			</ScrollView>
 		</SafeAreaView>

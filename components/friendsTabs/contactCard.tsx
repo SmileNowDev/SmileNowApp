@@ -1,18 +1,10 @@
 import React from "react";
 
-import {
-	View,
-	Text,
-	SafeAreaView,
-	Image,
-	StyleSheet,
-	TouchableOpacity,
-	Linking,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
-import { ButtonStyles } from "../../styles/styles";
 import * as SMS from "expo-sms";
+import { Button } from "../SmileNowUI/button";
 
 interface ContactCardProps {
 	name: string;
@@ -80,21 +72,13 @@ export default function ContactCard({
 					{name}
 				</Text>
 			</View>
-			<TouchableOpacity
-				onPress={() => sendText()}
-				style={{
-					...ButtonStyles.buttonSmall,
-					...ButtonStyles.primaryOutlined,
-				}}>
-				<Icon name="add" size={20} color={Colors.primary} />
-				<Text
-					style={{
-						...ButtonStyles.buttonTextSmall,
-						color: Colors.primary,
-					}}>
-					Invite
-				</Text>
-			</TouchableOpacity>
+			<Button
+				variant="outlined"
+				colorScheme="gray"
+				leftIcon={<Icon name="add" size={20} color={Colors.textSecondary} />}
+				onPress={() => sendText()}>
+				Invite
+			</Button>
 		</TouchableOpacity>
 	);
 }

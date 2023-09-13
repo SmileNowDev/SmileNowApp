@@ -1,18 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import {
-	Alert,
-	Button,
-	Image,
-	SafeAreaView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import { Colors, Fonts } from "../../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { Alert, SafeAreaView, Text, TextInput, View } from "react-native";
+import { Colors } from "../../styles/theme";
+import { GlobalStyles } from "../../styles/styles";
 import userApi from "../../api/user/user";
+import { Button } from "../../components/SmileNowUI/button";
 export default function AccountDetailsScreen({ navigation }) {
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
@@ -93,21 +85,21 @@ export default function AccountDetailsScreen({ navigation }) {
 					}}
 				/>
 				<Text style={{ color: Colors.foreground, textAlign: "center" }}>
-					(Must be at least 5-15 characters)
+					(Must be at least 4-16 characters)
 				</Text>
-				<TouchableOpacity
+				<Button
+					size={"lg"}
+					variant="outlined"
+					colorScheme="white"
 					onPress={uploadDetails}
-					// disabled={name.length < 1 && username.length < 5}
+					disabled={name.length < 4 && username.length > 16}
 					style={{
-						...ButtonStyles.button,
-						...ButtonStyles.outlinedWhite,
 						opacity: name.length < 1 && username.length < 5 ? 0.5 : 1,
 						marginTop: 40,
+						flex: 1,
 					}}>
-					<Text style={{ color: Colors.background, fontSize: 20 }}>
-						Complete Profile
-					</Text>
-				</TouchableOpacity>
+					Complete Profile
+				</Button>
 			</View>
 		</SafeAreaView>
 	);

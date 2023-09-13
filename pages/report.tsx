@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import { Colors, Fonts } from "../styles/theme";
-import { GlobalStyles, ButtonStyles, Dim } from "../styles/styles";
+import { GlobalStyles, Dim } from "../styles/styles";
 import reportApi from "../api/interaction/report";
 import Header from "../components/layout/header";
-import {
-	View,
-	SafeAreaView,
-	Text,
-	TextInput,
-	Alert,
-	TouchableOpacity,
-} from "react-native";
+import { View, SafeAreaView, Text, TextInput, Alert } from "react-native";
+import { Button } from "../components/SmileNowUI/button";
 export default function ReportPage({ route, navigation }) {
 	const { type, id } = route.params;
 	const [message, setMessage] = useState("");
@@ -65,14 +59,9 @@ export default function ReportPage({ route, navigation }) {
 					value={message}
 					onChangeText={setMessage}
 				/>
-				<TouchableOpacity
-					onPress={() => report()}
-					style={{
-						...ButtonStyles.buttonLarge,
-						...ButtonStyles.primary,
-					}}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Submit</Text>
-				</TouchableOpacity>
+				<Button onPress={() => report()} style={{ flex: 0.75, marginTop: 10 }}>
+					Submit
+				</Button>
 			</View>
 		</SafeAreaView>
 	);

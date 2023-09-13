@@ -127,6 +127,15 @@ export default function ComponentLibrary(params) {
 						onPress={() => Alert.alert("it worked")}>
 						Hello
 					</Button>
+					<View style={{ backgroundColor: "blue", padding: 5 }}>
+						<Button
+							variant={"outlined"}
+							colorScheme={"white"}
+							size={"sm"}
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+					</View>
 				</View>
 				<Text></Text>
 				<View

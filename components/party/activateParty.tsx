@@ -1,12 +1,13 @@
 import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
 import eventApi from "../../api/post/event";
 import React from "react";
-import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
+import { Dim, GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "../SmileNowUI/button";
 
 export default function ActivateParty({ isActive, eventId, isHost }) {
 	const queryClient = useQueryClient();
@@ -53,7 +54,7 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 						bottom: 40,
 						zIndex: 1000,
 					}}>
-					<View style={{ paddingBottom: 60 }}>
+					<View style={{ paddingBottom: 60, width: Dim.width * 0.8 }}>
 						<View
 							style={{
 								flexDirection: "row",
@@ -81,17 +82,17 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 								size={25}
 							/>
 						</View>
-						<TouchableOpacity
+
+						<Button
 							onPress={() => {
 								Haptics.notificationAsync(
 									Haptics.NotificationFeedbackType.Success
 								);
 								activateParty();
 							}}
+							size="xl"
 							style={{
-								...ButtonStyles.buttonLarge,
-								...ButtonStyles.primary,
-								width: "100%",
+								flex: 1,
 								shadowOffset: {
 									width: 0,
 									height: -1,
@@ -100,18 +101,15 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 								shadowRadius: 5,
 								elevation: 0,
 								shadowColor: Colors.text,
-							}}>
-							<Image
-								source={require("../../assets/logo_white.png")}
-								style={{ width: 30, height: 30 }}
-							/>
-							<Text
-								style={{
-									...ButtonStyles.buttonTextLarge,
-								}}>
-								Activate Party
-							</Text>
-						</TouchableOpacity>
+							}}
+							leftIcon={
+								<Image
+									source={require("../../assets/logo_white.png")}
+									style={{ width: 30, height: 30 }}
+								/>
+							}>
+							Activate Party
+						</Button>
 					</View>
 				</View>
 			</>

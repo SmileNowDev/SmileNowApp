@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-	ActivityIndicator,
-	FlatList,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
@@ -54,30 +47,6 @@ export default function RequestsTab() {
 		}
 	}, [data]);
 
-	// function AcceptButton({ userId }) {
-	// 	return (
-	// 		<TouchableOpacity
-	// 			onPress={() => {
-	// 				mutation.mutate(userId, {
-	// 					onSuccess: () => {
-	// 						console.log("success");
-	// 					},
-	// 				});
-	// 			}}
-	// 			style={{
-	// 				...ButtonStyles.buttonSmall,
-	// 				...ButtonStyles.primary,
-	// 			}}>
-	// 			<Text
-	// 				style={{
-	// 					...ButtonStyles.buttonTextSmall,
-	// 					color: Colors.background,
-	// 				}}>
-	// 				Accept
-	// 			</Text>
-	// 		</TouchableOpacity>
-	// 	);
-	// }
 	if (isLoading || isRefetching) {
 		return (
 			<View

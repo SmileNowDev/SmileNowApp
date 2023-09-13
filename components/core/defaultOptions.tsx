@@ -10,11 +10,11 @@ import {
 import Icon from "./icons";
 
 import ModalWrapper from "./modalWrapper";
-import { ButtonStyles } from "../../styles/styles";
 import { useNavigation } from "@react-navigation/native";
 import { Colors, Fonts } from "../../styles/theme";
 import blockApi from "../../api/user/block";
 import userApi from "../../api/user/user";
+import { Button } from "../SmileNowUI/button";
 
 interface DefaultOptionsProps {
 	type: string;
@@ -78,68 +78,80 @@ export default function DefaultOptions({
 				scrollable={false}
 				noSwipe={false}>
 				{/* subtitle text */}
-				<Text
+				<View
 					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-						textAlign: "left",
-						marginBottom: 20,
+						height: "100%",
+						paddingVertical: 40,
+						display: "flex",
+						justifyContent: "space-between",
 					}}>
-					Options
-				</Text>
-				<TouchableOpacity
-					style={styles.optionButton}
-					onPress={() => {
-						if (onPress) onPress();
-						setModalVisible(false);
-						// @ts-expect-error
-						navigation.navigate("Report", { type: "post", id });
-					}}>
-					<Icon name="flag" size={25} color={Colors.urgent} />
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: 20,
-							textAlign: "left",
-						}}>
-						Report {type.substring(0, 1).toUpperCase() + type.substring(1)}
-					</Text>
-				</TouchableOpacity>
-				{type === "user" ? (
-					// todo: alert feedback after block
-					<TouchableOpacity
-						style={styles.optionButton}
-						onPress={() => {
-							if (onPress) onPress();
-							if (blockedStatus) {
-								unblock();
-							} else {
-								block();
-							}
-						}}>
-						<Icon name="block" size={25} color={Colors.urgent} />
+					<View>
 						<Text
 							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: 20,
+								fontFamily: Fonts.subTitle.fontFamily,
+								fontSize: Fonts.subTitle.fontSize,
 								textAlign: "left",
+								marginBottom: 10,
 							}}>
-							{!blockedStatus ? "Block" : "Unblock"}{" "}
-							{type.substring(0, 1).toUpperCase() + type.substring(1)}
+							Options
 						</Text>
-					</TouchableOpacity>
-				) : (
-					<></>
-				)}
-				<TouchableOpacity
-					onPress={() => setModalVisible(false)}
-					style={{
-						...ButtonStyles.button,
-						...ButtonStyles.outlined,
-						marginTop: 50,
-					}}>
-					<Text>Close</Text>
-				</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.optionButton}
+							onPress={() => {
+								if (onPress) onPress();
+								setModalVisible(false);
+								// @ts-expect-error
+								navigation.navigate("Report", { type: "post", id });
+							}}>
+							<Icon name="flag" size={25} color={Colors.urgent} />
+							<Text
+								style={{
+									fontFamily: Fonts.body.fontFamily,
+									fontSize: 20,
+									textAlign: "left",
+								}}>
+								Report {type.substring(0, 1).toUpperCase() + type.substring(1)}
+							</Text>
+						</TouchableOpacity>
+						{type === "user" ? (
+							// todo: alert feedback after block
+							<TouchableOpacity
+								style={styles.optionButton}
+								onPress={() => {
+									if (onPress) onPress();
+									if (blockedStatus) {
+										unblock();
+									} else {
+										block();
+									}
+								}}>
+								<Icon name="block" size={25} color={Colors.urgent} />
+								<Text
+									style={{
+										fontFamily: Fonts.body.fontFamily,
+										fontSize: 20,
+										textAlign: "left",
+									}}>
+									{!blockedStatus ? "Block" : "Unblock"}{" "}
+									{type.substring(0, 1).toUpperCase() + type.substring(1)}
+								</Text>
+							</TouchableOpacity>
+						) : (
+							<></>
+						)}
+					</View>
+
+					<Button
+						onPress={() => setModalVisible(false)}
+						variant="outlined"
+						colorScheme="gray"
+						style={{
+							flex: 1,
+							marginTop: 50,
+						}}>
+						Close
+					</Button>
+				</View>
 			</ModalWrapper>
 		</>
 	);

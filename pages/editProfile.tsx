@@ -1,17 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-	Alert,
-	SafeAreaView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { Alert, SafeAreaView, Text, TextInput, View } from "react-native";
 import Header from "../components/layout/header";
 import { Context } from "../providers/provider";
 import userApi from "../api/user/user";
 import { Colors, Fonts } from "../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../styles/styles";
+import { Dim, GlobalStyles } from "../styles/styles";
+import { Button } from "../components/SmileNowUI/button";
 
 export default function EditProfilePage({ navigation }) {
 	const { userId } = useContext(Context);
@@ -100,18 +94,22 @@ export default function EditProfilePage({ navigation }) {
 						paddingVertical: 5,
 						marginTop: 20,
 					}}>
-					<TouchableOpacity
+					<Button
 						onPress={() => cancel()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.outlined }}>
-						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
-							Cancel Changes
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
+						variant="outlined"
+						colorScheme="gray"
+						style={{
+							width: Dim.width / 2 - 15,
+						}}>
+						Discard Changes
+					</Button>
+					<Button
 						onPress={() => save()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
-						<Text style={{ ...ButtonStyles.buttonText }}>Save Changes</Text>
-					</TouchableOpacity>
+						style={{
+							width: Dim.width / 2 - 15,
+						}}>
+						Save Changes
+					</Button>
 				</View>
 			</View>
 		</SafeAreaView>

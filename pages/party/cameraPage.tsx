@@ -14,14 +14,11 @@ import {
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import Icon from "../../components/core/icons";
 import { Colors, Fonts } from "../../styles/theme";
-import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
+import { Dim, GlobalStyles } from "../../styles/styles";
 import postApi from "../../api/post/post";
 import { imageHeight, imageWidth } from "../../pages/post";
-import {
-	QueryClient,
-	useMutation,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "../../components/SmileNowUI/button";
 export default function CameraPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId } = route.params;
@@ -215,16 +212,15 @@ export default function CameraPage({ route, navigation }) {
 					}}>
 					Sorry! You waited too long...
 				</Text>
-				<TouchableOpacity
+				<Button
+					size="lg"
 					style={{
 						marginTop: 20,
 						width: Dim.width - 20,
-						...ButtonStyles.buttonLarge,
-						...ButtonStyles.primary,
 					}}
 					onPress={() => navigation.goBack()}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Go Back</Text>
-				</TouchableOpacity>
+					Go Back
+				</Button>
 			</View>
 		);
 	}
@@ -332,20 +328,12 @@ export default function CameraPage({ route, navigation }) {
 									}}>
 									Time Remaining: {remainingTime.toString()}
 								</Text>
-								<TouchableOpacity
-									style={{
-										...ButtonStyles.button,
-										...ButtonStyles.primary,
-									}}
-									onPress={() => handlePost()}>
-									{isLoading ? (
-										<View>
-											<ActivityIndicator color={Colors.background} size={15} />
-										</View>
-									) : (
-										<Text style={{ ...ButtonStyles.buttonText }}>Post</Text>
-									)}
-								</TouchableOpacity>
+								<Button
+									loading={isLoading}
+									onPress={() => handlePost()}
+									loadingText="Posting...">
+									Post Photo
+								</Button>
 							</View>
 							<Animated.View
 								// keyboard handling animated view
@@ -427,30 +415,25 @@ export default function CameraPage({ route, navigation }) {
 									onChangeText={setCaption}
 									returnKeyType="done"
 								/>
-								<TouchableOpacity
+								<Button
 									onPress={() => retakePhoto()}
 									style={{
 										position: "absolute",
 										top: 20,
 										left: 20,
 										zIndex: 150,
-										...ButtonStyles.buttonSmall,
-										backgroundColor: Colors.foreground,
-									}}>
-									<Icon
-										name="image-remove"
-										size={20}
-										type={"MaterialCommunity"}
-										color={Colors.textSecondary}
-									/>
-									<Text
-										style={{
-											...ButtonStyles.buttonTextSmall,
-											color: Colors.textSecondary,
-										}}>
-										Retake
-									</Text>
-								</TouchableOpacity>
+									}}
+									colorScheme="gray"
+									leftIcon={
+										<Icon
+											name="image-remove"
+											size={20}
+											type={"MaterialCommunity"}
+											color={Colors.textSecondary}
+										/>
+									}>
+									Retake
+								</Button>
 							</Animated.View>
 						</>
 					)}

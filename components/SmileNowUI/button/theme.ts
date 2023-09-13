@@ -1,5 +1,32 @@
 import { Colors } from "../../../styles/theme";
+export const ButtonSizes = {
+	xs: {
+		paddingHorizontal: 6,
+		paddingVertical: 2,
+		fontSize: 12,
+	},
 
+	sm: {
+		paddingHorizontal: 12,
+		paddingVertical: 4,
+		fontSize: 14,
+	},
+	md: {
+		paddingHorizontal: 14,
+		paddingVertical: 6,
+		fontSize: 16,
+	},
+	lg: {
+		paddingHorizontal: 16,
+		paddingVertical: 8,
+		fontSize: 18,
+	},
+	xl: {
+		paddingVertical: 10,
+		paddingHorizontal: 18,
+		fontSize: 24,
+	},
+};
 export const ButtonColorScheme = {
 	primary: {
 		backgroundColor: Colors.primary,
@@ -29,9 +56,9 @@ export const ButtonColorScheme = {
 		color: Colors.text,
 	},
 	gray: {
-		backgroundColor: Colors.border,
+		backgroundColor: "#CCCCCC",
 		activeColor: "#888888",
-		borderColor: Colors.border,
+		borderColor: "#CCCCCC",
 		color: Colors.text,
 	},
 	success: {
@@ -39,23 +66,29 @@ export const ButtonColorScheme = {
 		activeColor: Colors.successDark,
 		borderColor: Colors.success,
 		color: Colors.background,
+		outlinedTextColor: Colors.success,
 	},
 	danger: {
 		backgroundColor: Colors.danger,
 		activeColor: Colors.dangerDark,
 		borderColor: Colors.danger,
 		color: Colors.background,
+		outlinedTextColor: Colors.danger,
+	},
+	white: {
+		backgroundColor: Colors.background,
+		activeColor: Colors.background + "30",
+		borderColor: Colors.background,
+		color: Colors.text,
+		outlinedTextColor: Colors.background,
 	},
 };
 export const getButtonVariant = ({ variant, isPressed, colorScheme }) => {
 	type Variant = {
 		[key: string]: any;
 	};
-	// type TextVariant = {
-	// 	[key: string]: any;
-	// };
 	let styles: Variant = undefined;
-	// let textStyles: TextVariant = undefined;
+
 	switch (variant) {
 		case "solid":
 			styles = {
@@ -80,11 +113,11 @@ export const getButtonVariant = ({ variant, isPressed, colorScheme }) => {
 			styles = {
 				backgroundColor: isPressed
 					? ButtonColorScheme[colorScheme].backgroundColor + "30"
-					: Colors.foreground,
+					: "transparent",
 				borderColor: isPressed
 					? ButtonColorScheme[colorScheme].activeColor + "30"
 					: ButtonColorScheme[colorScheme].backgroundColor,
-				color: Colors.text,
+				color: ButtonColorScheme[colorScheme].outlinedTextColor || Colors.text,
 			};
 			// textStyles = {
 			// 	color: ButtonColorScheme[colorScheme].color,
@@ -121,7 +154,7 @@ export const getButtonVariant = ({ variant, isPressed, colorScheme }) => {
 			styles = {
 				borderColor: "transparent",
 				backgroundColor: "transparent",
-				color: Colors.text,
+				color: ButtonColorScheme[colorScheme].color,
 			};
 			break;
 		default:
@@ -133,33 +166,4 @@ export const getButtonVariant = ({ variant, isPressed, colorScheme }) => {
 			break;
 	}
 	return styles;
-};
-
-export const ButtonSizes = {
-	xs: {
-		paddingHorizontal: 6,
-		paddingVertical: 2,
-		fontSize: 12,
-	},
-
-	sm: {
-		paddingHorizontal: 12,
-		paddingVertical: 4,
-		fontSize: 14,
-	},
-	md: {
-		paddingHorizontal: 14,
-		paddingVertical: 6,
-		fontSize: 16,
-	},
-	lg: {
-		paddingHorizontal: 16,
-		paddingVertical: 6,
-		fontSize: 18,
-	},
-	xl: {
-		paddingVertical: 6,
-		paddingHorizontal: 18,
-		fontSize: 24,
-	},
 };

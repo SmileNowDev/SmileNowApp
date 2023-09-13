@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image, Alert } from "react-native";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
 // @ts-expect-error
@@ -8,6 +8,7 @@ import logo from "../../assets/logo_color.png";
 import AnimatedLottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Button } from "../SmileNowUI/button";
 export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 	const [showTutorials, setShowTutorials] = useState(false);
 	useEffect(() => {
@@ -16,6 +17,15 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 			else setShowTutorials(false);
 		});
 	}, []);
+	async function handleDontShowAgain() {
+		setShowTutorials(false);
+		await AsyncStorage.setItem("showPartyTutorial", "false");
+		setShowTutorials(false);
+		Alert.alert(
+			"We won't show you this again",
+			"Go to settings to change this"
+		);
+	}
 
 	if (isHost && showTutorials) {
 		return (
@@ -72,27 +82,16 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 							Edit the name or notification settings
 						</Text>
 					</View>
-					<TouchableOpacity
+					<Button
+						variant={"link"}
 						style={{
-							...ButtonStyles.button,
 							marginTop: 20,
 						}}
 						onPress={() => {
-							AsyncStorage.setItem("showPartyTutorial", "false");
-							setShowTutorials(false);
-							Alert.alert(
-								"We won't show you this again",
-								"Go to settings to change this"
-							);
+							handleDontShowAgain();
 						}}>
-						<Text
-							style={{
-								...ButtonStyles.buttonText,
-								color: Colors.textSecondary,
-							}}>
-							Don't Show Again
-						</Text>
-					</TouchableOpacity>
+						Don't Show Again
+					</Button>
 				</View>
 			</>
 		);

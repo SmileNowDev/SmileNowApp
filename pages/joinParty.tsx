@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	SafeAreaView,
-	TextInput,
-	TouchableOpacity,
-} from "react-native";
-import Header from "../components/layout/header";
+import { View, Text, TextInput } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
-import { Camera } from "expo-camera";
-import { ButtonStyles, Dim } from "../styles/styles";
-import eventApi from "../api/post/event";
+import { Dim } from "../styles/styles";
 import attendeeApi from "../api/post/attendee";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
+import { Button } from "../components/SmileNowUI/button";
 export default function JoinPartyPage({ setVisible }) {
 	const navigation = useNavigation();
 	const [joinCode, setJoinCode] = useState("");
@@ -58,7 +50,7 @@ export default function JoinPartyPage({ setVisible }) {
 				<Text>Enter the join code</Text>
 				<TextInput
 					value={joinCode}
-					placeholder='Code'
+					placeholder="Code"
 					placeholderTextColor={Colors.textSecondary + "50"}
 					onChangeText={setJoinCode}
 					style={{
@@ -71,6 +63,15 @@ export default function JoinPartyPage({ setVisible }) {
 					}}
 					onSubmitEditing={() => joinEvent(joinCode)}
 				/>
+				<Text
+					style={{
+						marginTop: 10,
+						fontFamily: Fonts.body.fontFamily,
+						fontSize: Fonts.body.fontSize,
+						color: Colors.textSecondary,
+					}}>
+					Or Scan the QR Code
+				</Text>
 				<BarCodeScanner
 					onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
 					style={{
@@ -78,34 +79,28 @@ export default function JoinPartyPage({ setVisible }) {
 						height: Dim.width - 60,
 						borderRadius: 20,
 						overflow: "hidden",
-						marginVertical: 20,
 					}}
 				/>
-
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.textSecondary,
-					}}
-				>
-					Or Scan the QR Code
-				</Text>
-				{joinCode.length === 4 ? (
-					<TouchableOpacity
-						onPress={() => joinEvent(joinCode)}
-						style={{
-							marginTop: 50,
-							...ButtonStyles.buttonLarge,
-							...ButtonStyles.primary,
-						}}
-					>
-						<Text style={{ ...ButtonStyles.buttonTextLarge }}>
-							Join With Code
-						</Text>
-					</TouchableOpacity>
-				) : null}
 			</View>
+			{joinCode.length === 4 ? (
+				<View
+					style={{
+						position: "absolute",
+						left: 10,
+						right: 10,
+						bottom: -30,
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+					}}>
+					<Button
+						size="xl"
+						onPress={() => joinEvent(joinCode)}
+						style={{ flex: 1 }}>
+						Join With Code
+					</Button>
+				</View>
+			) : null}
 		</View>
 	);
 }

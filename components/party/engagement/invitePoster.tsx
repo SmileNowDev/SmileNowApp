@@ -5,19 +5,18 @@ import {
 	Text,
 	TouchableOpacity,
 	StyleSheet,
-	Button,
 	Image,
 	Alert,
 	Switch,
 } from "react-native";
-import { ButtonStyles, Dim } from "../../../styles/styles";
+import { Dim } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
 import QRCode from "react-native-qrcode-svg";
 import Icon from "../../core/icons";
 // @ts-expect-error
 import appStore from "../../../assets/appStore.png";
 import LogoBackground from "./logoBackground";
-import PostPage from "pages/post";
+import { Button } from "../../SmileNowUI/button";
 const appStoreURL =
 	"https://apps.apple.com/us/app/smile-now-party-pics/id6449005895";
 export default function InvitePoster({
@@ -250,7 +249,7 @@ export default function InvitePoster({
 							flexDirection: "row",
 							justifyContent: "space-between",
 							alignItems: "center",
-							marginBottom: 10,
+							marginBottom: 30,
 						}}>
 						<Text
 							style={{
@@ -261,22 +260,13 @@ export default function InvitePoster({
 						</Text>
 						<Switch value={saveInk} onValueChange={setSaveInk} />
 					</View>
-
-					<TouchableOpacity
-						style={{
-							...ButtonStyles.primary,
-							...ButtonStyles.buttonLarge,
-						}}
+					<Button
+						size="lg"
 						onPress={() => {
 							downloadImage(downloadRef);
 						}}>
-						<Text
-							style={{
-								...ButtonStyles.buttonTextLarge,
-							}}>
-							Save to Camera Roll
-						</Text>
-					</TouchableOpacity>
+						Save To Camera Roll
+					</Button>
 				</View>
 			</View>
 		</>

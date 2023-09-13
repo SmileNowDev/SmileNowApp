@@ -1,4 +1,4 @@
-import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
+import { Dim, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
 import React, { useState } from "react";
@@ -7,6 +7,7 @@ import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "../SmileNowUI/button";
 export default function CreateJoin({ navigation }) {
 	const [joining, setJoining] = useState(false);
 	const queryClient = useQueryClient();
@@ -65,40 +66,19 @@ export default function CreateJoin({ navigation }) {
 				}}
 			/>
 			<View style={GlobalStyles.footerButtonContainer}>
-				<TouchableOpacity
-					onPress={() => setJoining(true)}
-					style={{
-						...ButtonStyles.secondary,
-						...ButtonStyles.buttonLarge,
-						shadowColor: Colors.primary,
-
-						flex: 1,
-					}}>
-					<Text
-						style={{
-							...ButtonStyles.buttonTextLarge,
-							textAlign: "center",
-							fontWeight: "bold",
-						}}>
-						Join Party
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
+				<Button
+					style={{ width: Dim.width / 2.1 }}
+					size="xl"
+					colorScheme="secondary"
+					onPress={() => setJoining(true)}>
+					Join Party
+				</Button>
+				<Button
+					size="xl"
 					onPress={() => createEvent()}
-					style={{
-						...ButtonStyles.primary,
-						...ButtonStyles.buttonLarge,
-
-						flex: 1,
-					}}>
-					<Text
-						style={{
-							...ButtonStyles.buttonTextLarge,
-							textAlign: "center",
-						}}>
-						Create Party
-					</Text>
-				</TouchableOpacity>
+					style={{ width: Dim.width / 2.1 }}>
+					Create Party
+				</Button>
 			</View>
 		</>
 	);

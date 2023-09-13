@@ -13,11 +13,12 @@ import {
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import Icon from "../components/core/icons";
 import { Colors, Fonts } from "../styles/theme";
-import { ButtonStyles } from "../styles/styles";
-import postApi from "../api/post/post";
 import userApi from "../api/user/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Context } from "../providers/provider";
+import { Button } from "../components/SmileNowUI/button";
+import ScreenWrapper from "../components/core/screenWrapper";
+import Header from "../components/layout/header";
 const { width, height } = Dimensions.get("window");
 export default function CameraPage({ route, navigation }) {
 	const queryClient = useQueryClient();
@@ -117,6 +118,7 @@ export default function CameraPage({ route, navigation }) {
 				flex: 1,
 				alignItems: "center",
 			}}>
+			<Header title="Edit Profile Picture" goBack />
 			{!isPreviewing ? (
 				<>
 					<View style={{ height: 100, marginTop: 30 }}>
@@ -201,40 +203,27 @@ export default function CameraPage({ route, navigation }) {
 							borderRadius: (width - 20) / 2,
 						}}
 					/>
-					<View style={{ position: "absolute", bottom: 100 }}>
-						<TouchableOpacity
-							onPress={() => retakePhoto()}
-							style={{
-								...ButtonStyles.button,
-								...ButtonStyles.primaryOutlined,
-							}}>
-							<Icon
-								name="image-remove"
-								size={20}
-								type={"MaterialCommunity"}
-								color={Colors.primary}
-							/>
-							<Text
-								style={{
-									...ButtonStyles.buttonText,
-									color: Colors.primary,
-								}}>
-								Retake
-							</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={{
-								marginTop: 10,
-								width: width - 20,
-								...ButtonStyles.button,
-								...ButtonStyles.primary,
-							}}
+					<View
+						style={{
+							position: "absolute",
+							bottom: 100,
+							alignItems: "center",
+							gap: 10,
+						}}>
+						<Button
+							variant="outlined"
+							colorScheme="secondary"
+							style={{ width: width * 0.8 }}
+							size="lg"
+							onPress={() => retakePhoto()}>
+							Retake Photo
+						</Button>
+						<Button
+							style={{ width: width * 0.8 }}
+							size="lg"
 							onPress={() => handleSave()}>
-							<Text style={{ ...ButtonStyles.buttonTextLarge }}>
-								Save Photo
-							</Text>
-						</TouchableOpacity>
+							Save Photo
+						</Button>
 					</View>
 				</>
 			)}

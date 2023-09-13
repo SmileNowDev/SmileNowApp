@@ -6,17 +6,19 @@ import { Colors, Fonts } from "../../../styles/theme";
 import * as Haptics from "expo-haptics";
 import { MaterialIndicator } from "react-native-indicators";
 import { ButtonSizes, getButtonVariant } from "./theme";
-
+export type ButtonColorSchemeType =
+	| "primary"
+	| "secondary"
+	| "tertiary"
+	| "gray"
+	| "success"
+	| "danger"
+	| "black"
+	| "white";
 export interface IButton {
 	children: string;
 	variant?: "solid" | "outlined" | "ghost" | "link" | "unstyled";
-	colorScheme?:
-		| "primary"
-		| "secondary"
-		| "tertiary"
-		| "gray"
-		| "success"
-		| "danger";
+	colorScheme?: ButtonColorSchemeType;
 	size?: "xs" | "sm" | "md" | "lg" | "xl";
 	style?: StyleProp<any>;
 	leftIcon?: React.ReactNode;
@@ -86,6 +88,23 @@ export function Button({
 		if (haptic === false) return Haptics.ImpactFeedbackStyle.Medium;
 	}
 
+	function filterStyles(styles) {
+		const marginStyles = {};
+		const otherStyles = {};
+		if (!style) {
+			return [marginStyles, otherStyles, textStyle];
+		}
+		for (const [key, value] of Object.entries(styles)) {
+			if (key.startsWith("margin")) {
+				marginStyles[key] = value;
+			} else {
+				otherStyles[key] = value;
+			}
+		}
+
+		return [marginStyles, otherStyles];
+	}
+	const [marginStyles, otherStyles] = filterStyles(style);
 	return (
 		<Pressable
 			ref={ref}
@@ -96,6 +115,7 @@ export function Button({
 				flexDirection: "row",
 				flex: 0,
 				justifyContent: "flex-start",
+				...marginStyles,
 			}}
 			disabled={disabled || loading}
 			onPress={() => {
@@ -107,7 +127,7 @@ export function Button({
 				}
 				onPress?.();
 			}}>
-			<View style={[buttonStyles, style]}>
+			<View style={[buttonStyles, otherStyles]}>
 				{(!!leftIcon && !loading) || loadingLocation === "right" ? (
 					leftIcon
 				) : (
@@ -135,7 +155,7 @@ export function Button({
 		</Pressable>
 	);
 }
-export const ButtonStyles = StyleSheet.create({
+const ButtonStyles = StyleSheet.create({
 	button: {
 		display: "flex",
 		flexDirection: "row",
