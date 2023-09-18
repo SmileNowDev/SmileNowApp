@@ -1,5 +1,5 @@
-import React from "react";
-import { Text as RN_Text } from "react-native";
+import React, { CSSProperties } from "react";
+import { Text as RN_Text, TextStyle } from "react-native";
 import generateTextStyles from "./theme";
 type TextVariant =
 	| "title"
@@ -22,7 +22,9 @@ export interface IText {
 	variant?: TextVariant;
 	colorScheme?: TextColorScheme;
 	size?: number;
-	style?: any;
+	style?: TextStyle;
+	ellipsize?: "head" | "middle" | "tail" | "clip" | null;
+	numberOfLines?: number;
 }
 export default function Text({
 	children,
@@ -30,7 +32,20 @@ export default function Text({
 	colorScheme = "text",
 	size = 16,
 	style,
+	ellipsize = null,
+	numberOfLines = null,
 }: IText) {
-	const textStyles = generateTextStyles(variant, colorScheme, size);
-	return <RN_Text style={[textStyles, style]}>{children}</RN_Text>;
+	const textStyles = generateTextStyles({
+		variant,
+		colorScheme,
+		size,
+	});
+	return (
+		<RN_Text
+			style={{ ...textStyles, ...style }}
+			ellipsizeMode={ellipsize}
+			numberOfLines={numberOfLines}>
+			{children}
+		</RN_Text>
+	);
 }

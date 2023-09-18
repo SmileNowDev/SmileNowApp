@@ -10,7 +10,7 @@ const textColorScheme = {
 	background: Colors.background,
 };
 
-export default function generateTextStyles(variant, colorScheme, size) {
+export default function generateTextStyles({ variant, colorScheme, size }) {
 	return {
 		fontFamily: variant ? Fonts[variant].fontFamily : Fonts["body"].fontFamily,
 		color: colorScheme ? textColorScheme[colorScheme] : textColorScheme["text"],

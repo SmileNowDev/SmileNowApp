@@ -82,6 +82,13 @@ export const ButtonColorScheme = {
 		color: Colors.text,
 		outlinedTextColor: Colors.background,
 	},
+	black: {
+		backgroundColor: Colors.text,
+		activeColor: Colors.text + "30",
+		borderColor: Colors.text,
+		color: Colors.background,
+		outlinedTextColor: Colors.text,
+	},
 };
 export const getButtonVariant = ({ variant, isPressed, colorScheme }) => {
 	type Variant = {
@@ -154,7 +161,7 @@ export const getButtonVariant = ({ variant, isPressed, colorScheme }) => {
 			styles = {
 				borderColor: "transparent",
 				backgroundColor: "transparent",
-				color: ButtonColorScheme[colorScheme].color,
+				color: Colors.text,
 			};
 			break;
 		default:

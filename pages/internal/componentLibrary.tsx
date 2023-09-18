@@ -1,6 +1,6 @@
 import React from "react";
 import ScreenWrapper from "../../components/core/screenWrapper";
-import { Alert, SafeAreaView, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import Header from "../../components/layout/header";
 import { Button } from "../../components/SmileNowUI/button";
 import Icon from "../../components/core/icons";
@@ -13,18 +13,23 @@ export default function ComponentLibrary(params) {
 		<SafeAreaView>
 			<ScreenWrapper scrollEnabled>
 				<Header title="Component Library" goBack />
-				<Text variant="title">SmileNow UI</Text>
+				<Text variant="title" style={{ paddingTop: 30, paddingBottom: 0 }}>
+					SmileNow UI
+				</Text>
 				<Text variant="subTitle">(and internal docs)</Text>
-				<Text variant="subTitle">Text</Text>
-				<Text>variant = "..."</Text>
+				<View style={styles.header}>
+					<Text variant="subTitle">Text</Text>
+				</View>
+				<Text variant="button">variant = "..."</Text>
 				<View
 					style={{
+						...styles.render,
 						flexDirection: "row",
 						justifyContent: "flex-start",
 						alignItems: "flex-end",
 						flexWrap: "wrap",
 						gap: 10,
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Text variant="title">title</Text>
 					<Text variant="subTitle">subTitle</Text>
@@ -32,15 +37,16 @@ export default function ComponentLibrary(params) {
 					<Text variant="body">body</Text>
 					<Text variant="small">small</Text>
 				</View>
-				<Text>colorScheme = "..."</Text>
+				<Text variant="button">colorScheme = "..."</Text>
 				<View
 					style={{
+						...styles.render,
 						flexDirection: "row",
 						justifyContent: "flex-start",
 						alignItems: "flex-end",
 						flexWrap: "wrap",
 						gap: 10,
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Text>text</Text>
 					<Text colorScheme="textSecondary">textSecondary</Text>
@@ -52,105 +58,182 @@ export default function ComponentLibrary(params) {
 						<Text colorScheme="background">background</Text>
 					</View>
 				</View>
-				<Text variant="subTitle">Buttons</Text>
-				<Text>variant = 'solid'</Text>
+
+				<Text variant={"button"}>numberOfLines = {"null"} (default)</Text>
+				<View style={{ ...styles.render, marginBottom: 20 }}>
+					<Text variant={"body"} style={{ marginVertical: 10 }}>
+						Eiusmod voluptate fugiat velit elit ad. Reprehenderit aliqua nulla
+						Lorem aliqua veniam. Nisi et id sit consectetur Lorem. Culpa tempor
+						laborum consectetur aliquip ex et.
+					</Text>
+				</View>
+				<Text variant="button">numberOfLines = {1} or greater and ...</Text>
+				<Text variant={"button"}>ellipsize = "clip" </Text>
+				<View style={{ ...styles.render, marginBottom: 20 }}>
+					<Text
+						variant={"body"}
+						ellipsize="clip"
+						numberOfLines={1}
+						style={{ marginVertical: 10 }}>
+						Eiusmod voluptate fugiat velit elit ad. Reprehenderit aliqua nulla
+						Lorem aliqua veniam. Nisi et id sit consectetur Lorem. Culpa tempor
+						laborum consectetur aliquip ex et.
+					</Text>
+				</View>
+				<Text variant={"button"}>ellipsize = "head" </Text>
+				<View style={{ ...styles.render, marginBottom: 20 }}>
+					<Text
+						variant={"body"}
+						ellipsize="head"
+						numberOfLines={1}
+						style={{ marginVertical: 10 }}>
+						Eiusmod voluptate fugiat velit elit ad. Reprehenderit aliqua nulla
+						Lorem aliqua veniam. Nisi et id sit consectetur Lorem. Culpa tempor
+						laborum consectetur aliquip ex et.
+					</Text>
+				</View>
+
+				<Text variant={"button"}>ellipsize = "tail" </Text>
+				<View style={{ ...styles.render, marginBottom: 20 }}>
+					<Text
+						variant={"body"}
+						ellipsize="tail"
+						numberOfLines={1}
+						style={{ marginVertical: 10 }}>
+						Eiusmod voluptate fugiat velit elit ad. Reprehenderit aliqua nulla
+						Lorem aliqua veniam. Nisi et id sit consectetur Lorem. Culpa tempor
+						laborum consectetur aliquip ex et.
+					</Text>
+				</View>
+				<Text variant={"button"}>ellipsize = "middle"</Text>
+				<View style={{ ...styles.render, marginBottom: 20 }}>
+					<Text
+						variant={"body"}
+						ellipsize="middle"
+						numberOfLines={1}
+						style={{ marginVertical: 10 }}>
+						Eiusmod voluptate fugiat velit elit ad. Reprehenderit aliqua nulla
+						Lorem aliqua veniam. Nisi et id sit consectetur Lorem. Culpa tempor
+						laborum consectetur aliquip ex et.
+					</Text>
+				</View>
+				<View style={styles.header}>
+					<Text variant="subTitle">Buttons</Text>
+				</View>
+				<Text>variant = 'solid' colorScheme="...</Text>
 				<View
 					style={{
+						...styles.render,
 						display: "flex",
 						flexDirection: "row",
 						flexWrap: "wrap",
 						gap: 10,
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Button
 						variant={"solid"}
 						colorScheme={"primary"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						primary
 					</Button>
 					<Button
 						variant="solid"
 						colorScheme={"secondary"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						secondary
 					</Button>
 					<Button
 						variant={"solid"}
 						colorScheme={"tertiary"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						tertiary
 					</Button>
 					<Button
 						variant={"solid"}
 						colorScheme={"gray"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						gray
 					</Button>
 					<Button
 						variant={"solid"}
 						colorScheme={"success"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						success
 					</Button>
 					<Button
 						variant={"solid"}
 						colorScheme={"danger"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						danger
+					</Button>
+					<View style={{ backgroundColor: "blue", padding: 5 }}>
+						<Button
+							colorScheme={"white"}
+							size={"sm"}
+							onPress={() => Alert.alert("it worked")}>
+							white
+						</Button>
+					</View>
+					<Button
+						colorScheme={"black"}
+						size={"sm"}
+						onPress={() => Alert.alert("it worked")}>
+						black
 					</Button>
 				</View>
-				<Text>variant = "outlined"</Text>
+				<Text>variant = "outlined" colorScheme="..."</Text>
 				<View
 					style={{
+						...styles.render,
 						display: "flex",
 						flexDirection: "row",
 						gap: 10,
 						flexWrap: "wrap",
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Button
 						variant={"outlined"}
 						colorScheme={"primary"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						primary
 					</Button>
 					<Button variant="outlined" colorScheme={"secondary"} size={"sm"}>
-						Hello
+						secondary
 					</Button>
 					<Button
 						variant={"outlined"}
 						colorScheme={"tertiary"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						tertiary
 					</Button>
 					<Button
 						variant={"outlined"}
 						colorScheme={"gray"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						gray
 					</Button>
 					<Button
 						variant={"outlined"}
 						colorScheme={"success"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						success
 					</Button>
 					<Button
 						variant={"outlined"}
 						colorScheme={"danger"}
 						size={"sm"}
 						onPress={() => Alert.alert("it worked")}>
-						Hello
+						danger
 					</Button>
 					<View style={{ backgroundColor: "blue", padding: 5 }}>
 						<Button
@@ -158,23 +241,26 @@ export default function ComponentLibrary(params) {
 							colorScheme={"white"}
 							size={"sm"}
 							onPress={() => Alert.alert("it worked")}>
-							Hello
+							white
 						</Button>
 					</View>
+					<Button
+						variant={"outlined"}
+						colorScheme={"black"}
+						size={"sm"}
+						onPress={() => Alert.alert("it worked")}>
+						black
+					</Button>
 				</View>
-				<View
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						gap: 10,
-					}}></View>
+
 				<Text>variant = "link" & variant = "unstyled" & variant = "ghost"</Text>
 				<View
 					style={{
+						...styles.render,
 						display: "flex",
 						flexDirection: "row",
 						gap: 10,
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Button
 						variant={"link"}
@@ -201,11 +287,13 @@ export default function ComponentLibrary(params) {
 				<Text>Sizes: "xs" | "sm" | "md" | "lg" | "xl"</Text>
 				<View
 					style={{
+						...styles.render,
 						display: "flex",
 						flexDirection: "row",
 						alignItems: "flex-end",
+						flexWrap: "wrap",
 						gap: 10,
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Button
 						variant={"solid"}
@@ -239,95 +327,110 @@ export default function ComponentLibrary(params) {
 						Hello
 					</Button>
 				</View>
-				<Text style={{ fontSize: 18 }}>Special Features:</Text>
-				<Text>Loading & icons</Text>
+				<Text variant="subTitle">Loading & icons</Text>
 				<View
 					style={{
 						flexDirection: "column",
 						gap: 10,
 						marginVertical: 10,
 					}}>
-					<Text>loadingText="Loading..." loading=true, buttonText="hello"</Text>
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						loadingText="Loading..."
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-					<Text>No Icon, loading=true</Text>
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-					<Text>No Icon, loading=true, loadingLocation="right"</Text>
-
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						loadingLocation="right"
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-					<Text>Left Icon, loading=true</Text>
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						leftIcon={
-							<Icon name="person" size={20} color={Colors.background} />
-						}
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-					<Text>Right Icon, loading=true, loadingLocation="right"</Text>
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						rightIcon={
-							<Icon name="chevron-right" size={20} color={Colors.background} />
-						}
-						loadingLocation="right"
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-					<Text>left Icon, loading=true, loadingLocation="right"</Text>
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						leftIcon={
-							<Icon name="person" size={20} color={Colors.background} />
-						}
-						loadingLocation="right"
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
-					<Text>right Icon, loading=true</Text>
-					<Button
-						variant={"solid"}
-						size={"md"}
-						loading={true}
-						rightIcon={
-							<Icon name="chevron-right" size={20} color={Colors.background} />
-						}
-						onPress={() => Alert.alert("it worked")}>
-						Hello
-					</Button>
+					<Text>
+						loadingText="any text" loading=boolean
+						loadingLocation="left"|"right" loadingIcon={"any icon"}
+					</Text>
+					<View
+						style={{
+							...styles.render,
+							display: "flex",
+							flexDirection: "row",
+							flexWrap: "wrap",
+							gap: 10,
+						}}>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							loadingText="Loading..."
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							loadingLocation="right"
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							leftIcon={
+								<Icon name="person" size={20} color={Colors.background} />
+							}
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							rightIcon={
+								<Icon
+									name="chevron-right"
+									size={20}
+									color={Colors.background}
+								/>
+							}
+							loadingLocation="right"
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							leftIcon={
+								<Icon name="person" size={20} color={Colors.background} />
+							}
+							loadingLocation="right"
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+						<Button
+							variant={"solid"}
+							size={"md"}
+							loading={true}
+							rightIcon={
+								<Icon
+									name="chevron-right"
+									size={20}
+									color={Colors.background}
+								/>
+							}
+							onPress={() => Alert.alert("it worked")}>
+							Hello
+						</Button>
+					</View>
 				</View>
-				<Text>Icons</Text>
+				<Text>
+					iconLeft = {"any icon"} iconRight={"any icon"}
+				</Text>
 				<View
 					style={{
+						...styles.render,
 						flexDirection: "row",
 						flexWrap: "wrap",
 						gap: 10,
-						marginVertical: 10,
+						marginBottom: 20,
 					}}>
 					<Button
 						leftIcon={
@@ -344,8 +447,70 @@ export default function ComponentLibrary(params) {
 						Hello
 					</Button>
 				</View>
-				<Text>Haptic</Text>
+				<Text>Haptic = "light" | "medium" | "heavy" | "selection";</Text>
+				<View
+					style={{
+						...styles.render,
+						marginBottom: 20,
+						display: "flex",
+						flexDirection: "row",
+						flexWrap: "wrap",
+						gap: 10,
+					}}>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						haptic={"light"}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						haptic={"medium"}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						haptic={"heavy"}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+					<Button
+						variant={"solid"}
+						size={"md"}
+						haptic={"selection"}
+						onPress={() => Alert.alert("it worked")}>
+						Hello
+					</Button>
+				</View>
+				<View style={styles.header}>
+					<Text variant="subTitle">Icons</Text>
+				</View>
+				<Text>name="name-of-icon" size=number color="string"</Text>
+				<View style={styles.render}>
+					<Icon name="person" size={20} color={Colors.text} />
+				</View>
 			</ScreenWrapper>
 		</SafeAreaView>
 	);
 }
+const styles = StyleSheet.create({
+	header: {
+		width: "100%",
+		borderBottomColor: Colors.textSecondary,
+		borderStyle: "solid",
+		borderBottomWidth: 3,
+		paddingTop: 40,
+		marginBottom: 20,
+	},
+	render: {
+		borderWidth: 2,
+		borderColor: Colors.textSecondary,
+		borderStyle: "dashed",
+		padding: 6,
+		backgroundColor: Colors.foreground,
+	},
+});
