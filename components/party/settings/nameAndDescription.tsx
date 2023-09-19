@@ -15,7 +15,7 @@ import { debounce } from "lodash";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "react-native-toast-notifications";
 import { IEvent } from "../../../pages/party/party";
-import { Button } from "../../SmileNowUI/button";
+import { Button } from "../../SmileNowUI";
 export default function NameAndDescription({
 	title,
 	description,

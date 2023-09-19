@@ -17,7 +17,7 @@ import authApi from "../../api/user/auth";
 import { Context } from "../../providers/provider";
 import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 
 export default function LoginPage({ navigation }) {
 	const [phone, setPhone] = useState("");

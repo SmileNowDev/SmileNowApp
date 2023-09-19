@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Text, TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View, Image } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
@@ -12,6 +12,7 @@ import userApi from "../../api/user/user";
 import friendApi from "../../api/user/friend";
 
 import { UserType } from "../../pages/profile";
+import { Text } from "../SmileNowUI";
 type UserDataType = {
 	name: string;
 	pic: string;

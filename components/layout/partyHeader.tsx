@@ -1,9 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../../styles/styles";
+import { Text } from "../SmileNowUI";
 interface HeaderProps {
 	title: string;
 	eventId: string;
@@ -41,7 +42,7 @@ export default function PartyHeader({
 
 				<Text
 					numberOfLines={1}
-					ellipsizeMode="tail"
+					ellipsize="tail"
 					style={{
 						fontFamily: Fonts.title.fontFamily,
 						fontSize: 20,

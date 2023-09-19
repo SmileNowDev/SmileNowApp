@@ -2,7 +2,6 @@ import { downloadImage } from "../../../utils/downloadView";
 import React, { useRef, useState } from "react";
 import {
 	View,
-	Text,
 	TouchableOpacity,
 	StyleSheet,
 	Image,
@@ -16,7 +15,7 @@ import Icon from "../../core/icons";
 // @ts-expect-error
 import appStore from "../../../assets/appStore.png";
 import LogoBackground from "./logoBackground";
-import { Button } from "../../SmileNowUI/button";
+import { Text, Button } from "../../SmileNowUI";
 const appStoreURL =
 	"https://apps.apple.com/us/app/smile-now-party-pics/id6449005895";
 export default function InvitePoster({
@@ -58,13 +57,15 @@ export default function InvitePoster({
 							alignItems: "center",
 						}}>
 						<Text
+							variant="subTitle"
 							style={{
 								fontSize: (Fonts.subTitle.fontSize - 2) * scale,
-								fontFamily: Fonts.subTitle.fontFamily,
 								textAlign: "center",
 							}}>
 							Welcome to{" "}
-							<Text style={{ fontFamily: Fonts.title.fontFamily }}>
+							<Text
+								variant="title"
+								style={{ fontSize: (Fonts.subTitle.fontSize - 2) * scale }}>
 								{name}!
 							</Text>
 						</Text>
@@ -73,7 +74,14 @@ export default function InvitePoster({
 								fontSize: (Fonts.body.fontSize - 2) * scale,
 								fontFamily: Fonts.subTitle.fontFamily,
 							}}>
-							A <Text style={{ fontStyle: "italic" }}>Smile Now</Text>{" "}
+							A{" "}
+							<Text
+								style={{
+									fontStyle: "italic",
+									fontSize: (Fonts.body.fontSize - 2) * scale,
+								}}>
+								Smile Now
+							</Text>{" "}
 							Experience
 						</Text>
 					</View>

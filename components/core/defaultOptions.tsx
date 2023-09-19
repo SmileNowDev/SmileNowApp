@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-	Image,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-	Alert,
-} from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View, Alert } from "react-native";
 import Icon from "./icons";
 
 import ModalWrapper from "./modalWrapper";
@@ -14,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Colors, Fonts } from "../../styles/theme";
 import blockApi from "../../api/user/block";
 import userApi from "../../api/user/user";
-import { Button } from "../SmileNowUI/button";
+import { Button, Text } from "../SmileNowUI";
 
 interface DefaultOptionsProps {
 	type: string;
@@ -87,9 +80,8 @@ export default function DefaultOptions({
 					}}>
 					<View>
 						<Text
+							variant="subTitle"
 							style={{
-								fontFamily: Fonts.subTitle.fontFamily,
-								fontSize: Fonts.subTitle.fontSize,
 								textAlign: "left",
 								marginBottom: 10,
 							}}>
@@ -106,7 +98,6 @@ export default function DefaultOptions({
 							<Icon name="flag" size={25} color={Colors.urgent} />
 							<Text
 								style={{
-									fontFamily: Fonts.body.fontFamily,
 									fontSize: 20,
 									textAlign: "left",
 								}}>
@@ -128,7 +119,6 @@ export default function DefaultOptions({
 								<Icon name="block" size={25} color={Colors.urgent} />
 								<Text
 									style={{
-										fontFamily: Fonts.body.fontFamily,
 										fontSize: 20,
 										textAlign: "left",
 									}}>

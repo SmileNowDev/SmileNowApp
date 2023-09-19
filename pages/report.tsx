@@ -4,7 +4,7 @@ import { GlobalStyles, Dim } from "../styles/styles";
 import reportApi from "../api/interaction/report";
 import Header from "../components/layout/header";
 import { View, SafeAreaView, Text, TextInput, Alert } from "react-native";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 export default function ReportPage({ route, navigation }) {
 	const { type, id } = route.params;
 	const [message, setMessage] = useState("");

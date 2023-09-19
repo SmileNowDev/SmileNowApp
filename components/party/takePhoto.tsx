@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { Colors } from "../../styles/theme";
 import Icon from "../core/icons";
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "../SmileNowUI/button";
+import { Button } from "../SmileNowUI";
 
 export default function TakePhoto({ canPost, eventId }) {
 	const navigation = useNavigation();

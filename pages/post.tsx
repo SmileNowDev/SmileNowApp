@@ -28,7 +28,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 export const imageWidth = Dim.width - 40;
 export const imageHeight = imageWidth + 100;
 

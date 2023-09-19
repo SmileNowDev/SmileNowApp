@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, Text, FlatList, SafeAreaView } from "react-native";
 import Header from "../../components/layout/header";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 
 export default function PartyAttendees({ route, navigation }) {
 	const { eventId, isHost, name } = route.params;

@@ -5,7 +5,7 @@ import { Context } from "../providers/provider";
 import userApi from "../api/user/user";
 import { Colors, Fonts } from "../styles/theme";
 import { Dim, GlobalStyles } from "../styles/styles";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 
 export default function EditProfilePage({ navigation }) {
 	const { userId } = useContext(Context);

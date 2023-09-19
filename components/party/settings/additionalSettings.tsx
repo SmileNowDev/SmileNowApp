@@ -9,7 +9,8 @@ import { IEvent } from "../../../pages/party/party";
 import { useNavigation } from "@react-navigation/native";
 import archiveApi from "../../../api/post/archive";
 import { Context } from "../../../providers/provider";
-import { Button, ButtonColorSchemeType } from "../../SmileNowUI/button";
+import { ButtonColorSchemeType } from "../../SmileNowUI/button";
+import { Button } from "../../SmileNowUI";
 interface ISettingsButton {
 	title: string;
 	description: string;

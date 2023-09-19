@@ -8,7 +8,7 @@ import OtherProfile from "./otherProfile";
 import DefaultOptions from "./core/defaultOptions";
 import Icon from "./core/icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button } from "./SmileNowUI/button";
+import { Button } from "./SmileNowUI";
 interface AvatarProps {
 	pic: string;
 	size: number;

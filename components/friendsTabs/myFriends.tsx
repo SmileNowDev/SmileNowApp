@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
@@ -7,6 +7,7 @@ import ScreenWrapper from "../core/screenWrapper";
 import { Context } from "../../providers/provider";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Colors, Fonts } from "../../styles/theme";
+import { Text } from "../SmileNowUI";
 export default function MyFriendsTab() {
 	const [friends, setFriends] = useState([]);
 	const { userId } = useContext(Context);
@@ -78,20 +79,13 @@ export default function MyFriendsTab() {
 			{friends.length === 0 ? (
 				<View style={{ margin: 15, paddingTop: 20 }}>
 					<Text
+						colorScheme="textSecondary"
 						style={{
-							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize + 2,
-							color: Colors.textSecondary,
 						}}>
 						No Friend Requests
 					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}>
-						Looks like you're already everyone's friend 🥹
-					</Text>
+					<Text>Looks like you're already everyone's friend 🥹</Text>
 				</View>
 			) : (
 				<>

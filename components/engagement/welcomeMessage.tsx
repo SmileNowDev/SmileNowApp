@@ -1,7 +1,8 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import { GlobalStyles } from "../../styles/styles";
+import { Text } from "../SmileNowUI";
 
 export default function WelcomeMessage({
 	key,
@@ -22,8 +23,6 @@ export default function WelcomeMessage({
 						return (
 							<Text
 								style={{
-									fontFamily: Fonts.body.fontFamily,
-									fontSize: Fonts.body.fontSize,
 									...content.style,
 								}}>
 								{typeof content.content === "string" ? content.content : ""}

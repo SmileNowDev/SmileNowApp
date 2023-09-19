@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
@@ -7,6 +7,7 @@ import ScreenWrapper from "../core/screenWrapper";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Fonts, Colors } from "../../styles/theme";
 import { useIsFocused } from "@react-navigation/native";
+import { Text } from "../SmileNowUI";
 export default function RequestsTab() {
 	const isFocused = useIsFocused();
 	const [requests, setRequests] = useState([]);
@@ -67,20 +68,13 @@ export default function RequestsTab() {
 			{requests.length == 0 ? (
 				<View style={{ margin: 15, paddingTop: 20 }}>
 					<Text
+						colorScheme="textSecondary"
 						style={{
-							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize + 2,
-							color: Colors.textSecondary,
 						}}>
 						No Friend Requests
 					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}>
-						Looks like you're already everyone's friend 🥹
-					</Text>
+					<Text>Looks like you're already everyone's friend 🥹</Text>
 				</View>
 			) : (
 				<>

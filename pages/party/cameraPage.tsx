@@ -18,7 +18,7 @@ import { Dim, GlobalStyles } from "../../styles/styles";
 import postApi from "../../api/post/post";
 import { imageHeight, imageWidth } from "../../pages/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 export default function CameraPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId } = route.params;

@@ -7,7 +7,7 @@ import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button } from "../SmileNowUI/button";
+import { Button } from "../SmileNowUI";
 export default function CreateJoin({ navigation }) {
 	const [joining, setJoining] = useState(false);
 	const queryClient = useQueryClient();

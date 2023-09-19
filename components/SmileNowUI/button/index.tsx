@@ -41,7 +41,7 @@ function ButtonLoader({ size = 16, color = Colors.background }) {
 		</View>
 	);
 }
-export function Button({
+export default function Button({
 	children,
 	variant = "solid",
 	colorScheme = "primary",

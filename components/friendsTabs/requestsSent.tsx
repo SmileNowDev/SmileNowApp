@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import friendApi from "../../api/user/friend";
 import UserCard from "../userCard";
 import ScreenWrapper from "../core/screenWrapper";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Colors } from "../../styles/theme";
+import { Text } from "../SmileNowUI";
 export default function RequestsSentTab() {
 	const [page, setPage] = useState(1);
 	const [requests, setRequests] = useState([]);

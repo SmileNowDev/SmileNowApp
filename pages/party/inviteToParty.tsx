@@ -9,7 +9,7 @@ import ScreenWrapper from "../../components/core/screenWrapper";
 import ModalWrapper from "../../components/core/modalWrapper";
 import InvitePoster from "../../components/party/engagement/invitePoster";
 import Icon from "../../components/core/icons";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 export default function InviteToParty({ route, navigation }) {
 	const { eventId } = route.params;
 	const [joinCode, setJoinCode] = useState("ABCDE");

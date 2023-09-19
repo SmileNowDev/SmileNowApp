@@ -13,7 +13,7 @@ import QRCode from "react-native-qrcode-svg";
 import { useQueryClient } from "@tanstack/react-query";
 import PartyLoading from "../components/party/partyLoading";
 import AnimatedLottieView from "lottie-react-native";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 
 export default function CreatePartyPage({ route, navigation }) {
 	const { eventId } = route.params;

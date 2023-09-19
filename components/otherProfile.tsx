@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Picture } from "./avatar";
 import { Colors, Fonts } from "../styles/theme";
 import friendApi from "../api/user/friend";
 import userApi from "../api/user/user";
 import Icon from "./core/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "./SmileNowUI/button";
+import { Button, Text } from "./SmileNowUI";
 type FriendStatus = "stranger" | "requestedYou" | "requested" | "accepted";
 export default function OtherProfile({ id }) {
 	const queryClient = useQueryClient();
@@ -85,8 +85,6 @@ export default function OtherProfile({ id }) {
 				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 						}}>
 						{name} wants to be friends!
@@ -107,8 +105,6 @@ export default function OtherProfile({ id }) {
 				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 							textAlign: "center",
 						}}>
@@ -125,8 +121,6 @@ export default function OtherProfile({ id }) {
 				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 						}}>
 						You're friends with {name}
@@ -157,18 +151,17 @@ export default function OtherProfile({ id }) {
 			}}>
 			<Picture size={80} pic={picture} />
 			<Text
+				variant="title"
 				style={{
 					marginTop: 20,
 					marginBottom: 5,
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: Fonts.title.fontSize,
 				}}>
 				{name || "Loading..."}
 			</Text>
 			<Text
+				variant="button"
+				colorScheme="textSecondary"
 				style={{
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: Fonts.button.fontSize,
 					color: Colors.textSecondary,
 				}}>
 				@{userName || "username"}

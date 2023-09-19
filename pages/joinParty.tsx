@@ -5,7 +5,7 @@ import { Dim } from "../styles/styles";
 import attendeeApi from "../api/post/attendee";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 export default function JoinPartyPage({ setVisible }) {
 	const navigation = useNavigation();
 	const [joinCode, setJoinCode] = useState("");

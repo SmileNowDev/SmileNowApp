@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
 import { Picture } from "./avatar";
 import ModalWrapper from "./core/modalWrapper";
@@ -8,8 +8,7 @@ import OtherProfile from "./otherProfile";
 import DefaultOptions from "./core/defaultOptions";
 import { Context } from "../providers/provider";
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "./SmileNowUI/button";
-
+import { Button, Text } from "./SmileNowUI/index";
 export interface UserCardProps {
 	profilePicture: string;
 	name: string;
@@ -46,18 +45,11 @@ export default function UserCard({
 				delayPressIn={500}>
 				<Picture pic={profilePicture} size={40} />
 				<View style={{ flex: 1 }}>
+					<Text>{name}</Text>
 					<Text
+						colorScheme="textSecondary"
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}>
-						{name}
-					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
 							fontSize: Fonts.body.fontSize - 2,
-							color: Colors.textSecondary,
 						}}>
 						@{username}
 					</Text>

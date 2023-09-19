@@ -8,7 +8,7 @@ import ModalWrapper from "../core/modalWrapper";
 import { Dim } from "../../styles/styles";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
-import { Button } from "../SmileNowUI/button";
+import { Button } from "../SmileNowUI";
 
 export default function WelcomeMessageModal() {
 	const [modalVisible, setModalVisible] = useState(false);

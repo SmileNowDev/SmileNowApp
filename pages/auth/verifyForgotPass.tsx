@@ -11,7 +11,7 @@ import {
 import { Colors, Fonts } from "../../styles/theme";
 import { GlobalStyles } from "../../styles/styles";
 import authApi from "../../api/user/auth";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 
 export default function VerifyPassPage({ route, navigation }) {
 	const { phone } = route.params;

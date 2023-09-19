@@ -10,7 +10,7 @@ import MyFriendsTab from "../components/friendsTabs/myFriends";
 import Icon from "../components/core/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsFocused } from "@react-navigation/native";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 
 const Tab = createMaterialTopTabNavigator();
 export function getInitials(firstName: string, lastName: string) {

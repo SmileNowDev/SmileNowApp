@@ -16,7 +16,7 @@ import { Colors, Fonts } from "../styles/theme";
 import userApi from "../api/user/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Context } from "../providers/provider";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 import ScreenWrapper from "../components/core/screenWrapper";
 import Header from "../components/layout/header";
 const { width, height } = Dimensions.get("window");

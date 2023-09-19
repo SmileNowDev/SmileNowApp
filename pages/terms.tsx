@@ -5,7 +5,7 @@ import { Alert, SafeAreaView, ScrollView, Text, View } from "react-native";
 // Libraries
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../components/layout/header";
-import { Button } from "../components/SmileNowUI/button";
+import { Button } from "../components/SmileNowUI";
 
 export default function TermsAndConditions({ navigation }) {
 	// Functions

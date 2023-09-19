@@ -1,9 +1,10 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { Dim, GlobalStyles } from "../../styles/styles";
+import { Text } from "../SmileNowUI";
 interface HeaderProps {
 	goBack?: boolean;
 	title?: string;
@@ -34,10 +35,10 @@ export default function Header({
 				</>
 			)}
 			<Text
+				variant="title"
 				style={{
 					flex: 1,
 					textAlign: "center",
-					fontFamily: Fonts.title.fontFamily,
 					fontSize: 20,
 					width: Dim.width - 60,
 				}}>

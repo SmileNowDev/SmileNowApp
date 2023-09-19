@@ -1,9 +1,10 @@
 import React from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Dim } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import AnimatedLottieView from "lottie-react-native";
 import wave from "../../assets/animations/wave.json";
+import { Text } from "../SmileNowUI";
 export default function WelcomeMessage() {
 	return (
 		<ScrollView style={{ paddingBottom: 150 }}>
@@ -30,6 +31,7 @@ export default function WelcomeMessage() {
 					/>
 				</View>
 				<Text
+					variant="title"
 					style={{
 						left: 0,
 						right: 0,
@@ -43,20 +45,18 @@ export default function WelcomeMessage() {
 					Welcome!
 				</Text>
 				<Text
+					variant="subTitle"
+					colorScheme="textSecondary"
 					style={{
 						marginTop: -10,
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
-						color: Colors.textSecondary,
 					}}>
 					Here's how it all works:
 				</Text>
 				<View style={styles.stepsContainer}>
 					<View style={styles.step}>
 						<Text
+							variant="button"
 							style={{
-								fontFamily: Fonts.button.fontFamily,
-								fontSize: Fonts.button.fontSize,
 								...styles.number,
 								color: Colors.background,
 								backgroundColor: Colors.primary,
@@ -69,9 +69,8 @@ export default function WelcomeMessage() {
 					</View>
 					<View style={styles.step}>
 						<Text
+							variant="button"
 							style={{
-								fontFamily: Fonts.button.fontFamily,
-								fontSize: Fonts.button.fontSize,
 								...styles.number,
 								color: Colors.background,
 								backgroundColor: Colors.tertiary,
@@ -83,9 +82,8 @@ export default function WelcomeMessage() {
 
 					<View style={styles.step}>
 						<Text
+							variant="button"
 							style={{
-								fontFamily: Fonts.button.fontFamily,
-								fontSize: Fonts.button.fontSize,
 								...styles.number,
 								color: Colors.background,
 								backgroundColor: Colors.secondary,
@@ -99,9 +97,8 @@ export default function WelcomeMessage() {
 
 					<View style={styles.step}>
 						<Text
+							variant="button"
 							style={{
-								fontFamily: Fonts.button.fontFamily,
-								fontSize: Fonts.button.fontSize,
 								...styles.number,
 								color: Colors.background,
 								backgroundColor: Colors.success,

@@ -6,7 +6,7 @@ import { Colors, Fonts } from "../../styles/theme";
 import LogoWhite from "../../assets/logo_white.png";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 // todo - make sure button is disabled if phone number is not 10 digits and code is not entered
 // todo - make sure phone number is only numbers
 // todo - loading indicator on "next" press

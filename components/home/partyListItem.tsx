@@ -1,6 +1,5 @@
 import React from "react";
 import {
-	Text,
 	TouchableOpacity,
 	View,
 	TouchableWithoutFeedback,
@@ -17,6 +16,7 @@ import { PulseIndicator } from "react-native-indicators";
 import { LinearGradient } from "expo-linear-gradient";
 import { SquircleView } from "react-native-figma-squircle";
 import * as Haptics from "expo-haptics";
+import { Text } from "../SmileNowUI";
 interface ListProps {
 	initials: string;
 	name: string;
@@ -142,9 +142,8 @@ export default function PartyListItem({
 						</View>
 
 						<Text
+							variant="title"
 							style={{
-								flex: 1,
-								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize + 2,
 							}}>
 							{name}

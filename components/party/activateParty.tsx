@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
+import { View, Alert, Image } from "react-native";
 import eventApi from "../../api/post/event";
 import React from "react";
 import { Dim, GlobalStyles } from "../../styles/styles";
@@ -7,7 +7,7 @@ import Icon from "../core/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button } from "../SmileNowUI/button";
+import { Button, Text } from "../SmileNowUI";
 
 export default function ActivateParty({ isActive, eventId, isHost }) {
 	const queryClient = useQueryClient();
@@ -69,13 +69,7 @@ export default function ActivateParty({ isActive, eventId, isHost }) {
 								borderTopRightRadius: 5,
 								borderTopLeftRadius: 5,
 							}}>
-							<Text
-								style={{
-									fontFamily: Fonts.body.fontFamily,
-									fontSize: Fonts.body.fontSize,
-								}}>
-								Your party is inactive
-							</Text>
+							<Text>Your party is inactive</Text>
 							<Icon
 								name="emoticon-sad-outline"
 								type="MaterialCommunity"

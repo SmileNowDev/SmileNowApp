@@ -7,7 +7,7 @@ import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../../providers/provider";
 import jwt_decode from "jwt-decode";
-import { Button } from "../../components/SmileNowUI/button";
+import { Button } from "../../components/SmileNowUI";
 
 export default function VerifyPhonePage({ route, navigation }) {
 	const { phone } = route.params;

@@ -1,10 +1,10 @@
 import React from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
 import * as SMS from "expo-sms";
-import { Button } from "../SmileNowUI/button";
+import { Button, Text } from "../SmileNowUI";
 
 interface ContactCardProps {
 	name: string;
@@ -55,22 +55,16 @@ export default function ContactCard({
 					justifyContent: "center",
 				}}>
 				<Text
+					variant="subTitle"
+					colorScheme="textSecondary"
 					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
 						fontSize: Fonts.subTitle.fontSize - 2,
-						color: Colors.textSecondary,
 					}}>
 					{initials}
 				</Text>
 			</View>
 			<View style={{ flex: 1 }}>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-					}}>
-					{name}
-				</Text>
+				<Text>{name}</Text>
 			</View>
 			<Button
 				variant="outlined"
