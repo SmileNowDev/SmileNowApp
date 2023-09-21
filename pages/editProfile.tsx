@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, SafeAreaView, Text, TextInput, View } from "react-native";
+import { Alert, SafeAreaView, TextInput, View } from "react-native";
 import Header from "../components/layout/header";
 import { Context } from "../providers/provider";
 import userApi from "../api/user/user";
 import { Colors, Fonts } from "../styles/theme";
 import { Dim, GlobalStyles } from "../styles/styles";
-import { Button } from "../components/SmileNowUI";
+import { Button, Text } from "../components/SmileNowUI";
 
 export default function EditProfilePage({ navigation }) {
 	const { userId } = useContext(Context);
@@ -57,12 +57,7 @@ export default function EditProfilePage({ navigation }) {
 		<SafeAreaView>
 			<Header goBack title={"Edit Profile"} />
 			<View style={{ padding: 10 }}>
-				<Text
-					style={{
-						fontFamily: Fonts.small.fontFamily,
-						fontSize: Fonts.small.fontSize,
-						color: Colors.textSecondary,
-					}}>
+				<Text variant="small" colorScheme="textSecondary">
 					Name
 				</Text>
 				<TextInput
@@ -72,11 +67,10 @@ export default function EditProfilePage({ navigation }) {
 					style={{ ...GlobalStyles.textInput }}
 				/>
 				<Text
+					variant="small"
+					colorScheme="textSecondary"
 					style={{
 						marginTop: 20,
-						fontFamily: Fonts.small.fontFamily,
-						fontSize: Fonts.small.fontSize,
-						color: Colors.textSecondary,
 					}}>
 					Username
 				</Text>

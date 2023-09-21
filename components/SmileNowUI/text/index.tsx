@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { Text as RN_Text, TextStyle } from "react-native";
 import generateTextStyles from "./theme";
 type TextVariant =

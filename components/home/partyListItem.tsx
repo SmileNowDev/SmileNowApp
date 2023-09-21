@@ -145,6 +145,9 @@ export default function PartyListItem({
 							variant="title"
 							style={{
 								fontSize: Fonts.body.fontSize + 2,
+								textAlign: "left",
+								flex: 1,
+								paddingLeft: 10,
 							}}>
 							{name}
 						</Text>

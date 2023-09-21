@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Dim } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
+import { Text } from "../../SmileNowUI";
 
 export default function NotificationFrequencyButton({
 	mode,

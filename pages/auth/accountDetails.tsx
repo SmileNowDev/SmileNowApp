@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import { Alert, SafeAreaView, Text, TextInput, View } from "react-native";
+import { Alert, SafeAreaView, TextInput, View } from "react-native";
 import { Colors } from "../../styles/theme";
 import { GlobalStyles } from "../../styles/styles";
 import userApi from "../../api/user/user";
-import { Button } from "../../components/SmileNowUI";
+import { Button, Text } from "../../components/SmileNowUI";
 export default function AccountDetailsScreen({ navigation }) {
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");

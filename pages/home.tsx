@@ -21,6 +21,7 @@ import CreateJoin from "../components/home/createJoin";
 import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
 import WelcomeMessageModal from "../components/engagement/welcomeMessageModal";
+import { Button } from "../components/SmileNowUI";
 export type EventType = {
 	_id: string;
 	title: string;

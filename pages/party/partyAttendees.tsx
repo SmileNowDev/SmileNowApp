@@ -3,7 +3,7 @@ import UserCard from "../../components/userCard";
 import attendeeApi from "../../api/post/attendee";
 import { Context } from "../../providers/provider";
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, FlatList, SafeAreaView } from "react-native";
+import { View, FlatList, SafeAreaView } from "react-native";
 import Header from "../../components/layout/header";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Button } from "../../components/SmileNowUI";

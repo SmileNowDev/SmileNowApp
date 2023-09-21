@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, TextInput } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
 import { Dim } from "../styles/styles";
 import attendeeApi from "../api/post/attendee";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "../components/SmileNowUI";
+import { Button, Text } from "../components/SmileNowUI";
 export default function JoinPartyPage({ setVisible }) {
 	const navigation = useNavigation();
 	const [joinCode, setJoinCode] = useState("");
@@ -64,11 +64,9 @@ export default function JoinPartyPage({ setVisible }) {
 					onSubmitEditing={() => joinEvent(joinCode)}
 				/>
 				<Text
+					colorScheme="textSecondary"
 					style={{
 						marginTop: 10,
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.textSecondary,
 					}}>
 					Or Scan the QR Code
 				</Text>

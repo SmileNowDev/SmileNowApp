@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
-import { Image, Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import { Image, TouchableOpacity, StyleSheet, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 
 import dayjs from "dayjs";
 import { Dim } from "../../styles/styles";
 import { downloadImage } from "../../utils/downloadView";
+import { Text } from "../SmileNowUI";
 interface DownloadPostProps {
 	image: string;
 	caption: string;
@@ -77,21 +78,13 @@ export default function DownloadPost({
 					{dayjs(date).format("YYYY-MM-DD  hh:mm")}
 				</Text>
 			</View>
-
-			{/* flex row */}
 			<View
 				style={{
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
 				}}>
-				<Text
-					style={{
-						fontFamily: Fonts.title.fontFamily,
-						fontSize: Fonts.title.fontSize,
-					}}>
-					Download Options
-				</Text>
+				<Text variant="title">Download Options</Text>
 				<TouchableOpacity onPress={() => setModalVisible(false)}>
 					<Icon name="close" size={30} color={Colors.textSecondary} />
 				</TouchableOpacity>
@@ -150,13 +143,7 @@ export default function DownloadPost({
 							alignItems: "center",
 							gap: 10,
 						}}>
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							Photo Only
-						</Text>
+						<Text>Photo Only</Text>
 						<Icon name={"download"} type="Feather" size={30} />
 					</TouchableOpacity>
 				</View>
@@ -212,13 +199,7 @@ export default function DownloadPost({
 							alignItems: "center",
 							gap: 10,
 						}}>
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							Photo + Caption
-						</Text>
+						<Text>Photo + Caption</Text>
 						<Icon name={"download"} type="Feather" size={30} />
 					</TouchableOpacity>
 				</View>

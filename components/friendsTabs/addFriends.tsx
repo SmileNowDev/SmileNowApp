@@ -7,7 +7,7 @@ import userApi from "../../api/user/user";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import { Colors } from "../../styles/theme";
-import Text from "../core/text";
+import { Text } from "../SmileNowUI";
 type ContactType = {
 	contactType: string;
 	firstName: string;

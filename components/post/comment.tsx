@@ -1,11 +1,11 @@
 import React from "react";
-import { Image, View, Text, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { Fonts, Colors } from "../../styles/theme";
 import Avatar from "../avatar";
-import Icon from "../core/icons";
 import DefaultOptions from "../core/defaultOptions";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Text } from "../SmileNowUI";
 dayjs.extend(relativeTime);
 interface Comment {
 	pic: string;
@@ -46,31 +46,13 @@ export default function Comment({
 						flex: 1,
 						gap: 3,
 					}}>
-					<Text
-						style={{
-							fontFamily: Fonts.small.fontFamily,
-							fontSize: Fonts.small.fontSize,
-							color: Colors.text,
-						}}>
-						{name}
-					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.small.fontFamily,
-							fontSize: Fonts.small.fontSize,
-							color: Colors.textSecondary,
-						}}>
+					<Text variant="small">{name}</Text>
+					<Text colorScheme="textSecondary" variant="small">
 						| {dayjs(date).fromNow()}
 					</Text>
 				</View>
 
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-					}}>
-					{comment}
-				</Text>
+				<Text>{comment}</Text>
 			</View>
 			<DefaultOptions type={"comment"} id={commentId} size={20} horizontal />
 		</View>

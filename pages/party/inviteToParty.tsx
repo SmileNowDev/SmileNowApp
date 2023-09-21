@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import { Dim, GlobalStyles } from "../../styles/styles";
 import QRCode from "react-native-qrcode-svg";
 import { Colors, Fonts } from "../../styles/theme";
@@ -9,7 +9,7 @@ import ScreenWrapper from "../../components/core/screenWrapper";
 import ModalWrapper from "../../components/core/modalWrapper";
 import InvitePoster from "../../components/party/engagement/invitePoster";
 import Icon from "../../components/core/icons";
-import { Button } from "../../components/SmileNowUI";
+import { Button, Text } from "../../components/SmileNowUI";
 export default function InviteToParty({ route, navigation }) {
 	const { eventId } = route.params;
 	const [joinCode, setJoinCode] = useState("ABCDE");
@@ -69,16 +69,14 @@ export default function InviteToParty({ route, navigation }) {
 						<Text
 							style={{
 								marginBottom: 10,
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
 							}}>
 							Tell friends to join with
 						</Text>
 						<Text
+							variant="title"
+							colorScheme="primary"
 							style={{
-								fontFamily: Fonts.title.fontFamily,
-								fontSize: Fonts.title.fontSize + 10,
-								color: Colors.primary,
+								fontSize: 40,
 								textAlign: "center",
 								marginBottom: 20,
 							}}>

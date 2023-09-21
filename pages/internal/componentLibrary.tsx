@@ -2,11 +2,10 @@ import React from "react";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import Header from "../../components/layout/header";
-import { Button } from "../../components/SmileNowUI/button";
+import { Text, Button } from "../../components/SmileNowUI";
 import Icon from "../../components/core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { Dim } from "../../styles/styles";
-import Text from "../../components/SmileNowUI/text/index";
 
 export default function ComponentLibrary(params) {
 	return (

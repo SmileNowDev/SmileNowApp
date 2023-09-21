@@ -1,7 +1,7 @@
 import Icon from "../../core/icons";
 import eventApi from "../../../api/post/event";
 import React, { useContext } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, View } from "react-native";
 import { Colors, Fonts } from "../../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "react-native-toast-notifications";
@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import archiveApi from "../../../api/post/archive";
 import { Context } from "../../../providers/provider";
 import { ButtonColorSchemeType } from "../../SmileNowUI/button";
-import { Button } from "../../SmileNowUI";
+import { Button, Text } from "../../SmileNowUI";
 interface ISettingsButton {
 	title: string;
 	description: string;
@@ -42,19 +42,11 @@ function SettingsButton({
 				style={{
 					flex: 1,
 				}}>
+				<Text>{title}</Text>
 				<Text
+					variant="small"
+					colorScheme="textSecondary"
 					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.text,
-					}}>
-					{title}
-				</Text>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.small.fontSize,
-						color: Colors.textSecondary,
 						flex: 0,
 					}}>
 					{description}
@@ -63,6 +55,7 @@ function SettingsButton({
 			<Button
 				onPress={onPress}
 				size="xs"
+				variant="outlined"
 				colorScheme={colorScheme || "gray"}
 				leftIcon={<Icon name={icon} size={20} color={Colors.text} />}>
 				{buttonText}
@@ -208,11 +201,10 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 		<View>
 			{/* Party Settings */}
 			<Text
+				variant="subTitle"
 				style={{
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.button.fontSize,
-					width: "100%",
 					marginTop: 5,
+					fontSize: 20,
 				}}>
 				Party Settings
 			</Text>

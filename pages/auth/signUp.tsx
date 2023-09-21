@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Image, Text, TextInput, View, Alert } from "react-native";
+import { Image, TextInput, View, Alert } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 // @ts-expect-error
 import LogoWhite from "../../assets/logo_white.png";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "../../components/SmileNowUI";
+import { Button, Text } from "../../components/SmileNowUI";
 // todo - make sure button is disabled if phone number is not 10 digits and code is not entered
 // todo - make sure phone number is only numbers
 // todo - loading indicator on "next" press
@@ -66,14 +66,11 @@ export default function SignUpPage({ navigation }) {
 				}}
 			/>
 			<Text
+				variant="subTitle"
+				colorScheme="background"
 				style={{
-					textAlign: "left",
 					paddingHorizontal: 10,
 					width: "100%",
-
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.subTitle.fontSize,
-					color: Colors.background,
 				}}>
 				Sign Up
 			</Text>

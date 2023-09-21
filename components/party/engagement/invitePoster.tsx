@@ -105,9 +105,9 @@ export default function InvitePoster({
 								height: 60 * scale,
 							}}></View>
 						<Text
+							variant="title"
 							style={{
 								width: Dim.width * scale - 80 * scale,
-								fontFamily: Fonts.title.fontFamily,
 								fontSize: (Fonts.body.fontSize - 2) * scale,
 								textAlign: "center",
 							}}>
@@ -132,8 +132,8 @@ export default function InvitePoster({
 								alignItems: "center",
 							}}>
 							<Text
+								variant="title"
 								style={{
-									fontFamily: Fonts.title.fontFamily,
 									fontSize: Fonts.body.fontSize * scale,
 								}}>
 								1. Download App
@@ -166,8 +166,8 @@ export default function InvitePoster({
 								alignItems: "center",
 							}}>
 							<Text
+								variant="title"
 								style={{
-									fontFamily: Fonts.title.fontFamily,
 									fontSize: Fonts.body.fontSize * scale,
 								}}>
 								2. Create Account
@@ -184,8 +184,8 @@ export default function InvitePoster({
 									alignItems: "center",
 								}}>
 								<Text
+									variant="button"
 									style={{
-										fontFamily: Fonts.button.fontFamily,
 										fontSize: Fonts.body.fontSize * scale,
 									}}>
 									Join Party
@@ -210,8 +210,8 @@ export default function InvitePoster({
 							gap: 10 * scale,
 						}}>
 						<Text
+							variant="title"
 							style={{
-								fontFamily: Fonts.titleBold.fontFamily,
 								fontSize: Fonts.subTitle.fontSize * scale,
 							}}>
 							3. Have Fun!
@@ -259,13 +259,7 @@ export default function InvitePoster({
 							alignItems: "center",
 							marginBottom: 30,
 						}}>
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							Save Ink?
-						</Text>
+						<Text>Save Ink?</Text>
 						<Switch value={saveInk} onValueChange={setSaveInk} />
 					</View>
 					<Button

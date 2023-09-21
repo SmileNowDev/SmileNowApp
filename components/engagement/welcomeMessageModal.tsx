@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import engagementApi from "../../api/user/engagement";
 import WelcomeMessage from "./welcomeMessage";
 import ModalWrapper from "../core/modalWrapper";
@@ -105,6 +105,23 @@ export default function WelcomeMessageModal() {
 								}}>
 								<Icon name="close" size={30} color={Colors.textSecondary} />
 							</TouchableOpacity>
+
+							<View
+								style={{
+									maxHeight: Dim.height - 160,
+								}}>
+								<View
+									style={{
+										borderRadius: 20,
+										width: Dim.width * 0.9,
+										justifyContent: "flex-start",
+										alignItems: "center",
+										paddingTop: 30,
+										height: Dim.height - 160,
+									}}>
+									<WelcomeMessage key={message._id + "1"} message={message} />
+								</View>
+							</View>
 							<View
 								style={{
 									width: Dim.width - 40,
@@ -136,22 +153,6 @@ export default function WelcomeMessageModal() {
 								) : (
 									<></>
 								)}
-							</View>
-							<View
-								style={{
-									maxHeight: Dim.height - 160,
-								}}>
-								<View
-									style={{
-										borderRadius: 20,
-										width: Dim.width * 0.9,
-										justifyContent: "flex-start",
-										alignItems: "center",
-										paddingTop: 30,
-										height: Dim.height - 160,
-									}}>
-									<WelcomeMessage key={message._id + "1"} message={message} />
-								</View>
 							</View>
 						</View>
 					</ModalWrapper>

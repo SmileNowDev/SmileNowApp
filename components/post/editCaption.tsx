@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Text, TextInput, View, Alert } from "react-native";
+import { TextInput, View, Alert } from "react-native";
 import { Dim, GlobalStyles } from "../../styles/styles";
 import { Colors } from "../../styles/theme";
 import postApi from "../../api/post/post";
-import Icon from "../../components/core/icons";
-import { Button } from "../SmileNowUI/button";
+import { Button, Text } from "../SmileNowUI";
 interface EditCaptionProps {
 	postId: string;
 	caption: string;

@@ -1,11 +1,12 @@
 import React from "react";
 import { useButton } from "@react-native-aria/button";
-import { Pressable, StyleProp, Text, View, StyleSheet } from "react-native";
+import { Pressable, StyleProp, View, StyleSheet } from "react-native";
 import { useRef } from "react";
 import { Colors, Fonts } from "../../../styles/theme";
 import * as Haptics from "expo-haptics";
 import { MaterialIndicator } from "react-native-indicators";
 import { ButtonSizes, getButtonVariant } from "./theme";
+import { Text } from "../index";
 export type ButtonColorSchemeType =
 	| "primary"
 	| "secondary"

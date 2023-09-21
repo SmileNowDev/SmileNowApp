@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Dim } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -10,7 +10,7 @@ import MyFriendsTab from "../components/friendsTabs/myFriends";
 import Icon from "../components/core/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsFocused } from "@react-navigation/native";
-import { Button } from "../components/SmileNowUI";
+import { Button, Text } from "../components/SmileNowUI";
 
 const Tab = createMaterialTopTabNavigator();
 export function getInitials(firstName: string, lastName: string) {
@@ -43,14 +43,7 @@ export default function FriendsPage({ navigation }) {
 					alignItems: "center",
 					justifyContent: "space-between",
 				}}>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.textSecondary,
-					}}>
-					Smile Now is more fun with friends!
-				</Text>
+				<Text variant="subTitle">Friends</Text>
 				<Button
 					onPress={() => navigation.navigate("Home")}
 					size="sm"
@@ -107,11 +100,10 @@ export default function FriendsPage({ navigation }) {
 											marginTop: -7,
 										}}>
 										<Text
+											variant="subTitle"
 											style={{
 												color: Colors.background,
-												fontSize: 12,
 												textAlign: "center",
-												fontFamily: Fonts.subTitle.fontFamily,
 											}}>
 											{requestData}
 										</Text>
@@ -153,13 +145,3 @@ export default function FriendsPage({ navigation }) {
 		</>
 	);
 }
-const styles = StyleSheet.create({
-	tabContainer: {
-		padding: 10,
-	},
-	tabTitle: {
-		fontFamily: Fonts.subTitle.fontFamily,
-		fontSize: Fonts.subTitle.fontSize,
-		color: Colors.textSecondary,
-	},
-});

@@ -2,7 +2,7 @@ import { Dim, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

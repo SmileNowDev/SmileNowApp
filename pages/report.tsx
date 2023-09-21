@@ -3,8 +3,8 @@ import { Colors, Fonts } from "../styles/theme";
 import { GlobalStyles, Dim } from "../styles/styles";
 import reportApi from "../api/interaction/report";
 import Header from "../components/layout/header";
-import { View, SafeAreaView, Text, TextInput, Alert } from "react-native";
-import { Button } from "../components/SmileNowUI";
+import { View, SafeAreaView, TextInput, Alert } from "react-native";
+import { Button, Text } from "../components/SmileNowUI";
 export default function ReportPage({ route, navigation }) {
 	const { type, id } = route.params;
 	const [message, setMessage] = useState("");
@@ -38,14 +38,7 @@ export default function ReportPage({ route, navigation }) {
 		<SafeAreaView>
 			<Header goBack title="Report" />
 			<View style={{ padding: 10 }}>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-					}}>
-					{" "}
-					Why are you reporting this {type}
-				</Text>
+				<Text>Why are you reporting this {type}</Text>
 				<TextInput
 					placeholderTextColor={Colors.textSecondary}
 					style={{

@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
+import { Text } from "../SmileNowUI";
 type SettingsButtonProps = {
 	icon: React.ReactNode;
 	text: string;

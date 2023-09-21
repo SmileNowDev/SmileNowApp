@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { SafeAreaView, Text } from "react-native";
+import { SafeAreaView } from "react-native";
 import { Context } from "../providers/provider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";

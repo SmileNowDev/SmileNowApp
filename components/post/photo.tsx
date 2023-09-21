@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import likeApi from "../../api/interaction/like";
@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Polaroid from "./polaroid";
+import { Text } from "../SmileNowUI";
 dayjs.extend(relativeTime);
 export interface PhotoProps {
 	postId: string;
@@ -89,21 +90,21 @@ export default function Photo({
 							<View
 								style={{ flex: 1, overflow: "hidden", position: "relative" }}>
 								<Text
+									variant="button"
 									numberOfLines={1}
+									ellipsize="middle"
 									style={{
-										fontFamily: Fonts.button.fontFamily,
-										fontSize: Fonts.button.fontSize,
 										flex: 1,
 										width: "100%",
 									}}>
 									{owner.name}
 								</Text>
 								<Text
+									variant="small"
+									colorScheme="textSecondary"
 									style={{
-										fontFamily: Fonts.small.fontFamily,
-										fontSize: Fonts.small.fontSize,
-										color: Colors.textSecondary,
 										textAlign: "left",
+										flex: 1,
 									}}>
 									{dayjs(date).fromNow()}
 								</Text>
@@ -117,17 +118,11 @@ export default function Photo({
 									size={25}
 									color={liked ? Colors.primary : Colors.textSecondary}
 								/>
-								<Text
-									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}>
-									{likesCount}
-								</Text>
+								<Text style={{ fontSize: 20 }}>{likesCount}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity style={styles.reaction} disabled>
 								<Icon name="message" size={25} color={Colors.textSecondary} />
-								<Text
-									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}>
-									{comments}
-								</Text>
+								<Text style={{ fontSize: 20 }}>{comments}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={styles.reaction}

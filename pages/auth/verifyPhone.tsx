@@ -1,13 +1,13 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { SafeAreaView, Text, TextInput, View, Alert } from "react-native";
+import { SafeAreaView, TextInput, View, Alert } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import { GlobalStyles } from "../../styles/styles";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../../providers/provider";
 import jwt_decode from "jwt-decode";
-import { Button } from "../../components/SmileNowUI";
+import { Button, Text } from "../../components/SmileNowUI";
 
 export default function VerifyPhonePage({ route, navigation }) {
 	const { phone } = route.params;
@@ -56,22 +56,16 @@ export default function VerifyPhonePage({ route, navigation }) {
 			}}>
 			<View style={GlobalStyles.ScreenContainer}>
 				<Text
+					variant="subTitle"
+					colorScheme="background"
 					style={{
 						paddingTop: 30,
 						textAlign: "center",
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.body.fontSize,
 						marginBottom: 20,
-						color: Colors.background,
 					}}>
 					Enter the code we just texted you
 				</Text>
-				<Text
-					style={{
-						color: Colors.background,
-					}}>
-					{errorText}
-				</Text>
+				<Text colorScheme="background">{errorText}</Text>
 
 				<TextInput
 					placeholder="Code"

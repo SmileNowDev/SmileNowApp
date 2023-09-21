@@ -1,13 +1,7 @@
 import Icon from "../../core/icons";
 import eventApi from "../../../api/post/event";
 import React, { useContext, useState } from "react";
-import {
-	ActivityIndicator,
-	StyleSheet,
-	Switch,
-	Text,
-	View,
-} from "react-native";
+import { StyleSheet, Switch, View } from "react-native";
 import { GlobalStyles } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +12,7 @@ import attendeeApi from "../../../api/post/attendee";
 import { Context } from "../../../providers/provider";
 import NotificationFrequencyButton from "./notificationFrequencyButton";
 import QueryLoadingStatus from "../../core/queryLoadingStatus";
+import { Text } from "../../SmileNowUI";
 export default function NotificationsSettings({
 	eventId,
 	title,
@@ -152,15 +147,13 @@ export default function NotificationsSettings({
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
-				}}
-			>
+				}}>
 				<Text
+					variant="subTitle"
 					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.button.fontSize,
+						fontSize: 20,
 						marginTop: 5,
-					}}
-				>
+					}}>
 					Notification Settings
 				</Text>
 				<QueryLoadingStatus
@@ -170,39 +163,26 @@ export default function NotificationsSettings({
 			</View>
 			<View
 				style={{
-					gap: 5,
+					gap: 10,
 					display: "flex",
 					flexDirection: "row",
-					alignItems: "center",
+					alignItems: "flex-start",
 					justifyContent: "flex-start",
 					padding: 5,
 					marginTop: 10,
-				}}
-			>
+				}}>
 				{notificationStatus ? (
 					<View>
 						<PulseIndicator color={Colors.primary} size={20} />
 					</View>
 				) : (
-					<Icon name='circle' size={20} color={Colors.textSecondary} />
+					<Icon name="circle" size={20} color={Colors.textSecondary} />
 				)}
 				<View style={{ flex: 1 }}>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}
-					>
+					<Text>
 						This party is {notificationStatus ? "active" : "inactive"}
 					</Text>
-					<Text
-						style={{
-							flex: 0,
-							fontFamily: Fonts.small.fontFamily,
-							fontSize: Fonts.small.fontSize,
-							color: Colors.textSecondary,
-						}}
-					>
+					<Text variant="small" colorScheme="textSecondary">
 						{notificationStatus
 							? "Notifications are being sent out randomly every few minutes"
 							: "No notifications are being sent out right now, activate the party to start notifications"}
@@ -222,36 +202,22 @@ export default function NotificationsSettings({
 
 			<View
 				style={{
-					gap: 5,
+					gap: 10,
 					display: "flex",
 					flexDirection: "row",
-					alignItems: "center",
+					alignItems: "flex-start",
 					justifyContent: "flex-start",
 					padding: 5,
 					marginTop: 10,
-				}}
-			>
+				}}>
 				<Icon
 					name={isMuted ? "notifications-off" : "notifications"}
 					size={20}
 					color={isMuted ? Colors.textSecondary : Colors.secondaryDark}
 				/>
 				<View style={{ flex: 1 }}>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}
-					>
-						Your notifications are {isMuted ? "muted" : "on"}
-					</Text>
-					<Text
-						style={{
-							fontFamily: Fonts.small.fontFamily,
-							fontSize: Fonts.small.fontSize,
-							color: Colors.textSecondary,
-						}}
-					>
+					<Text>Your notifications are {isMuted ? "muted" : "on"}</Text>
+					<Text variant="small" colorScheme="textSecondary">
 						{isMuted
 							? "You will not receive any notifications from this party, even if its active"
 							: "You will receive notifications from this party when the party is active"}
@@ -275,16 +241,13 @@ export default function NotificationsSettings({
 							justifyContent: "space-between",
 							alignItems: "center",
 							width: "100%",
-						}}
-					>
+						}}>
 						<Text
+							variant="subTitle"
 							style={{
-								fontFamily: Fonts.subTitle.fontFamily,
-								fontSize: Fonts.button.fontSize,
-
+								fontSize: 20,
 								marginTop: 5,
-							}}
-						>
+							}}>
 							Notification Frequency: {newNotificationFrequency}
 						</Text>
 						<QueryLoadingStatus
@@ -294,7 +257,7 @@ export default function NotificationsSettings({
 					</View>
 					<View style={styles.frequencyContainer}>
 						<NotificationFrequencyButton
-							mode='fast'
+							mode="fast"
 							notificationFrequency={newNotificationFrequency}
 							setNotificationFrequency={handleFrequencyChange}
 							color={Colors.tertiary}
@@ -302,20 +265,20 @@ export default function NotificationsSettings({
 							subtext={"Every 5-10 Minutes"}
 							icon={
 								<Icon
-									name='rabbit'
+									name="rabbit"
 									size={30}
 									color={
 										newNotificationFrequency === "fast"
 											? Colors.tertiaryDark
 											: Colors.textSecondary
 									}
-									type='MaterialCommunity'
+									type="MaterialCommunity"
 								/>
 							}
 							disabled={notificationFrequencyMutation.isLoading}
 						/>
 						<NotificationFrequencyButton
-							mode='normal'
+							mode="normal"
 							notificationFrequency={newNotificationFrequency}
 							setNotificationFrequency={handleFrequencyChange}
 							color={Colors.primary}
@@ -323,7 +286,7 @@ export default function NotificationsSettings({
 							subtext={"Every 15-30 Minutes"}
 							icon={
 								<Icon
-									name='face'
+									name="face"
 									size={30}
 									color={
 										newNotificationFrequency === "normal"
@@ -335,7 +298,7 @@ export default function NotificationsSettings({
 							disabled={notificationFrequencyMutation.isLoading}
 						/>
 						<NotificationFrequencyButton
-							mode='slow'
+							mode="slow"
 							notificationFrequency={newNotificationFrequency}
 							setNotificationFrequency={handleFrequencyChange}
 							color={Colors.secondary}
@@ -343,14 +306,14 @@ export default function NotificationsSettings({
 							subtext={"Every 30-60 Minutes"}
 							icon={
 								<Icon
-									name='tortoise'
+									name="tortoise"
 									size={30}
 									color={
 										newNotificationFrequency === "slow"
 											? Colors.secondaryDark
 											: Colors.textSecondary
 									}
-									type='MaterialCommunity'
+									type="MaterialCommunity"
 								/>
 							}
 							disabled={notificationFrequencyMutation.isLoading}
