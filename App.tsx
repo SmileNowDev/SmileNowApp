@@ -7,6 +7,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { AppStateStatus, Platform, View } from "react-native";
 import { loadFonts } from "./utils/loadFonts";
 import RootNavigator from "./navigation/rootNavigator";
+import { AptabaseProvider } from "@aptabase/react-native";
+import { APTABASE_KEY } from "react-native-dotenv";
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -45,22 +47,24 @@ export default function App() {
 		return <View></View>;
 	} else {
 		return (
-			<MyProvider>
-				<StatusBar style="dark" />
-				<ToastProvider
-					placement="bottom"
-					offsetTop={50}
-					offsetBottom={40}
-					style={{
-						borderRadius: 20,
-					}}>
-					<QueryClientProvider client={queryClient}>
-						<NavigationContainer>
-							<RootNavigator />
-						</NavigationContainer>
-					</QueryClientProvider>
-				</ToastProvider>
-			</MyProvider>
+			<AptabaseProvider appKey={APTABASE_KEY}>
+				<MyProvider>
+					<StatusBar style="dark" />
+					<ToastProvider
+						placement="bottom"
+						offsetTop={50}
+						offsetBottom={40}
+						style={{
+							borderRadius: 20,
+						}}>
+						<QueryClientProvider client={queryClient}>
+							<NavigationContainer>
+								<RootNavigator />
+							</NavigationContainer>
+						</QueryClientProvider>
+					</ToastProvider>
+				</MyProvider>
+			</AptabaseProvider>
 		);
 	}
 }

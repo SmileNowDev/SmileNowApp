@@ -8,7 +8,9 @@ import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "../SmileNowUI";
+import { useAptabase } from "@aptabase/react-native";
 export default function CreateJoin({ navigation }) {
+	const { trackEvent } = useAptabase();
 	const [joining, setJoining] = useState(false);
 	const queryClient = useQueryClient();
 	const mutation = useMutation(() => eventApi.create(), {
@@ -32,6 +34,7 @@ export default function CreateJoin({ navigation }) {
 		},
 	});
 	async function createEvent() {
+		trackEvent("createEvent");
 		mutation.mutate(null, {
 			onSuccess: async (data) => {
 				navigation.navigate("CreateParty", {
@@ -45,6 +48,10 @@ export default function CreateJoin({ navigation }) {
 				navigation.navigate("Home");
 			},
 		});
+	}
+	function handleJoin() {
+		trackEvent("joinEvent");
+		setJoining(true);
 	}
 
 	return (
@@ -70,7 +77,7 @@ export default function CreateJoin({ navigation }) {
 					style={{ width: Dim.width / 2.1 }}
 					size="xl"
 					colorScheme="secondary"
-					onPress={() => setJoining(true)}>
+					onPress={() => handleJoin()}>
 					Join Party
 				</Button>
 				<Button
