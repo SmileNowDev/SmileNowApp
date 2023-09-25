@@ -10,6 +10,7 @@ import ModalWrapper from "../../components/core/modalWrapper";
 import InvitePoster from "../../components/party/engagement/invitePoster";
 import Icon from "../../components/core/icons";
 import { Button, Text } from "../../components/SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 export default function InviteToParty({ route, navigation }) {
 	const { eventId } = route.params;
 	const [joinCode, setJoinCode] = useState("ABCDE");
@@ -94,7 +95,10 @@ export default function InviteToParty({ route, navigation }) {
 
 				<Button
 					size="lg"
-					onPress={() => setPosterVisible(true)}
+					onPress={() => {
+						trackEvent("openPartyInvitePoster");
+						setPosterVisible(true);
+					}}
 					style={{
 						marginHorizontal: 20,
 						flex: 1,

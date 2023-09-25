@@ -19,6 +19,7 @@ import postApi from "../../api/post/post";
 import { imageHeight, imageWidth } from "../../pages/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../../components/SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 export default function CameraPage({ route, navigation }) {
 	const queryClient = useQueryClient();
 	const { eventId } = route.params;
@@ -176,6 +177,7 @@ export default function CameraPage({ route, navigation }) {
 	async function handlePost() {
 		mutate(null, {
 			onSuccess: (newPost) => {
+				trackEvent("postPhoto", { eventId });
 				// console.log("new post: ", newPost.data);
 				navigation.navigate("Party", { eventId, newPost: newPost.data });
 			},

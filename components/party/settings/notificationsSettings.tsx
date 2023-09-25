@@ -13,6 +13,7 @@ import { Context } from "../../../providers/provider";
 import NotificationFrequencyButton from "./notificationFrequencyButton";
 import QueryLoadingStatus from "../../core/queryLoadingStatus";
 import { Text } from "../../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 export default function NotificationsSettings({
 	eventId,
 	title,
@@ -45,7 +46,11 @@ export default function NotificationsSettings({
 					? "Your notifications are off 🤫"
 					: "You're now unmuted! 🎉";
 				toast.show(message);
-
+				if (muted) {
+					trackEvent("muteNotifications");
+				} else {
+					trackEvent("unmuteNotifications");
+				}
 				queryClient.setQueryData(["event", eventId], (oldData) => ({
 					...(oldData as IEvent),
 					//@ts-expect-error

@@ -11,6 +11,7 @@ import archiveApi from "../../../api/post/archive";
 import { Context } from "../../../providers/provider";
 import { ButtonColorSchemeType } from "../../SmileNowUI/button";
 import { Button, Text } from "../../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 interface ISettingsButton {
 	title: string;
 	description: string;
@@ -91,6 +92,10 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 					type: "success",
 					placement: "top",
 				});
+				trackEvent("archiveParty", {
+					isArchiving: true,
+				});
+
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},
@@ -115,6 +120,9 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 					type: "success",
 					placement: "top",
 				});
+				trackEvent("archiveParty", {
+					isArchiving: false,
+				});
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},
@@ -138,6 +146,7 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 			onSuccess: (data) => {
 				// console.log("success - event deleted");
 				toast.show("Your party has been deleted", { placement: "top" });
+				trackEvent("deleteParty");
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},
@@ -172,6 +181,7 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 				toast.show("You have been removed from the event", {
 					placement: "top",
 				});
+				trackEvent("leaveParty");
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},

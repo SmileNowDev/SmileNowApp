@@ -4,6 +4,7 @@ import { Colors } from "../../styles/theme";
 import Icon from "../core/icons";
 import { useNavigation } from "@react-navigation/native";
 import { Button } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 
 export default function TakePhoto({ canPost, eventId }) {
 	const navigation = useNavigation();
@@ -18,8 +19,11 @@ export default function TakePhoto({ canPost, eventId }) {
 					zIndex: 95,
 				}}>
 				<Button
-					// @ts-expect-error
-					onPress={() => navigation.navigate("Camera", { eventId })}
+					onPress={() => {
+						trackEvent("Take Photo", { eventId });
+						// @ts-expect-error
+						navigation.navigate("Camera", { eventId });
+					}}
 					size="xl"
 					style={{ flex: 1 }}
 					leftIcon={

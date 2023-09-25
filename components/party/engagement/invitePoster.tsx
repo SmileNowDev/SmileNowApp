@@ -16,6 +16,7 @@ import Icon from "../../core/icons";
 import appStore from "../../../assets/appStore.png";
 import LogoBackground from "./logoBackground";
 import { Text, Button } from "../../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 const appStoreURL =
 	"https://apps.apple.com/us/app/smile-now-party-pics/id6449005895";
 export default function InvitePoster({
@@ -265,6 +266,9 @@ export default function InvitePoster({
 					<Button
 						size="lg"
 						onPress={() => {
+							trackEvent("downloadPartyInvitePoster", {
+								saveInk,
+							});
 							downloadImage(downloadRef);
 						}}>
 						Save To Camera Roll

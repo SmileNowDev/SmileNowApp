@@ -73,9 +73,10 @@ export default function HomeHeader() {
 				...GlobalStyles.header,
 			}}>
 			<TouchableOpacity
-				onPress={() =>
-					navigation.navigate("Friends" as keyof RootStackParamList["Friends"])
-				}>
+				onPress={() => {
+					trackEvent("friends");
+					navigation.navigate("Friends" as keyof RootStackParamList["Friends"]);
+				}}>
 				<Icon name={"people"} size={35} />
 				{!isRequestsLoading && requests > 0 ? (
 					<View
