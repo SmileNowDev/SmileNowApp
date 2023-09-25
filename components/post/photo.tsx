@@ -12,6 +12,8 @@ import DownloadPost from "./downloadPost";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Polaroid from "./polaroid";
 import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 dayjs.extend(relativeTime);
 export interface PhotoProps {
 	postId: string;
@@ -43,20 +45,37 @@ export default function Photo({
 	const [downloadModalVisible, setDownloadModalVisible] = useState(false);
 	const [liked, setLiked] = useState(isLiked ? true : false);
 	const [likesCount, setLikesCount] = useState(likes);
-
-	async function handleLike() {
+	const [lastTap, setLastTap] = useState(null);
+	const handleDoubleTap = () => {
+		const now = Date.now();
+		const DOUBLE_PRESS_DELAY = 300;
+		if (lastTap && now - lastTap < DOUBLE_PRESS_DELAY) {
+			handleLike("double-tap");
+		} else {
+			setLastTap(now);
+		}
+	};
+	async function handleLike(method: string) {
 		if (!liked) {
 			const result = await likeApi.create({ postId });
 			if (result.ok) {
+				trackEvent("likePost", {
+					method: method,
+					isDisliking: false,
+				});
 				setLiked(true);
 				setLikesCount((p) => {
 					let c = p;
 					return c + 1;
 				});
 			}
-		} else {
+		} else if (method !== "double-tap") {
 			const result = await likeApi.deleteLike({ postId });
 			if (result.ok) {
+				trackEvent("likePost", {
+					location: method,
+					isDisliking: true,
+				});
 				setLiked(false);
 				setLikesCount((p) => {
 					let c = p;
@@ -64,7 +83,6 @@ export default function Photo({
 				});
 			}
 		}
-		// refresh();
 	}
 
 	function handleEndZoom() {
@@ -74,7 +92,10 @@ export default function Photo({
 	return (
 		<>
 			<View style={styles.photo}>
-				<Polaroid imageUri={image} takenAt={date} postId={postId} />
+				<TouchableWithoutFeedback onPress={handleDoubleTap}>
+					<Polaroid imageUri={image} takenAt={date} postId={postId} />
+				</TouchableWithoutFeedback>
+
 				<View style={{ minHeight: 50, width: "100%" }}>
 					<Text
 						style={{
@@ -111,7 +132,9 @@ export default function Photo({
 							</View>
 						</View>
 						<View style={styles.reactionContainer}>
-							<TouchableOpacity style={styles.reaction} onPress={handleLike}>
+							<TouchableOpacity
+								style={styles.reaction}
+								onPress={() => handleLike("button")}>
 								<Icon
 									name="heart"
 									type="Ion"

@@ -6,12 +6,14 @@ module.exports = function (api) {
 			[
 				"module:react-native-dotenv",
 				{
+					envName: "@env",
 					moduleName: "@env",
 					path: ".env",
-					blacklist: null,
-					whitelist: null,
+					blockList: null,
+					allowList: null,
 					safe: false,
 					allowUndefined: true,
+					verbose: false,
 				},
 			],
 		],

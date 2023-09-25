@@ -8,7 +8,8 @@ import { AppStateStatus, Platform, View } from "react-native";
 import { loadFonts } from "./utils/loadFonts";
 import RootNavigator from "./navigation/rootNavigator";
 import { AptabaseProvider } from "@aptabase/react-native";
-import { APTABASE_KEY } from "react-native-dotenv";
+//@ts-expect-error
+import { APTABASE_KEY } from "@env";
 import {
 	QueryClient,
 	QueryClientProvider,

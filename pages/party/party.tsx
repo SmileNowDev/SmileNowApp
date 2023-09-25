@@ -5,6 +5,7 @@ import {
 	TouchableOpacity,
 	View,
 	FlatList,
+	TouchableWithoutFeedback,
 } from "react-native";
 import PartyHeader from "../../components/layout/partyHeader";
 import Photo from "../../components/post/photo";
@@ -21,6 +22,7 @@ import TakePhoto from "../../components/party/takePhoto";
 import { useIsFocused } from "@react-navigation/native";
 import PostingIndicator from "../../components/party/postingIndicator";
 import NewPosts from "../../components/party/newPosts";
+import { trackEvent } from "@aptabase/react-native";
 export type NotificationFrequencyType = "slow" | "normal" | "fast";
 export interface IEvent {
 	_id: string;
@@ -219,9 +221,12 @@ export default function PartyPage({ route, navigation }) {
 											keyExtractor={(item) => item._id}
 											renderItem={({ item, index }) => {
 												return (
-													<TouchableOpacity
+													<TouchableWithoutFeedback
 														delayPressIn={500}
 														onPress={() => {
+															trackEvent("viewPost", {
+																location: "party",
+															});
 															navigation.navigate("Post", {
 																postId: item._id,
 																eventId: eventId,
@@ -242,7 +247,7 @@ export default function PartyPage({ route, navigation }) {
 															comments={item.comments || 0}
 															refresh={refetch}
 														/>
-													</TouchableOpacity>
+													</TouchableWithoutFeedback>
 												);
 											}}
 											ListFooterComponent={

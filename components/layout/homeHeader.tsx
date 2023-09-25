@@ -5,7 +5,7 @@ import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../../styles/styles";
 import { RootStackParamList } from "../../navigation/rootNavigator";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Context } from "../../providers/provider";
 import { Picture } from "../avatar";
 import userApi from "../../api/user/user";
@@ -13,6 +13,7 @@ import friendApi from "../../api/user/friend";
 
 import { UserType } from "../../pages/profile";
 import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 type UserDataType = {
 	name: string;
 	pic: string;
@@ -20,7 +21,6 @@ type UserDataType = {
 };
 export default function HomeHeader() {
 	const navigation = useNavigation();
-	const queryClient = useQueryClient();
 	const { userId } = useContext(Context);
 	// const userData: UserDataType = queryClient.ensureQueryData({
 	// 	queryKey: ["user", userId],
@@ -129,11 +129,14 @@ export default function HomeHeader() {
 			</View>
 			{!isLoading ? (
 				<TouchableOpacity
-					onPress={() =>
+					onPress={() => {
+						trackEvent("profile", {
+							location: "homeHeader",
+						});
 						navigation.navigate(
 							"Profile" as keyof RootStackParamList["Profile"]
-						)
-					}>
+						);
+					}}>
 					<Picture pic={data?.pic} size={35} />
 				</TouchableOpacity>
 			) : (
