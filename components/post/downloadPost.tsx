@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { Dim } from "../../styles/styles";
 import { downloadImage } from "../../utils/downloadView";
 import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 interface DownloadPostProps {
 	image: string;
 	caption: string;
@@ -135,7 +136,10 @@ export default function DownloadPost({
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
-						onPress={() => downloadImage(imageToSave)}
+						onPress={() => {
+							trackEvent("Download Post", { "Download Type": "Photo Only" });
+							downloadImage(imageToSave);
+						}}
 						style={{
 							display: "flex",
 							flexDirection: "column",
@@ -156,7 +160,12 @@ export default function DownloadPost({
 						alignItems: "center",
 					}}>
 					<TouchableOpacity
-						onPress={() => downloadImage(imageToSaveWithCaption)}
+						onPress={() => {
+							trackEvent("Download Post", {
+								"Download Type": "Photo + Caption",
+							});
+							downloadImage(imageToSaveWithCaption);
+						}}
 						style={styles.photoDownload}>
 						<View style={{ position: "relative" }}>
 							<Image

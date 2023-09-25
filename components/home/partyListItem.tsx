@@ -17,6 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { SquircleView } from "react-native-figma-squircle";
 import * as Haptics from "expo-haptics";
 import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 interface ListProps {
 	initials: string;
 	name: string;
@@ -168,8 +169,11 @@ export default function PartyListItem({
 
 						{canPost ? (
 							<TouchableOpacity
-								// @ts-expect-error
-								onPress={() => navigation.navigate("Camera", { eventId })}>
+								onPress={() => {
+									trackEvent("Take Photo", { eventId, location: "Home Page" });
+									// @ts-expect-error
+									navigation.navigate("Camera", { eventId });
+								}}>
 								<Icon
 									name={"camera"}
 									type="Ion"

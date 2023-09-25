@@ -220,7 +220,10 @@ export default function CameraPage({ route, navigation }) {
 						marginTop: 20,
 						width: Dim.width - 20,
 					}}
-					onPress={() => navigation.goBack()}>
+					onPress={() => {
+						trackEvent("sawExpiredMessage", { eventId });
+						navigation.goBack();
+					}}>
 					Go Back
 				</Button>
 			</View>
