@@ -20,7 +20,10 @@ export default function TakePhoto({ canPost, eventId }) {
 				}}>
 				<Button
 					onPress={() => {
-						trackEvent("Take Photo", { eventId, location: "Party Page" });
+						trackEvent("Take_Photo", {
+							eventId,
+							location: "Party Page",
+						});
 						// @ts-expect-error
 						navigation.navigate("Camera", { eventId });
 					}}

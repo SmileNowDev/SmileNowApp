@@ -22,6 +22,7 @@ import { useIsFocused } from "@react-navigation/native";
 import PartyLoading from "../components/party/partyLoading";
 import WelcomeMessageModal from "../components/engagement/welcomeMessageModal";
 import { Button } from "../components/SmileNowUI";
+import ScreenWrapper from "../components/core/screenWrapper";
 export type EventType = {
 	_id: string;
 	title: string;
@@ -121,124 +122,126 @@ export default function HomePage({ navigation }) {
 				backgroundColor: Colors.background,
 			}}>
 			<HomeHeader />
-			<WelcomeMessageModal />
+			<ScreenWrapper>
+				<WelcomeMessageModal />
 
-			<CreateJoin navigation={navigation} />
-			<>
-				{isLoading ? (
-					<View
-						style={{
-							position: "absolute",
-							left: 0,
-							top: 0,
-							bottom: 0,
-							right: 0,
-							flex: 1,
-							height: Dim.height,
-							alignContent: "center",
-							justifyContent: "center",
-						}}>
-						<PartyLoading
-							variant="white_backdrop"
-							message={"Gathering your parties"}
-						/>
-					</View>
-				) : (
-					<>
+				<CreateJoin navigation={navigation} />
+				<>
+					{isLoading ? (
 						<View
 							style={{
+								position: "absolute",
+								left: 0,
+								top: 0,
+								bottom: 0,
+								right: 0,
 								flex: 1,
-								width: "100%",
-							}}></View>
-						{!events.length ? (
-							<WelcomeMessage />
-						) : (
-							<>
-								<FlatList
-									style={{ marginBottom: 40 }}
-									ListHeaderComponent={
-										<View
-											style={{
-												flexDirection: "row",
-												justifyContent: "space-between",
-												paddingRight: 20,
-											}}>
-											<Text
-												style={{
-													fontFamily: Fonts.title.fontFamily,
-													fontSize: Fonts.subTitle.fontSize,
-													padding: 10,
-												}}>
-												My Parties
-											</Text>
-
-											{isFetching && (
-												<ActivityIndicator color={Colors.primary} />
-											)}
-										</View>
-									}
-									refreshControl={
-										<RefreshControl
-											refreshing={refreshing}
-											onRefresh={onRefresh}
-										/>
-									}
-									scrollEnabled={true}
-									onEndReached={() => {
-										if (hasNextPage) {
-											fetchNextPage();
-										}
-									}}
-									onEndReachedThreshold={0.2}
-									data={events}
-									keyExtractor={(item) => item._id}
-									renderItem={({ item }) => {
-										return (
+								height: Dim.height,
+								alignContent: "center",
+								justifyContent: "center",
+							}}>
+							<PartyLoading
+								variant="white_backdrop"
+								message={"Gathering your parties"}
+							/>
+						</View>
+					) : (
+						<>
+							<View
+								style={{
+									flex: 1,
+									width: "100%",
+								}}></View>
+							{!events.length ? (
+								<WelcomeMessage />
+							) : (
+								<>
+									<FlatList
+										style={{ marginBottom: 40 }}
+										ListHeaderComponent={
 											<View
-												key={item._id}
 												style={{
-													marginBottom: 15,
+													flexDirection: "row",
+													justifyContent: "space-between",
+													paddingRight: 20,
 												}}>
-												<PartyListItem
-													initials={getInitials(
-														item.title?.split(" ")[0],
-														item.title?.split(" ")[1]
-													)}
-													name={item.title}
-													eventId={item._id}
-													canPost={item.canPost}
-													attendeeInfo={item.attendeeInfo}
-													isActive={item.isActive}
-												/>
-											</View>
-										);
-									}}
-									ListFooterComponent={
-										<View
-											style={{
-												height: 250,
-												width: Dim.width,
-												justifyContent: "flex-start",
-												alignItems: "center",
-											}}>
-											{isFetchingNextPage && (
 												<Text
 													style={{
-														textAlign: "center",
-														fontFamily: Fonts.body.fontFamily,
-														fontSize: Fonts.body.fontSize,
+														fontFamily: Fonts.title.fontFamily,
+														fontSize: Fonts.subTitle.fontSize,
+														padding: 10,
 													}}>
-													Getting More Parties... 🎉
+													My Parties
 												</Text>
-											)}
-										</View>
-									}
-								/>
-							</>
-						)}
-					</>
-				)}
-			</>
+
+												{isFetching && (
+													<ActivityIndicator color={Colors.primary} />
+												)}
+											</View>
+										}
+										refreshControl={
+											<RefreshControl
+												refreshing={refreshing}
+												onRefresh={onRefresh}
+											/>
+										}
+										scrollEnabled={true}
+										onEndReached={() => {
+											if (hasNextPage) {
+												fetchNextPage();
+											}
+										}}
+										onEndReachedThreshold={0.2}
+										data={events}
+										keyExtractor={(item) => item._id}
+										renderItem={({ item }) => {
+											return (
+												<View
+													key={item._id}
+													style={{
+														marginBottom: 15,
+													}}>
+													<PartyListItem
+														initials={getInitials(
+															item.title?.split(" ")[0],
+															item.title?.split(" ")[1]
+														)}
+														name={item.title}
+														eventId={item._id}
+														canPost={item.canPost}
+														attendeeInfo={item.attendeeInfo}
+														isActive={item.isActive}
+													/>
+												</View>
+											);
+										}}
+										ListFooterComponent={
+											<View
+												style={{
+													height: 250,
+													width: Dim.width,
+													justifyContent: "flex-start",
+													alignItems: "center",
+												}}>
+												{isFetchingNextPage && (
+													<Text
+														style={{
+															textAlign: "center",
+															fontFamily: Fonts.body.fontFamily,
+															fontSize: Fonts.body.fontSize,
+														}}>
+														Getting More Parties... 🎉
+													</Text>
+												)}
+											</View>
+										}
+									/>
+								</>
+							)}
+						</>
+					)}
+				</>
+			</ScreenWrapper>
 		</SafeAreaView>
 	);
 }

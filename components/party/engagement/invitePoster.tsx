@@ -266,7 +266,8 @@ export default function InvitePoster({
 					<Button
 						size="lg"
 						onPress={() => {
-							trackEvent("downloadPartyInvitePoster", {
+							trackEvent("Party_Action", {
+								action_name: "downloadPartyInvitePoster",
 								saveInk,
 							});
 							downloadImage(downloadRef);

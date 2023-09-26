@@ -170,7 +170,7 @@ export default function PartyListItem({
 						{canPost ? (
 							<TouchableOpacity
 								onPress={() => {
-									trackEvent("Take Photo", { eventId, location: "Home Page" });
+									trackEvent("Take_Photo", { eventId, location: "Home Page" });
 									// @ts-expect-error
 									navigation.navigate("Camera", { eventId });
 								}}>

@@ -74,7 +74,7 @@ export default function HomeHeader() {
 			}}>
 			<TouchableOpacity
 				onPress={() => {
-					trackEvent("friends");
+					trackEvent("Page_View", { analyticsTitle: "Friends Page" });
 					navigation.navigate("Friends" as keyof RootStackParamList["Friends"]);
 				}}>
 				<Icon name={"people"} size={35} />
@@ -131,9 +131,6 @@ export default function HomeHeader() {
 			{!isLoading ? (
 				<TouchableOpacity
 					onPress={() => {
-						trackEvent("profile", {
-							location: "homeHeader",
-						});
 						navigation.navigate(
 							"Profile" as keyof RootStackParamList["Profile"]
 						);

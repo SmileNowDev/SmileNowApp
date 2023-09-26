@@ -11,6 +11,7 @@ import {
 	View,
 } from "react-native";
 import { Colors } from "../../styles/theme";
+import { trackEvent } from "@aptabase/react-native";
 
 type ScreenWrapperProps = {
 	scrollEnabled?: any;
@@ -21,6 +22,7 @@ type ScreenWrapperProps = {
 	bottomLoading?: any;
 	style?: any;
 	keyboardShouldPersistTaps?: "always" | "never" | "handled";
+	analyticsTitle?: string;
 };
 
 export default function ScreenWrapper({
@@ -32,6 +34,7 @@ export default function ScreenWrapper({
 	bottomLoading,
 	style,
 	keyboardShouldPersistTaps = "handled",
+	analyticsTitle,
 }: ScreenWrapperProps) {
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -52,6 +55,11 @@ export default function ScreenWrapper({
 		onRefresh();
 		setRefreshing(false);
 	});
+	if (analyticsTitle) {
+		trackEvent("Page_View", {
+			analyticsTitle,
+		});
+	}
 	if (loading) {
 		return (
 			<SafeAreaView style={{ flex: 1 }}>

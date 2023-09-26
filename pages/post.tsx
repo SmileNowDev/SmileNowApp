@@ -194,6 +194,7 @@ export default function PostPage({ route }) {
 					}
 				/>
 				<ScreenWrapper
+					analyticsTitle="Post Page"
 					onRefresh={() => {
 						refetchPost();
 						refetchComments();

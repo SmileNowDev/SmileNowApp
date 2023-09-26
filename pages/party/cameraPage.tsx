@@ -177,7 +177,7 @@ export default function CameraPage({ route, navigation }) {
 	async function handlePost() {
 		mutate(null, {
 			onSuccess: (newPost) => {
-				trackEvent("postPhoto", { eventId });
+				trackEvent("Post_Photo", { eventId });
 				// console.log("new post: ", newPost.data);
 				navigation.navigate("Party", { eventId, newPost: newPost.data });
 			},
@@ -221,7 +221,7 @@ export default function CameraPage({ route, navigation }) {
 						width: Dim.width - 20,
 					}}
 					onPress={() => {
-						trackEvent("sawExpiredMessage", { eventId });
+						trackEvent("Saw_Expired_Message", { eventId });
 						navigation.goBack();
 					}}>
 					Go Back

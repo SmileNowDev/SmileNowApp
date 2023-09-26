@@ -92,9 +92,6 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 					type: "success",
 					placement: "top",
 				});
-				trackEvent("archiveParty", {
-					isArchiving: true,
-				});
 
 				//@ts-expect-error
 				navigation.navigate("Home");
@@ -146,7 +143,6 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 			onSuccess: (data) => {
 				// console.log("success - event deleted");
 				toast.show("Your party has been deleted", { placement: "top" });
-				trackEvent("deleteParty");
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},

@@ -59,7 +59,7 @@ export default function Photo({
 		if (!liked) {
 			const result = await likeApi.create({ postId });
 			if (result.ok) {
-				trackEvent("likePost", {
+				trackEvent("Like_Post", {
 					method: method,
 					isDisliking: false,
 				});
@@ -72,7 +72,7 @@ export default function Photo({
 		} else if (method !== "double-tap") {
 			const result = await likeApi.deleteLike({ postId });
 			if (result.ok) {
-				trackEvent("likePost", {
+				trackEvent("Like_Post", {
 					location: method,
 					isDisliking: true,
 				});

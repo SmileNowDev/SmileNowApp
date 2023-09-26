@@ -61,11 +61,12 @@ export default function PartyHeader({
 				}}>
 				<TouchableOpacity
 					onPress={() => {
-						trackEvent("openPartyAttendees", {
+						trackEvent("Party_Action", {
+							eventId,
+							action_name: "openPartyAttendees",
 							role: isHost ? "host" : "guest",
 						});
 						// @ts-expect-error
-
 						navigation.navigate("PartyAttendees", { eventId, isHost, name });
 					}}>
 					<Icon name="people" size={25} color={Colors.textSecondary} />
@@ -74,7 +75,9 @@ export default function PartyHeader({
 					<>
 						<TouchableOpacity
 							onPress={() => {
-								trackEvent("openPartyInvite", {
+								trackEvent("Party_Action", {
+									eventId,
+									action_name: "openPartyInvite",
 									role: isHost ? "host" : "guest",
 								});
 								// @ts-expect-error
@@ -88,7 +91,9 @@ export default function PartyHeader({
 				)}
 				<TouchableOpacity
 					onPress={() => {
-						trackEvent("openPartySettings", {
+						trackEvent("Party_Action", {
+							eventId,
+							action_name: "openPartySettings",
 							role: isHost ? "host" : "guest",
 						});
 						// @ts-expect-error

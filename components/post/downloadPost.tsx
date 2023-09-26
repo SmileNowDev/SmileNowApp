@@ -137,7 +137,10 @@ export default function DownloadPost({
 					</View>
 					<TouchableOpacity
 						onPress={() => {
-							trackEvent("Download Post", { "Download Type": "Photo Only" });
+							trackEvent("Party_Action", {
+								action_name: "Download Photo",
+								download_type: "Photo Only",
+							});
 							downloadImage(imageToSave);
 						}}
 						style={{
@@ -161,8 +164,8 @@ export default function DownloadPost({
 					}}>
 					<TouchableOpacity
 						onPress={() => {
-							trackEvent("Download Post", {
-								"Download Type": "Photo + Caption",
+							trackEvent("Party_Action", {
+								action_name: "Download Photo + Caption",
 							});
 							downloadImage(imageToSaveWithCaption);
 						}}

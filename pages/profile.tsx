@@ -66,6 +66,7 @@ export default function ProfilePage({ navigation }) {
 		<SafeAreaView>
 			<Header goBack title={"My Profile"} />
 			<ScreenWrapper
+				analyticsTitle="Profile Page"
 				loading={isLoading}
 				scrollEnabled={true}
 				onRefresh={refresh}>
@@ -88,7 +89,6 @@ export default function ProfilePage({ navigation }) {
 						<Picture pic={data.pic} size={150} />
 						<TouchableOpacity
 							onPress={() => {
-								trackEvent("openTakeProfilePicture");
 								navigation.navigate("TakeProfilePicture");
 							}}
 							style={{
@@ -140,7 +140,6 @@ export default function ProfilePage({ navigation }) {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							trackEvent("openEditProfile");
 							navigation.navigate("EditProfile");
 						}}
 						style={{
@@ -152,7 +151,6 @@ export default function ProfilePage({ navigation }) {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							trackEvent("openSettings");
 							navigation.navigate("Settings");
 						}}
 						style={{ ...styles.optionButton, backgroundColor: Colors.border }}>

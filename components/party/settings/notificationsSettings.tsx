@@ -47,9 +47,13 @@ export default function NotificationsSettings({
 					: "You're now unmuted! 🎉";
 				toast.show(message);
 				if (muted) {
-					trackEvent("muteNotifications");
+					trackEvent("Party_Action", {
+						action_name: "muteNotifications",
+					});
 				} else {
-					trackEvent("unmuteNotifications");
+					trackEvent("Party_Action", {
+						action_name: "unmuteNotifications",
+					});
 				}
 				queryClient.setQueryData(["event", eventId], (oldData) => ({
 					...(oldData as IEvent),

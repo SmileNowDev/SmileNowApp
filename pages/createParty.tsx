@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import PartyLoading from "../components/party/partyLoading";
 import AnimatedLottieView from "lottie-react-native";
 import { Button } from "../components/SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 
 export default function CreatePartyPage({ route, navigation }) {
 	const { eventId } = route.params;
@@ -343,7 +344,13 @@ export default function CreatePartyPage({ route, navigation }) {
 						Take the First Picture!
 					</Text>
 					<TouchableOpacity
-						onPress={() => navigation.navigate("Camera", { eventId })}
+						onPress={() => {
+							trackEvent("Take_Photo", {
+								eventId,
+								location: "Create Party Page",
+							});
+							navigation.navigate("Camera", { eventId });
+						}}
 						style={{
 							backgroundColor: Colors.primary,
 							width: 80,

@@ -10,7 +10,7 @@ import { Dim } from "../../styles/styles";
 export default function ComponentLibrary(params) {
 	return (
 		<SafeAreaView>
-			<ScreenWrapper scrollEnabled>
+			<ScreenWrapper scrollEnabled analyticsTitle="Component Library">
 				<Header title="Component Library" goBack />
 				<Text variant="title" style={{ paddingTop: 30, paddingBottom: 0 }}>
 					SmileNow UI

@@ -55,6 +55,7 @@ export default function InviteToParty({ route, navigation }) {
 			</ModalWrapper>
 			<Header goBack title={`Invite to ${name}`} />
 			<ScreenWrapper
+				analyticsTitle="Invite to Party"
 				onRefresh={() => {
 					getEvent();
 				}}
@@ -96,7 +97,10 @@ export default function InviteToParty({ route, navigation }) {
 				<Button
 					size="lg"
 					onPress={() => {
-						trackEvent("openPartyInvitePoster");
+						trackEvent("Party_Action", {
+							action_name: "downloadPartyInvitePoster",
+							eventId,
+						});
 						setPosterVisible(true);
 					}}
 					style={{

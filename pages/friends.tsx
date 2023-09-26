@@ -11,6 +11,7 @@ import Icon from "../components/core/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsFocused } from "@react-navigation/native";
 import { Button, Text } from "../components/SmileNowUI";
+import ScreenWrapper from "../components/core/screenWrapper";
 
 const Tab = createMaterialTopTabNavigator();
 export function getInitials(firstName: string, lastName: string) {

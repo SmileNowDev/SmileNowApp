@@ -6,6 +6,7 @@ import userApi from "../api/user/user";
 import { Colors, Fonts } from "../styles/theme";
 import { Dim, GlobalStyles } from "../styles/styles";
 import { Button, Text } from "../components/SmileNowUI";
+import ScreenWrapper from "../components/core/screenWrapper";
 
 export default function EditProfilePage({ navigation }) {
 	const { userId } = useContext(Context);
@@ -56,56 +57,58 @@ export default function EditProfilePage({ navigation }) {
 	return (
 		<SafeAreaView>
 			<Header goBack title={"Edit Profile"} />
-			<View style={{ padding: 10 }}>
-				<Text variant="small" colorScheme="textSecondary">
-					Name
-				</Text>
-				<TextInput
-					value={name}
-					onChangeText={setName}
-					autoCapitalize={"none"}
-					style={{ ...GlobalStyles.textInput }}
-				/>
-				<Text
-					variant="small"
-					colorScheme="textSecondary"
-					style={{
-						marginTop: 20,
-					}}>
-					Username
-				</Text>
-				<TextInput
-					value={username}
-					onChangeText={handleSetUsername}
-					style={{ ...GlobalStyles.textInput }}
-				/>
-				<View
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "center",
-						gap: 5,
-						paddingVertical: 5,
-						marginTop: 20,
-					}}>
-					<Button
-						onPress={() => cancel()}
-						variant="outlined"
-						colorScheme="gray"
+			<ScreenWrapper analyticsTitle="Edit Profile">
+				<View style={{ padding: 10 }}>
+					<Text variant="small" colorScheme="textSecondary">
+						Name
+					</Text>
+					<TextInput
+						value={name}
+						onChangeText={setName}
+						autoCapitalize={"none"}
+						style={{ ...GlobalStyles.textInput }}
+					/>
+					<Text
+						variant="small"
+						colorScheme="textSecondary"
 						style={{
-							width: Dim.width / 2 - 15,
+							marginTop: 20,
 						}}>
-						Discard Changes
-					</Button>
-					<Button
-						onPress={() => save()}
+						Username
+					</Text>
+					<TextInput
+						value={username}
+						onChangeText={handleSetUsername}
+						style={{ ...GlobalStyles.textInput }}
+					/>
+					<View
 						style={{
-							width: Dim.width / 2 - 15,
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "center",
+							gap: 5,
+							paddingVertical: 5,
+							marginTop: 20,
 						}}>
-						Save Changes
-					</Button>
+						<Button
+							onPress={() => cancel()}
+							variant="outlined"
+							colorScheme="gray"
+							style={{
+								width: Dim.width / 2 - 15,
+							}}>
+							Discard Changes
+						</Button>
+						<Button
+							onPress={() => save()}
+							style={{
+								width: Dim.width / 2 - 15,
+							}}>
+							Save Changes
+						</Button>
+					</View>
 				</View>
-			</View>
+			</ScreenWrapper>
 		</SafeAreaView>
 	);
 }

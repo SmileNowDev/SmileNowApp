@@ -173,6 +173,7 @@ export default function PartyPage({ route, navigation }) {
 					<></>
 				)}
 				<ScreenWrapper
+					analyticsTitle="Party"
 					onRefresh={refetch}
 					loading={false}
 					scrollEnabled={true}
@@ -224,7 +225,7 @@ export default function PartyPage({ route, navigation }) {
 													<TouchableWithoutFeedback
 														delayPressIn={500}
 														onPress={() => {
-															trackEvent("viewPost", {
+															trackEvent("View_Post", {
 																location: "party",
 															});
 															navigation.navigate("Post", {

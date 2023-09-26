@@ -34,7 +34,7 @@ export default function CreateJoin({ navigation }) {
 		},
 	});
 	async function createEvent() {
-		trackEvent("createEvent");
+		trackEvent("Create_Event");
 		mutation.mutate(null, {
 			onSuccess: async (data) => {
 				navigation.navigate("CreateParty", {
@@ -50,7 +50,7 @@ export default function CreateJoin({ navigation }) {
 		});
 	}
 	function handleJoin() {
-		trackEvent("joinEvent");
+		trackEvent("Join_Event");
 		setJoining(true);
 	}
 

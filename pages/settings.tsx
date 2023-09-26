@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../providers/provider";
 import authApi from "../api/user/auth";
 import SettingButton from "../components/settings/settingsButton";
+import ScreenWrapper from "../components/core/screenWrapper";
 export default function Settings({ navigation }) {
 	const { setUserId, setLoggedIn } = useContext(Context);
 
@@ -90,10 +91,12 @@ export default function Settings({ navigation }) {
 	];
 	return (
 		<SafeAreaView>
-			<Header goBack title={"Settings"} />
-			{buttons.map((button) => (
-				<SettingButton {...button} />
-			))}
+			<ScreenWrapper analyticsTitle="Settings" loading={false}>
+				<Header goBack title={"Settings"} />
+				{buttons.map((button) => (
+					<SettingButton {...button} />
+				))}
+			</ScreenWrapper>
 		</SafeAreaView>
 	);
 }
