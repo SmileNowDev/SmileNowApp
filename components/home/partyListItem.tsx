@@ -85,6 +85,7 @@ export default function PartyListItem({
 				style={styles.gradientStyles}>
 				<TouchableWithoutFeedback
 					onPress={() => {
+						trackEvent("Page_View", { analyticsTitle: "Party" });
 						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 						// @ts-ignore error
 						navigation.navigate("Party", { eventId });

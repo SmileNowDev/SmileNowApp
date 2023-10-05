@@ -138,8 +138,7 @@ export default function DownloadPost({
 					<TouchableOpacity
 						onPress={() => {
 							trackEvent("Party_Action", {
-								action_name: "Download Photo",
-								download_type: "Photo Only",
+								action_name: "Download Photo Only",
 							});
 							downloadImage(imageToSave);
 						}}

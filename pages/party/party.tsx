@@ -6,6 +6,7 @@ import {
 	View,
 	FlatList,
 	TouchableWithoutFeedback,
+	Alert,
 } from "react-native";
 import PartyHeader from "../../components/layout/partyHeader";
 import Photo from "../../components/post/photo";
@@ -173,7 +174,6 @@ export default function PartyPage({ route, navigation }) {
 					<></>
 				)}
 				<ScreenWrapper
-					analyticsTitle="Party"
 					onRefresh={refetch}
 					loading={false}
 					scrollEnabled={true}
@@ -222,7 +222,7 @@ export default function PartyPage({ route, navigation }) {
 											keyExtractor={(item) => item._id}
 											renderItem={({ item, index }) => {
 												return (
-													<TouchableWithoutFeedback
+													<TouchableOpacity
 														delayPressIn={500}
 														onPress={() => {
 															trackEvent("View_Post", {
@@ -248,7 +248,7 @@ export default function PartyPage({ route, navigation }) {
 															comments={item.comments || 0}
 															refresh={refetch}
 														/>
-													</TouchableWithoutFeedback>
+													</TouchableOpacity>
 												);
 											}}
 											ListFooterComponent={

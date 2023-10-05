@@ -66,7 +66,7 @@ export default function ProfilePage({ navigation }) {
 		<SafeAreaView>
 			<Header goBack title={"My Profile"} />
 			<ScreenWrapper
-				analyticsTitle="Profile Page"
+				analyticsTitle="MyProfile"
 				loading={isLoading}
 				scrollEnabled={true}
 				onRefresh={refresh}>
@@ -89,6 +89,9 @@ export default function ProfilePage({ navigation }) {
 						<Picture pic={data.pic} size={150} />
 						<TouchableOpacity
 							onPress={() => {
+								trackEvent("Page_View", {
+									analyticsTitle: "TakeProfilePicture",
+								});
 								navigation.navigate("TakeProfilePicture");
 							}}
 							style={{

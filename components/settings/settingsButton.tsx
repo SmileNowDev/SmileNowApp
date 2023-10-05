@@ -2,20 +2,20 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 import { Text } from "../SmileNowUI";
-type SettingsButtonProps = {
+export interface ISettingsButton {
 	icon: React.ReactNode;
 	text: string;
 	onPress: () => void;
 	rightElement?: React.ReactNode;
-};
+}
 export default function SettingButton({
 	icon,
 	text,
 	onPress,
 	rightElement,
-}: SettingsButtonProps) {
+}: ISettingsButton) {
 	return (
-		<TouchableOpacity onPress={onPress}>
+		<TouchableOpacity key={text} onPress={onPress}>
 			<View style={styles.settingButton}>
 				{icon && icon}
 				<View style={styles.textContainer}>

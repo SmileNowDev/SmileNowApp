@@ -106,7 +106,6 @@ export default function PartyAttendees({ route, navigation }) {
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header title={`${name} Attendees`} goBack />
 			<ScreenWrapper
-				analyticsTitle="Party Attendees"
 				onRefresh={() => {
 					refetch();
 				}}

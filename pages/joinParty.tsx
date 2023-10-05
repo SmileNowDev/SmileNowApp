@@ -6,7 +6,9 @@ import attendeeApi from "../api/post/attendee";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Text } from "../components/SmileNowUI";
+import { useAptabase } from "@aptabase/react-native";
 export default function JoinPartyPage({ setVisible }) {
+	const { trackEvent } = useAptabase();
 	const navigation = useNavigation();
 	const [joinCode, setJoinCode] = useState("");
 
@@ -14,6 +16,7 @@ export default function JoinPartyPage({ setVisible }) {
 		const result = await attendeeApi.join({ code: joinCode });
 		// console.log({ result });
 		if (result.ok) {
+			trackEvent("Join_Event");
 			setVisible(false);
 			//@ts-expect-error
 			navigation.navigate("Party", { eventId: result.data.event });

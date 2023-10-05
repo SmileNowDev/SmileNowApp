@@ -13,9 +13,13 @@ import Header from "../components/layout/header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../providers/provider";
 import authApi from "../api/user/auth";
-import SettingButton from "../components/settings/settingsButton";
+import SettingButton, {
+	ISettingsButton,
+} from "../components/settings/settingsButton";
 import ScreenWrapper from "../components/core/screenWrapper";
+import { useAptabase } from "@aptabase/react-native";
 export default function Settings({ navigation }) {
+	const { trackEvent } = useAptabase();
 	const { setUserId, setLoggedIn } = useContext(Context);
 
 	async function logout() {
@@ -23,11 +27,13 @@ export default function Settings({ navigation }) {
 		await AsyncStorage.removeItem("refresh-token");
 		setUserId("");
 		setLoggedIn(false);
+		trackEvent("Setting_Event", { action: "Logout" });
 		navigation.navigate("SignUp");
 	}
 	async function deleteAccount() {
 		const result = await authApi.deleteAccount();
 		if (result.ok) {
+			trackEvent("Setting_Event", { action: "Delete Account" });
 			await logout();
 		}
 	}
@@ -48,11 +54,14 @@ export default function Settings({ navigation }) {
 			{ cancelable: true }
 		);
 	}
-	const buttons = [
+	const buttons: ISettingsButton[] = [
 		{
 			icon: <Icon name="block" />,
 			text: "Blocked Users",
-			onPress: () => navigation.navigate("Blocked"),
+			onPress: () => {
+				trackEvent("Page_View", { analyticsTitle: "Blocked Users" });
+				navigation.navigate("Blocked");
+			},
 			rightElement: (
 				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
 			),
@@ -60,7 +69,10 @@ export default function Settings({ navigation }) {
 		{
 			icon: <Icon name="archive" />,
 			text: "Event Archive",
-			onPress: () => navigation.navigate("Archive"),
+			onPress: () => {
+				trackEvent("Page_View", { action: "Archived Parties" });
+				navigation.navigate("Archive");
+			},
 			rightElement: (
 				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
 			),
@@ -73,7 +85,10 @@ export default function Settings({ navigation }) {
 		{
 			icon: <Icon name="person" />,
 			text: "Preferences",
-			onPress: () => navigation.navigate("Preferences"),
+			onPress: () => {
+				trackEvent("Page_View", { analyticsTitle: "Preferences" });
+				navigation.navigate("Preferences");
+			},
 			rightElement: (
 				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
 			),
@@ -87,6 +102,9 @@ export default function Settings({ navigation }) {
 			icon: <Icon name="person" />,
 			text: "Component Library",
 			onPress: () => navigation.navigate("ComponentLibrary"),
+			rightElement: (
+				<Icon name="chevron-right" size={20} color={Colors.textSecondary} />
+			),
 		},
 	];
 	return (

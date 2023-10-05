@@ -119,116 +119,114 @@ export default function CameraPage({ route, navigation }) {
 				alignItems: "center",
 			}}>
 			<Header title="Edit Profile Picture" goBack />
-			<ScreenWrapper analyticsTitle="Take Profile Picture">
-				{!isPreviewing ? (
-					<>
-						<View style={{ height: 100, marginTop: 30 }}>
-							<Text
-								style={{
-									fontFamily: Fonts.title.fontFamily,
-									fontSize: 40,
-								}}>
-								Smile Now!
-							</Text>
-						</View>
-						<Camera
+			{!isPreviewing ? (
+				<>
+					<View style={{ height: 100, marginTop: 30 }}>
+						<Text
 							style={{
-								height: width - 20,
-								width: width - 20,
-								borderRadius: (width - 20) / 2,
-								overflow: "hidden",
+								fontFamily: Fonts.title.fontFamily,
+								fontSize: 40,
+							}}>
+							Smile Now!
+						</Text>
+					</View>
+					<Camera
+						style={{
+							height: width - 20,
+							width: width - 20,
+							borderRadius: (width - 20) / 2,
+							overflow: "hidden",
 
-								position: "absolute",
-								top: width / 2,
-							}}
-							type={cameraType}
-							flashMode={flashMode}
-							ref={cameraRef}></Camera>
+							position: "absolute",
+							top: width / 2,
+						}}
+						type={cameraType}
+						flashMode={flashMode}
+						ref={cameraRef}></Camera>
 
-						<View style={styles.footer}>
-							<TouchableOpacity onPress={() => toggleFlashMode()}>
-								<Icon
-									name="flash"
-									size={30}
-									type={"Ion"}
-									color={
-										flashMode === FlashMode.off
-											? Colors.textSecondary
-											: Colors.primary
-									}
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.shutter}
-								onPress={() => takePhoto()}>
-								<View style={styles.innerShutter} />
-							</TouchableOpacity>
-							<View style={{ opacity: 0 }}>
-								<Icon name="" size={30} />
-							</View>
-						</View>
-					</>
-				) : (
-					<>
-						<View style={{ height: 100, marginTop: 30 }}>
-							<Text
-								style={{
-									fontFamily: Fonts.title.fontFamily,
-									fontSize: 40,
-								}}>
-								Looks Great!
-							</Text>
-						</View>
-						{isLoading ? (
-							<ActivityIndicator
-								size={"large"}
-								color={Colors.primary}
-								style={{
-									height: width - 20,
-									width: width - 20,
-									position: "absolute",
-									top: width / 2,
-									zIndex: 100,
-								}}
+					<View style={styles.footer}>
+						<TouchableOpacity onPress={() => toggleFlashMode()}>
+							<Icon
+								name="flash"
+								size={30}
+								type={"Ion"}
+								color={
+									flashMode === FlashMode.off
+										? Colors.textSecondary
+										: Colors.primary
+								}
 							/>
-						) : (
-							<></>
-						)}
-						<Image
-							source={{ uri: photo?.uri }}
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.shutter}
+							onPress={() => takePhoto()}>
+							<View style={styles.innerShutter} />
+						</TouchableOpacity>
+						<View style={{ opacity: 0 }}>
+							<Icon name="" size={30} />
+						</View>
+					</View>
+				</>
+			) : (
+				<>
+					<View style={{ height: 100, marginTop: 30 }}>
+						<Text
 							style={{
-								position: "absolute",
-								top: width / 2,
+								fontFamily: Fonts.title.fontFamily,
+								fontSize: 40,
+							}}>
+							Looks Great!
+						</Text>
+					</View>
+					{isLoading ? (
+						<ActivityIndicator
+							size={"large"}
+							color={Colors.primary}
+							style={{
 								height: width - 20,
 								width: width - 20,
-								borderRadius: (width - 20) / 2,
+								position: "absolute",
+								top: width / 2,
+								zIndex: 100,
 							}}
 						/>
-						<View
-							style={{
-								position: "absolute",
-								bottom: 100,
-								alignItems: "center",
-								gap: 10,
-							}}>
-							<Button
-								variant="outlined"
-								colorScheme="secondary"
-								style={{ width: width * 0.8 }}
-								size="lg"
-								onPress={() => retakePhoto()}>
-								Retake Photo
-							</Button>
-							<Button
-								style={{ width: width * 0.8 }}
-								size="lg"
-								onPress={() => handleSave()}>
-								Save Photo
-							</Button>
-						</View>
-					</>
-				)}
-			</ScreenWrapper>
+					) : (
+						<></>
+					)}
+					<Image
+						source={{ uri: photo?.uri }}
+						style={{
+							position: "absolute",
+							top: width / 2,
+							height: width - 20,
+							width: width - 20,
+							borderRadius: (width - 20) / 2,
+						}}
+					/>
+					<View
+						style={{
+							position: "absolute",
+							bottom: 100,
+							alignItems: "center",
+							gap: 10,
+						}}>
+						<Button
+							variant="outlined"
+							colorScheme="secondary"
+							style={{ width: width * 0.8 }}
+							size="lg"
+							onPress={() => retakePhoto()}>
+							Retake Photo
+						</Button>
+						<Button
+							style={{ width: width * 0.8 }}
+							size="lg"
+							onPress={() => handleSave()}>
+							Save Photo
+						</Button>
+					</View>
+				</>
+			)}
 		</SafeAreaView>
 	);
 }

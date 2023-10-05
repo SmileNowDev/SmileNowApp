@@ -5,6 +5,7 @@ import { Colors, Fonts } from "../../styles/theme";
 import likeApi from "../../api/interaction/like";
 import Avatar from "../avatar";
 import DefaultOptions from "../core/defaultOptions";
+import * as Haptics from "expo-haptics";
 
 import ModalWrapper from "../core/modalWrapper";
 import dayjs from "dayjs";
@@ -59,6 +60,12 @@ export default function Photo({
 		if (!liked) {
 			const result = await likeApi.create({ postId });
 			if (result.ok) {
+				if (method === "double-tap") {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+				} else {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+				}
+
 				trackEvent("Like_Post", {
 					method: method,
 					isDisliking: false,

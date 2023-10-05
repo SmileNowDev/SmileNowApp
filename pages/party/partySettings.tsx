@@ -34,10 +34,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 	return (
 		<SafeAreaView style={{ flex: 1, height: Dim.height }}>
 			<Header leftContent={<SafeBackButton />} title={`Party Settings`} />
-			<ScreenWrapper
-				scrollEnabled={true}
-				onRefresh={handleRefresh}
-				analyticsTitle="Party Settings">
+			<ScreenWrapper scrollEnabled={true} onRefresh={handleRefresh}>
 				{/* Name and Description */}
 				<NameAndDescription
 					isHost={isHost || data.isHost}

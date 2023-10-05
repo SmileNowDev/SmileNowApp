@@ -50,7 +50,6 @@ export default function CreateJoin({ navigation }) {
 		});
 	}
 	function handleJoin() {
-		trackEvent("Join_Event");
 		setJoining(true);
 	}
 
