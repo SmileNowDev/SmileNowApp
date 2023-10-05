@@ -31,7 +31,7 @@ import ForgotPassPage from "../pages/auth/forgotPass";
 import VerifyPassPage from "../pages/auth/verifyForgotPass";
 import ArchivePage from "../pages/settings/archive";
 import Preferences from "../pages/settings/preferences";
-
+import ComponentLibrary from "../pages/internal/componentLibrary";
 export type RootStackParamList = {
 	Splash: undefined;
 	Home: undefined;
@@ -59,6 +59,7 @@ export type RootStackParamList = {
 	VerifyPass: { phone: string };
 	ForgotPass: undefined;
 	Archive: undefined;
+	ComponentLibrary: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -124,6 +125,7 @@ export default function RootNavigator() {
 			<Stack.Screen name="ForgotPass" component={ForgotPassPage} />
 			<Stack.Screen name="VerifyPass" component={VerifyPassPage} />
 			<Stack.Screen name="Archive" component={ArchivePage} />
+			<Stack.Screen name="ComponentLibrary" component={ComponentLibrary} />
 		</Stack.Navigator>
 	);
 }

@@ -83,6 +83,7 @@ export default function ArchivePage({ navigation }) {
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header goBack title="Archive" />
 			<ScreenWrapper
+				analyticsTitle="Archive Page"
 				onRefresh={onRefresh}
 				scrollEnabled={true}
 				loading={isLoading}

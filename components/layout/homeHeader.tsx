@@ -1,17 +1,19 @@
 import React, { useContext, useEffect } from "react";
-import { Text, TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View, Image } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../../styles/styles";
 import { RootStackParamList } from "../../navigation/rootNavigator";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Context } from "../../providers/provider";
 import { Picture } from "../avatar";
 import userApi from "../../api/user/user";
 import friendApi from "../../api/user/friend";
 
 import { UserType } from "../../pages/profile";
+import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 type UserDataType = {
 	name: string;
 	pic: string;
@@ -19,7 +21,6 @@ type UserDataType = {
 };
 export default function HomeHeader() {
 	const navigation = useNavigation();
-	const queryClient = useQueryClient();
 	const { userId } = useContext(Context);
 	// const userData: UserDataType = queryClient.ensureQueryData({
 	// 	queryKey: ["user", userId],
@@ -72,9 +73,10 @@ export default function HomeHeader() {
 				...GlobalStyles.header,
 			}}>
 			<TouchableOpacity
-				onPress={() =>
-					navigation.navigate("Friends" as keyof RootStackParamList["Friends"])
-				}>
+				onPress={() => {
+					trackEvent("Page_View", { analyticsTitle: "Friends" });
+					navigation.navigate("Friends" as keyof RootStackParamList["Friends"]);
+				}}>
 				<Icon name={"people"} size={35} />
 				{!isRequestsLoading && requests > 0 ? (
 					<View
@@ -128,11 +130,11 @@ export default function HomeHeader() {
 			</View>
 			{!isLoading ? (
 				<TouchableOpacity
-					onPress={() =>
+					onPress={() => {
 						navigation.navigate(
 							"Profile" as keyof RootStackParamList["Profile"]
-						)
-					}>
+						);
+					}}>
 					<Picture pic={data?.pic} size={35} />
 				</TouchableOpacity>
 			) : (

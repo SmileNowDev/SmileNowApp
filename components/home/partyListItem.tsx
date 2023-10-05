@@ -1,6 +1,5 @@
 import React from "react";
 import {
-	Text,
 	TouchableOpacity,
 	View,
 	TouchableWithoutFeedback,
@@ -17,6 +16,8 @@ import { PulseIndicator } from "react-native-indicators";
 import { LinearGradient } from "expo-linear-gradient";
 import { SquircleView } from "react-native-figma-squircle";
 import * as Haptics from "expo-haptics";
+import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 interface ListProps {
 	initials: string;
 	name: string;
@@ -84,6 +85,7 @@ export default function PartyListItem({
 				style={styles.gradientStyles}>
 				<TouchableWithoutFeedback
 					onPress={() => {
+						trackEvent("Page_View", { analyticsTitle: "Party" });
 						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 						// @ts-ignore error
 						navigation.navigate("Party", { eventId });
@@ -142,10 +144,12 @@ export default function PartyListItem({
 						</View>
 
 						<Text
+							variant="title"
 							style={{
-								flex: 1,
-								fontFamily: Fonts.body.fontFamily,
 								fontSize: Fonts.body.fontSize + 2,
+								textAlign: "left",
+								flex: 1,
+								paddingLeft: 10,
 							}}>
 							{name}
 						</Text>
@@ -166,8 +170,11 @@ export default function PartyListItem({
 
 						{canPost ? (
 							<TouchableOpacity
-								// @ts-expect-error
-								onPress={() => navigation.navigate("Camera", { eventId })}>
+								onPress={() => {
+									trackEvent("Take_Photo", { eventId, location: "Home Page" });
+									// @ts-expect-error
+									navigation.navigate("Camera", { eventId });
+								}}>
 								<Icon
 									name={"camera"}
 									type="Ion"

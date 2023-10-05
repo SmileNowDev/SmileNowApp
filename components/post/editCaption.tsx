@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Text, TextInput, View, Alert, TouchableOpacity } from "react-native";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { TextInput, View, Alert } from "react-native";
+import { Dim, GlobalStyles } from "../../styles/styles";
 import { Colors } from "../../styles/theme";
 import postApi from "../../api/post/post";
-import Icon from "../../components/core/icons";
+import { Button, Text } from "../SmileNowUI";
 interface EditCaptionProps {
 	postId: string;
 	caption: string;
@@ -49,36 +49,34 @@ export default function EditCaption({
 				onChangeText={setEditCaption}
 				returnKeyType="done"
 			/>
-			<TouchableOpacity
-				onPress={updateCaption}
+			<View
 				style={{
-					...ButtonStyles.button,
-					...ButtonStyles.primary,
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "center",
+					gap: 5,
+					paddingVertical: 5,
 				}}>
-				<Icon name="save" size={20} color="white" />
-				<Text
+				<Button
+					onPress={() => {
+						setEditCaption("");
+						setVisible(false);
+					}}
+					variant="outlined"
+					colorScheme="gray"
 					style={{
-						...ButtonStyles.buttonText,
-						color: Colors.background,
+						width: Dim.width / 2 - 22.5,
+					}}>
+					Discard Changes
+				</Button>
+				<Button
+					onPress={updateCaption}
+					style={{
+						width: Dim.width / 2 - 22.5,
 					}}>
 					Save Changes
-				</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				onPress={() => setVisible(false)}
-				style={{
-					...ButtonStyles.button,
-					...ButtonStyles.outlined,
-				}}>
-				<Icon name="cancel" size={20} color={Colors.textSecondary} />
-				<Text
-					style={{
-						...ButtonStyles.buttonText,
-						color: Colors.text,
-					}}>
-					Cancel
-				</Text>
-			</TouchableOpacity>
+				</Button>
+			</View>
 		</View>
 	);
 }

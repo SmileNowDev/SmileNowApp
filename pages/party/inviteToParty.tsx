@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
+import { SafeAreaView, TouchableOpacity, View } from "react-native";
+import { Dim, GlobalStyles } from "../../styles/styles";
 import QRCode from "react-native-qrcode-svg";
 import { Colors, Fonts } from "../../styles/theme";
 import Header from "../../components/layout/header";
@@ -9,6 +9,8 @@ import ScreenWrapper from "../../components/core/screenWrapper";
 import ModalWrapper from "../../components/core/modalWrapper";
 import InvitePoster from "../../components/party/engagement/invitePoster";
 import Icon from "../../components/core/icons";
+import { Button, Text } from "../../components/SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 export default function InviteToParty({ route, navigation }) {
 	const { eventId } = route.params;
 	const [joinCode, setJoinCode] = useState("ABCDE");
@@ -68,16 +70,14 @@ export default function InviteToParty({ route, navigation }) {
 						<Text
 							style={{
 								marginBottom: 10,
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
 							}}>
 							Tell friends to join with
 						</Text>
 						<Text
+							variant="title"
+							colorScheme="primary"
 							style={{
-								fontFamily: Fonts.title.fontFamily,
-								fontSize: Fonts.title.fontSize + 10,
-								color: Colors.primary,
+								fontSize: 40,
 								textAlign: "center",
 								marginBottom: 20,
 							}}>
@@ -93,20 +93,21 @@ export default function InviteToParty({ route, navigation }) {
 					</View>
 				</View>
 
-				<TouchableOpacity
-					onPress={() => setPosterVisible(true)}
+				<Button
+					size="lg"
+					onPress={() => {
+						trackEvent("Party_Action", {
+							action_name: "downloadPartyInvitePoster",
+							eventId,
+						});
+						setPosterVisible(true);
+					}}
 					style={{
-						...ButtonStyles.buttonLarge,
-						...ButtonStyles.primary,
 						marginHorizontal: 20,
+						flex: 1,
 					}}>
-					<Text
-						style={{
-							...ButtonStyles.buttonTextLarge,
-						}}>
-						Create a Printable Invite Poster
-					</Text>
-				</TouchableOpacity>
+					Create a Printable Invite Poster
+				</Button>
 			</ScreenWrapper>
 		</SafeAreaView>
 	);

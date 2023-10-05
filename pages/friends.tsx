@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Text, StyleSheet, TouchableOpacity, View, Button } from "react-native";
-import { ButtonStyles, Dim } from "../styles/styles";
+import { StyleSheet, View } from "react-native";
+import { Dim } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import AddFriendsTab from "../components/friendsTabs/addFriends";
@@ -10,6 +10,8 @@ import MyFriendsTab from "../components/friendsTabs/myFriends";
 import Icon from "../components/core/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useIsFocused } from "@react-navigation/native";
+import { Button, Text } from "../components/SmileNowUI";
+import ScreenWrapper from "../components/core/screenWrapper";
 
 const Tab = createMaterialTopTabNavigator();
 export function getInitials(firstName: string, lastName: string) {
@@ -41,28 +43,14 @@ export default function FriendsPage({ navigation }) {
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "space-between",
-				}}
-			>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.textSecondary,
-					}}
-				>
-					Smile Now is more fun with friends!
-				</Text>
-				<TouchableOpacity
-					style={{
-						...ButtonStyles.buttonSmall,
-						...ButtonStyles.primary,
-						paddingLeft: 25,
-					}}
+				}}>
+				<Text variant="subTitle">Friends</Text>
+				<Button
 					onPress={() => navigation.navigate("Home")}
-				>
-					<Text style={{ ...ButtonStyles.buttonText }}>Back</Text>
-					<Icon name='chevron-right' size={20} color={Colors.background} />
-				</TouchableOpacity>
+					size="sm"
+					rightIcon={<Icon name="home" size={15} color={Colors.background} />}>
+					Home
+				</Button>
 			</View>
 
 			<Tab.Navigator
@@ -78,25 +66,24 @@ export default function FriendsPage({ navigation }) {
 					tabBarLabelStyle: {
 						textTransform: "none",
 					},
-				}}
-			>
+				}}>
 				<Tab.Screen
-					name='Add Friends'
+					name="Add Friends"
 					component={AddFriendsTab}
 					options={{
 						tabBarIcon: () => (
-							<Icon name='add' size={20} color={Colors.textSecondary} />
+							<Icon name="add" size={20} color={Colors.textSecondary} />
 						),
 					}}
 				/>
 				<Tab.Screen
-					name='Friend Requests'
+					name="Friend Requests"
 					component={RequestsTab}
 					options={{
 						tabBarIcon: () => (
 							<View>
 								<Icon
-									name='move-to-inbox'
+									name="move-to-inbox"
 									size={20}
 									color={Colors.textSecondary}
 								/>
@@ -112,16 +99,13 @@ export default function FriendsPage({ navigation }) {
 											right: 0,
 											marginRight: -7,
 											marginTop: -7,
-										}}
-									>
+										}}>
 										<Text
+											variant="subTitle"
 											style={{
 												color: Colors.background,
-												fontSize: 12,
 												textAlign: "center",
-												fontFamily: Fonts.subTitle.fontFamily,
-											}}
-										>
+											}}>
 											{requestData}
 										</Text>
 									</View>
@@ -131,12 +115,12 @@ export default function FriendsPage({ navigation }) {
 					}}
 				/>
 				<Tab.Screen
-					name='My Friends'
+					name="My Friends"
 					component={MyFriendsTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name='account-heart'
+								name="account-heart"
 								type={"MaterialCommunity"}
 								size={20}
 								color={Colors.textSecondary}
@@ -145,14 +129,14 @@ export default function FriendsPage({ navigation }) {
 					}}
 				/>
 				<Tab.Screen
-					name='Requests Sent'
+					name="Requests Sent"
 					component={RequestsSentTab}
 					options={{
 						tabBarIcon: () => (
 							<Icon
-								name='send'
+								name="send"
 								size={20}
-								type='FontAwesome'
+								type="FontAwesome"
 								color={Colors.textSecondary}
 							/>
 						),
@@ -162,13 +146,3 @@ export default function FriendsPage({ navigation }) {
 		</>
 	);
 }
-const styles = StyleSheet.create({
-	tabContainer: {
-		padding: 10,
-	},
-	tabTitle: {
-		fontFamily: Fonts.subTitle.fontFamily,
-		fontSize: Fonts.subTitle.fontSize,
-		color: Colors.textSecondary,
-	},
-});

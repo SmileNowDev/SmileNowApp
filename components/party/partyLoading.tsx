@@ -1,9 +1,10 @@
 import AnimatedLottieView from "lottie-react-native";
 import React from "react";
-import { Animated, Image, View, Easing, StyleSheet, Text } from "react-native";
+import { Animated, View, Easing, StyleSheet } from "react-native";
 import { Dim } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import { LinearGradient } from "expo-linear-gradient";
+import { Text } from "../SmileNowUI";
 type PartyLoadingProps = {
 	variant?: "pink_backdrop" | "white_backdrop";
 	message?: string;
@@ -108,10 +109,10 @@ export default function PartyLoading({
 							</View>
 						</Animated.View>
 						<Text
+							variant="subTitle"
 							style={{
 								alignSelf: "center",
 								marginTop: 50,
-								fontFamily: Fonts.subTitle.fontFamily,
 								fontSize: Fonts.subTitle.fontSize - 5,
 								color: Colors.background,
 								position: "absolute",
@@ -184,12 +185,12 @@ export default function PartyLoading({
 							</View>
 						</Animated.View>
 						<Text
+							variant="subTitle"
+							colorScheme="textSecondary"
 							style={{
 								alignSelf: "center",
 								marginTop: 50,
-								fontFamily: Fonts.subTitle.fontFamily,
 								fontSize: Fonts.subTitle.fontSize - 5,
-								color: Colors.textSecondary,
 								position: "absolute",
 								bottom: -60,
 								width: Dim.width * 0.75,

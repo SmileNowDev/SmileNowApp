@@ -2,22 +2,21 @@ import { downloadImage } from "../../../utils/downloadView";
 import React, { useRef, useState } from "react";
 import {
 	View,
-	Text,
 	TouchableOpacity,
 	StyleSheet,
-	Button,
 	Image,
 	Alert,
 	Switch,
 } from "react-native";
-import { ButtonStyles, Dim } from "../../../styles/styles";
+import { Dim } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
 import QRCode from "react-native-qrcode-svg";
 import Icon from "../../core/icons";
 // @ts-expect-error
 import appStore from "../../../assets/appStore.png";
 import LogoBackground from "./logoBackground";
-import PostPage from "pages/post";
+import { Text, Button } from "../../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 const appStoreURL =
 	"https://apps.apple.com/us/app/smile-now-party-pics/id6449005895";
 export default function InvitePoster({
@@ -59,13 +58,15 @@ export default function InvitePoster({
 							alignItems: "center",
 						}}>
 						<Text
+							variant="subTitle"
 							style={{
 								fontSize: (Fonts.subTitle.fontSize - 2) * scale,
-								fontFamily: Fonts.subTitle.fontFamily,
 								textAlign: "center",
 							}}>
 							Welcome to{" "}
-							<Text style={{ fontFamily: Fonts.title.fontFamily }}>
+							<Text
+								variant="title"
+								style={{ fontSize: (Fonts.subTitle.fontSize - 2) * scale }}>
 								{name}!
 							</Text>
 						</Text>
@@ -74,7 +75,14 @@ export default function InvitePoster({
 								fontSize: (Fonts.body.fontSize - 2) * scale,
 								fontFamily: Fonts.subTitle.fontFamily,
 							}}>
-							A <Text style={{ fontStyle: "italic" }}>Smile Now</Text>{" "}
+							A{" "}
+							<Text
+								style={{
+									fontStyle: "italic",
+									fontSize: (Fonts.body.fontSize - 2) * scale,
+								}}>
+								Smile Now
+							</Text>{" "}
 							Experience
 						</Text>
 					</View>
@@ -98,9 +106,9 @@ export default function InvitePoster({
 								height: 60 * scale,
 							}}></View>
 						<Text
+							variant="title"
 							style={{
 								width: Dim.width * scale - 80 * scale,
-								fontFamily: Fonts.title.fontFamily,
 								fontSize: (Fonts.body.fontSize - 2) * scale,
 								textAlign: "center",
 							}}>
@@ -125,8 +133,8 @@ export default function InvitePoster({
 								alignItems: "center",
 							}}>
 							<Text
+								variant="title"
 								style={{
-									fontFamily: Fonts.title.fontFamily,
 									fontSize: Fonts.body.fontSize * scale,
 								}}>
 								1. Download App
@@ -159,8 +167,8 @@ export default function InvitePoster({
 								alignItems: "center",
 							}}>
 							<Text
+								variant="title"
 								style={{
-									fontFamily: Fonts.title.fontFamily,
 									fontSize: Fonts.body.fontSize * scale,
 								}}>
 								2. Create Account
@@ -177,8 +185,8 @@ export default function InvitePoster({
 									alignItems: "center",
 								}}>
 								<Text
+									variant="button"
 									style={{
-										fontFamily: Fonts.button.fontFamily,
 										fontSize: Fonts.body.fontSize * scale,
 									}}>
 									Join Party
@@ -203,8 +211,8 @@ export default function InvitePoster({
 							gap: 10 * scale,
 						}}>
 						<Text
+							variant="title"
 							style={{
-								fontFamily: Fonts.titleBold.fontFamily,
 								fontSize: Fonts.subTitle.fontSize * scale,
 							}}>
 							3. Have Fun!
@@ -250,33 +258,22 @@ export default function InvitePoster({
 							flexDirection: "row",
 							justifyContent: "space-between",
 							alignItems: "center",
-							marginBottom: 10,
+							marginBottom: 30,
 						}}>
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							Save Ink?
-						</Text>
+						<Text>Save Ink?</Text>
 						<Switch value={saveInk} onValueChange={setSaveInk} />
 					</View>
-
-					<TouchableOpacity
-						style={{
-							...ButtonStyles.primary,
-							...ButtonStyles.buttonLarge,
-						}}
+					<Button
+						size="lg"
 						onPress={() => {
+							trackEvent("Party_Action", {
+								action_name: "downloadPartyInvitePoster",
+								saveInk,
+							});
 							downloadImage(downloadRef);
 						}}>
-						<Text
-							style={{
-								...ButtonStyles.buttonTextLarge,
-							}}>
-							Save to Camera Roll
-						</Text>
-					</TouchableOpacity>
+						Save To Camera Roll
+					</Button>
 				</View>
 			</View>
 		</>

@@ -1,22 +1,13 @@
 import React from "react";
 import { useState, useContext } from "react";
-import {
-	Button,
-	Image,
-	SafeAreaView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-	Alert,
-} from "react-native";
+import { SafeAreaView, TextInput, View, Alert } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
-import Icon from "../../components/core/icons";
+import { GlobalStyles } from "../../styles/styles";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../../providers/provider";
 import jwt_decode from "jwt-decode";
+import { Button, Text } from "../../components/SmileNowUI";
 
 export default function VerifyPhonePage({ route, navigation }) {
 	const { phone } = route.params;
@@ -65,22 +56,16 @@ export default function VerifyPhonePage({ route, navigation }) {
 			}}>
 			<View style={GlobalStyles.ScreenContainer}>
 				<Text
+					variant="subTitle"
+					colorScheme="background"
 					style={{
 						paddingTop: 30,
 						textAlign: "center",
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.body.fontSize,
 						marginBottom: 20,
-						color: Colors.background,
 					}}>
 					Enter the code we just texted you
 				</Text>
-				<Text
-					style={{
-						color: Colors.background,
-					}}>
-					{errorText}
-				</Text>
+				<Text colorScheme="background">{errorText}</Text>
 
 				<TextInput
 					placeholder="Code"
@@ -127,19 +112,20 @@ export default function VerifyPhonePage({ route, navigation }) {
 					}}>
 					(Password must be at least 8 characters)
 				</Text>
-				<TouchableOpacity
+
+				<Button
+					size="lg"
+					variant="outlined"
+					colorScheme="white"
 					onPress={verifyAccount}
-					// disabled={code.length < 5 && password.length < 8}
+					disabled={code.length < 5 && password.length < 8}
 					style={{
-						...ButtonStyles.button,
-						...ButtonStyles.outlinedWhite,
 						marginTop: 40,
+						flex: 1,
 						opacity: code.length < 5 && password.length < 8 ? 0.5 : 1,
 					}}>
-					<Text style={{ color: Colors.background, fontSize: 20 }}>
-						Create Account
-					</Text>
-				</TouchableOpacity>
+					Create Account
+				</Button>
 			</View>
 		</SafeAreaView>
 	);

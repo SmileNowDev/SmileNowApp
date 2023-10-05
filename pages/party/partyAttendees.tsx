@@ -3,17 +3,10 @@ import UserCard from "../../components/userCard";
 import attendeeApi from "../../api/post/attendee";
 import { Context } from "../../providers/provider";
 import React, { useContext, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	FlatList,
-	TouchableOpacity,
-	SafeAreaView,
-} from "react-native";
-import { ButtonStyles } from "../../styles/styles";
-import { Colors, Fonts } from "../../styles/theme";
+import { View, FlatList, SafeAreaView } from "react-native";
 import Header from "../../components/layout/header";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Button } from "../../components/SmileNowUI";
 
 export default function PartyAttendees({ route, navigation }) {
 	const { eventId, isHost, name } = route.params;
@@ -89,34 +82,22 @@ export default function PartyAttendees({ route, navigation }) {
 		if (!isHost || id === userId) return <></>;
 		if (attendeeIsHost) {
 			return (
-				<TouchableOpacity
+				<Button
+					variant={"outlined"}
 					onPress={() => demoteToMember(id)}
-					style={{
-						...ButtonStyles.buttonSmall,
-						...ButtonStyles.primaryOutlined,
-					}}>
-					<Text
-						style={{ ...ButtonStyles.buttonTextSmall, color: Colors.primary }}>
-						Demote to Member
-					</Text>
-				</TouchableOpacity>
+					size="sm">
+					Demote to Member
+				</Button>
 			);
 		} else {
 			return (
-				<TouchableOpacity
+				<Button
+					variant={"outlined"}
+					colorScheme="secondary"
 					onPress={() => promoteToHost(id)}
-					style={{
-						...ButtonStyles.buttonSmall,
-						...ButtonStyles.secondaryOutlined,
-					}}>
-					<Text
-						style={{
-							...ButtonStyles.buttonTextSmall,
-							color: Colors.secondary,
-						}}>
-						Promote to Host
-					</Text>
-				</TouchableOpacity>
+					size="sm">
+					Promote to Host
+				</Button>
 			);
 		}
 	}

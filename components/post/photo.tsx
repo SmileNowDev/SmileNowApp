@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import likeApi from "../../api/interaction/like";
 import Avatar from "../avatar";
 import DefaultOptions from "../core/defaultOptions";
+import * as Haptics from "expo-haptics";
 
 import ModalWrapper from "../core/modalWrapper";
 import dayjs from "dayjs";
 import DownloadPost from "./downloadPost";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Polaroid from "./polaroid";
+import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 dayjs.extend(relativeTime);
 export interface PhotoProps {
 	postId: string;
@@ -42,20 +46,43 @@ export default function Photo({
 	const [downloadModalVisible, setDownloadModalVisible] = useState(false);
 	const [liked, setLiked] = useState(isLiked ? true : false);
 	const [likesCount, setLikesCount] = useState(likes);
-
-	async function handleLike() {
+	const [lastTap, setLastTap] = useState(null);
+	const handleDoubleTap = () => {
+		const now = Date.now();
+		const DOUBLE_PRESS_DELAY = 300;
+		if (lastTap && now - lastTap < DOUBLE_PRESS_DELAY) {
+			handleLike("double-tap");
+		} else {
+			setLastTap(now);
+		}
+	};
+	async function handleLike(method: string) {
 		if (!liked) {
 			const result = await likeApi.create({ postId });
 			if (result.ok) {
+				if (method === "double-tap") {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+				} else {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+				}
+
+				trackEvent("Like_Post", {
+					method: method,
+					isDisliking: false,
+				});
 				setLiked(true);
 				setLikesCount((p) => {
 					let c = p;
 					return c + 1;
 				});
 			}
-		} else {
+		} else if (method !== "double-tap") {
 			const result = await likeApi.deleteLike({ postId });
 			if (result.ok) {
+				trackEvent("Like_Post", {
+					location: method,
+					isDisliking: true,
+				});
 				setLiked(false);
 				setLikesCount((p) => {
 					let c = p;
@@ -63,7 +90,6 @@ export default function Photo({
 				});
 			}
 		}
-		// refresh();
 	}
 
 	function handleEndZoom() {
@@ -73,7 +99,10 @@ export default function Photo({
 	return (
 		<>
 			<View style={styles.photo}>
-				<Polaroid imageUri={image} takenAt={date} postId={postId} />
+				<TouchableWithoutFeedback onPress={handleDoubleTap}>
+					<Polaroid imageUri={image} takenAt={date} postId={postId} />
+				</TouchableWithoutFeedback>
+
 				<View style={{ minHeight: 50, width: "100%" }}>
 					<Text
 						style={{
@@ -89,45 +118,41 @@ export default function Photo({
 							<View
 								style={{ flex: 1, overflow: "hidden", position: "relative" }}>
 								<Text
+									variant="button"
 									numberOfLines={1}
+									ellipsize="middle"
 									style={{
-										fontFamily: Fonts.button.fontFamily,
-										fontSize: Fonts.button.fontSize,
 										flex: 1,
 										width: "100%",
 									}}>
 									{owner.name}
 								</Text>
 								<Text
+									variant="small"
+									colorScheme="textSecondary"
 									style={{
-										fontFamily: Fonts.small.fontFamily,
-										fontSize: Fonts.small.fontSize,
-										color: Colors.textSecondary,
 										textAlign: "left",
+										flex: 1,
 									}}>
 									{dayjs(date).fromNow()}
 								</Text>
 							</View>
 						</View>
 						<View style={styles.reactionContainer}>
-							<TouchableOpacity style={styles.reaction} onPress={handleLike}>
+							<TouchableOpacity
+								style={styles.reaction}
+								onPress={() => handleLike("button")}>
 								<Icon
 									name="heart"
 									type="Ion"
 									size={25}
 									color={liked ? Colors.primary : Colors.textSecondary}
 								/>
-								<Text
-									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}>
-									{likesCount}
-								</Text>
+								<Text style={{ fontSize: 20 }}>{likesCount}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity style={styles.reaction} disabled>
 								<Icon name="message" size={25} color={Colors.textSecondary} />
-								<Text
-									style={{ fontFamily: Fonts.body.fontFamily, fontSize: 20 }}>
-									{comments}
-								</Text>
+								<Text style={{ fontSize: 20 }}>{comments}</Text>
 							</TouchableOpacity>
 							<TouchableOpacity
 								style={styles.reaction}

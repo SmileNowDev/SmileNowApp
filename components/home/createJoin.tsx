@@ -1,13 +1,16 @@
-import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
+import { Dim, GlobalStyles } from "../../styles/styles";
 import JoinPartyPage from "../../pages/joinParty";
 import ModalWrapper from "../core/modalWrapper";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import eventApi from "../../api/post/event";
 import { Colors } from "../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "../SmileNowUI";
+import { useAptabase } from "@aptabase/react-native";
 export default function CreateJoin({ navigation }) {
+	const { trackEvent } = useAptabase();
 	const [joining, setJoining] = useState(false);
 	const queryClient = useQueryClient();
 	const mutation = useMutation(() => eventApi.create(), {
@@ -31,6 +34,7 @@ export default function CreateJoin({ navigation }) {
 		},
 	});
 	async function createEvent() {
+		trackEvent("Create_Event");
 		mutation.mutate(null, {
 			onSuccess: async (data) => {
 				navigation.navigate("CreateParty", {
@@ -44,6 +48,9 @@ export default function CreateJoin({ navigation }) {
 				navigation.navigate("Home");
 			},
 		});
+	}
+	function handleJoin() {
+		setJoining(true);
 	}
 
 	return (
@@ -65,40 +72,19 @@ export default function CreateJoin({ navigation }) {
 				}}
 			/>
 			<View style={GlobalStyles.footerButtonContainer}>
-				<TouchableOpacity
-					onPress={() => setJoining(true)}
-					style={{
-						...ButtonStyles.secondary,
-						...ButtonStyles.buttonLarge,
-						shadowColor: Colors.primary,
-
-						flex: 1,
-					}}>
-					<Text
-						style={{
-							...ButtonStyles.buttonTextLarge,
-							textAlign: "center",
-							fontWeight: "bold",
-						}}>
-						Join Party
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
+				<Button
+					style={{ width: Dim.width / 2.1 }}
+					size="xl"
+					colorScheme="secondary"
+					onPress={() => handleJoin()}>
+					Join Party
+				</Button>
+				<Button
+					size="xl"
 					onPress={() => createEvent()}
-					style={{
-						...ButtonStyles.primary,
-						...ButtonStyles.buttonLarge,
-
-						flex: 1,
-					}}>
-					<Text
-						style={{
-							...ButtonStyles.buttonTextLarge,
-							textAlign: "center",
-						}}>
-						Create Party
-					</Text>
-				</TouchableOpacity>
+					style={{ width: Dim.width / 2.1 }}>
+					Create Party
+				</Button>
 			</View>
 		</>
 	);

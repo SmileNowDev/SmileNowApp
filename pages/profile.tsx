@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import {
 	ActivityIndicator,
 	Image,
@@ -7,7 +7,6 @@ import {
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	TouchableWithoutFeedback,
 	View,
 } from "react-native";
 import { Colors, Fonts } from "../styles/theme";
@@ -15,9 +14,10 @@ import Header from "../components/layout/header";
 import Icon from "../components/core/icons";
 import userApi from "../api/user/user";
 import { Context } from "../providers/provider";
-import Avatar, { Picture } from "../components/avatar";
+import { Picture } from "../components/avatar";
 import { useQuery } from "@tanstack/react-query";
 import ScreenWrapper from "../components/core/screenWrapper";
+import { trackEvent } from "@aptabase/react-native";
 export type UserType = {
 	name: string;
 	pic: string;
@@ -66,6 +66,7 @@ export default function ProfilePage({ navigation }) {
 		<SafeAreaView>
 			<Header goBack title={"My Profile"} />
 			<ScreenWrapper
+				analyticsTitle="MyProfile"
 				loading={isLoading}
 				scrollEnabled={true}
 				onRefresh={refresh}>
@@ -87,7 +88,12 @@ export default function ProfilePage({ navigation }) {
 						}}>
 						<Picture pic={data.pic} size={150} />
 						<TouchableOpacity
-							onPress={() => navigation.navigate("TakeProfilePicture")}
+							onPress={() => {
+								trackEvent("Page_View", {
+									analyticsTitle: "TakeProfilePicture",
+								});
+								navigation.navigate("TakeProfilePicture");
+							}}
 							style={{
 								position: "absolute",
 								bottom: 0,
@@ -125,7 +131,7 @@ export default function ProfilePage({ navigation }) {
 					}}>
 					<TouchableOpacity
 						onPress={() => {
-							// TODO: open the app store page!
+							trackEvent("openLearnMore");
 							Linking.openURL("https://smile.samschmitt.net");
 						}}
 						style={{
@@ -147,14 +153,14 @@ export default function ProfilePage({ navigation }) {
 						<Text>Edit Profile</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => navigation.navigate("Settings")}
+						onPress={() => {
+							navigation.navigate("Settings");
+						}}
 						style={{ ...styles.optionButton, backgroundColor: Colors.border }}>
 						<Icon name="settings" type={"Feather"} size={30} />
 						<Text>Settings</Text>
 					</TouchableOpacity>
 				</View>
-
-				{/* TODO:  my pictures */}
 			</ScreenWrapper>
 		</SafeAreaView>
 	);

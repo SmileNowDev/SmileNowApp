@@ -7,18 +7,7 @@
 		"skipLibCheck": true,
 		"resolveJsonModule": true,
 		"strict": false,
-		"target": "esnext",
-		"baseUrl": "./",
-		"paths": {
-			"@components/*": ["components/*"],
-			"@constants/*": ["constants/*"],
-			"@hooks/*": ["hooks/*"],
-			"@navigation/*": ["navigation/*"],
-			"@screens/*": ["screens/*"],
-			"@services/*": ["services/*"],
-			"@types/*": ["types/*"],
-			"@utils/*": ["utils/*"]
-		}
+		"target": "esnext"
 	},
 	"extends": "expo/tsconfig.base"
 }

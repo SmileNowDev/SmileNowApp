@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useContext } from "react";
 import {
-	Button,
 	Image,
 	Text,
 	TextInput,
@@ -13,12 +12,12 @@ import {
 import { Colors, Fonts } from "../../styles/theme";
 // @ts-expect-error
 import LogoWhite from "../../assets/logo_white.png";
-import { ButtonStyles } from "../../styles/styles";
 import Icon from "../../components/core/icons";
 import authApi from "../../api/user/auth";
 import { Context } from "../../providers/provider";
 import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "../../components/SmileNowUI";
 
 export default function LoginPage({ navigation }) {
 	const [phone, setPhone] = useState("");
@@ -52,14 +51,12 @@ export default function LoginPage({ navigation }) {
 				display: "flex",
 				alignItems: "center",
 			}}>
-			{/* LOGO */}
 			<TouchableOpacity
 				onPress={() => navigation.goBack()}
 				style={{
-					...ButtonStyles.button,
 					position: "absolute",
 					top: 60,
-					left: 0,
+					left: 30,
 				}}>
 				<Icon name="arrow-back" color={Colors.background} size={30} />
 			</TouchableOpacity>
@@ -122,39 +119,29 @@ export default function LoginPage({ navigation }) {
 					marginTop: 20,
 				}}
 			/>
-			<TouchableOpacity
+			<Button
 				onPress={login}
 				disabled={phone.length < 10}
+				variant="outlined"
+				size="lg"
+				colorScheme="white"
 				style={{
-					...ButtonStyles.button,
-					...ButtonStyles.outlinedWhite,
 					marginTop: 40,
-					borderRadius: 5,
 					opacity: phone.length < 10 ? 0.5 : 1,
 					width: "100%",
 				}}>
-				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
-			</TouchableOpacity>
-
-			<TouchableOpacity
-				onPress={() => {
-					navigation.navigate("ForgotPass");
-				}}
+				Login
+			</Button>
+			<Button
+				variant="unstyled"
+				size="lg"
+				onPress={() => navigation.navigate("ForgotPass")}
 				style={{
-					...ButtonStyles.button,
-					marginTop: 40,
-					borderRadius: 5,
-					opacity: phone.length < 10 ? 0.5 : 1,
-					width: "100%",
+					marginTop: 10,
+					color: Colors.background,
 				}}>
-				<Text style={{ ...ButtonStyles.buttonTextLarge }}>
-					Forgot Password?
-				</Text>
-			</TouchableOpacity>
-
-			{/* header that lets you access party details */}
-			{/* list of pictures */}
-			{/* if they can, let them take a photo */}
+				Forgot Password?
+			</Button>
 		</View>
 	);
 }

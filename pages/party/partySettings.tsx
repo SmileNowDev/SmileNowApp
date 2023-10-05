@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, TouchableOpacity, View, Text } from "react-native";
+import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import Header from "../../components/layout/header";
 import { GlobalStyles, Dim } from "../../styles/styles";
 import Icon from "../../components/core/icons";

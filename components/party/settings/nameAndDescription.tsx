@@ -4,18 +4,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
 	ActivityIndicator,
 	Alert,
-	Button,
-	Text,
 	TextInput,
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { ButtonStyles, Dim, GlobalStyles } from "../../../styles/styles";
+import { GlobalStyles } from "../../../styles/styles";
 import { Colors, Fonts } from "../../../styles/theme";
 import { debounce } from "lodash";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "react-native-toast-notifications";
 import { IEvent } from "../../../pages/party/party";
+import { Button, Text } from "../../SmileNowUI";
 export default function NameAndDescription({
 	title,
 	description,
@@ -121,9 +120,9 @@ export default function NameAndDescription({
 		return (
 			<View style={{ padding: 10 }}>
 				<Text
+					variant="subTitle"
 					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.button.fontSize,
+						fontSize: 20,
 						flex: 0,
 					}}>
 					Party Details
@@ -171,29 +170,22 @@ export default function NameAndDescription({
 					</View>
 
 					{hasMadeEdits && (
-						<TouchableOpacity
+						<Button
 							onPress={() => abandonChanges()}
-							style={{
-								...ButtonStyles.buttonSmall,
-								...ButtonStyles.outlined,
-							}}>
-							<Icon name="refresh" size={12} color={Colors.textSecondary} />
-							<Text
-								style={{
-									...ButtonStyles.buttonTextSmall,
-									color: Colors.textSecondary,
-								}}>
-								Revert Changes
-							</Text>
-						</TouchableOpacity>
+							leftIcon={
+								<Icon name="refresh" size={12} color={Colors.textSecondary} />
+							}
+							size="sm"
+							variant="outlined"
+							colorScheme="gray">
+							Revert Changes
+						</Button>
 					)}
 				</View>
 
 				<Text
+					colorScheme="textSecondary"
 					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.textSecondary,
 						paddingBottom: 5,
 					}}>
 					Name:
@@ -229,10 +221,8 @@ export default function NameAndDescription({
 				</View>
 
 				<Text
+					colorScheme="textSecondary"
 					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.textSecondary,
 						paddingBottom: 5,
 						marginTop: 20,
 					}}>
@@ -275,50 +265,22 @@ export default function NameAndDescription({
 		return (
 			<View style={{ padding: 10 }}>
 				<Text
+					variant="subTitle"
 					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.button.fontSize,
-						width: "100%",
+						fontSize: 20,
 						marginBottom: 10,
 					}}>
 					Party Details
 				</Text>
-				<Text
-					style={{
-						fontFamily: Fonts.small.fontFamily,
-						fontSize: Fonts.small.fontSize,
-						color: Colors.textSecondary,
-					}}>
-					Name:
-				</Text>
+				<Text colorScheme="textSecondary">Name:</Text>
 
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.text,
-					}}>
-					{title}
-				</Text>
+				<Text>{title}</Text>
 
-				<Text
-					style={{
-						fontFamily: Fonts.small.fontFamily,
-						fontSize: Fonts.small.fontSize,
-						color: Colors.textSecondary,
-						marginTop: 20,
-					}}>
+				<Text colorScheme="textSecondary" style={{ marginTop: 20 }}>
 					Description:
 				</Text>
 
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.text,
-					}}>
-					{description}
-				</Text>
+				<Text>{description}</Text>
 			</View>
 		);
 	}

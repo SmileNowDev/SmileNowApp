@@ -1,21 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import {
-	Button,
-	Image,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-	Alert,
-} from "react-native";
+import { Image, TextInput, View, Alert } from "react-native";
 import { Colors, Fonts } from "../../styles/theme";
 // @ts-expect-error
 import LogoWhite from "../../assets/logo_white.png";
-import { ButtonStyles, Dim } from "../../styles/styles";
-import Icon from "../../components/core/icons";
 import authApi from "../../api/user/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button, Text } from "../../components/SmileNowUI";
 // todo - make sure button is disabled if phone number is not 10 digits and code is not entered
 // todo - make sure phone number is only numbers
 // todo - loading indicator on "next" press
@@ -75,14 +66,11 @@ export default function SignUpPage({ navigation }) {
 				}}
 			/>
 			<Text
+				variant="subTitle"
+				colorScheme="background"
 				style={{
-					textAlign: "left",
 					paddingHorizontal: 10,
 					width: "100%",
-
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.subTitle.fontSize,
-					color: Colors.background,
 				}}>
 				Sign Up
 			</Text>
@@ -105,27 +93,29 @@ export default function SignUpPage({ navigation }) {
 					color: Colors.background,
 				}}
 			/>
-			<TouchableOpacity
+			<Button
 				onPress={signUp}
 				disabled={phone.length < 10}
+				variant="outlined"
+				size="lg"
+				colorScheme="white"
 				style={{
-					...ButtonStyles.button,
-					...ButtonStyles.outlinedWhite,
 					marginTop: 40,
-					borderRadius: 5,
 					opacity: phone.length < 10 ? 0.5 : 1,
 					width: "100%",
 				}}>
-				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Next</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
+				Next
+			</Button>
+			<Button
+				variant="unstyled"
+				size="lg"
 				onPress={() => navigation.navigate("Login")}
 				style={{
-					...ButtonStyles.button,
 					marginTop: 10,
+					color: Colors.background,
 				}}>
-				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Login</Text>
-			</TouchableOpacity>
+				Login
+			</Button>
 		</View>
 	);
 }

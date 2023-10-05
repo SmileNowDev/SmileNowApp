@@ -5,17 +5,16 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	Animated,
-	TouchableWithoutFeedback,
 } from "react-native";
-import Header from "../components/layout/header";
-import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
+import { Dim } from "../styles/styles";
 import { Colors, Fonts } from "../styles/theme";
 import Icon from "../components/core/icons";
 import QRCode from "react-native-qrcode-svg";
 import { useQueryClient } from "@tanstack/react-query";
-import ScreenWrapper from "../components/core/screenWrapper";
 import PartyLoading from "../components/party/partyLoading";
 import AnimatedLottieView from "lottie-react-native";
+import { Button } from "../components/SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 
 export default function CreatePartyPage({ route, navigation }) {
 	const { eventId } = route.params;
@@ -140,54 +139,35 @@ export default function CreatePartyPage({ route, navigation }) {
 					justifyContent: "space-between",
 					paddingHorizontal: 4,
 				}}>
-				<TouchableOpacity
-					onPress={() => navigation.goBack()}
-					style={{
-						padding: 10,
-						zIndex: 100,
-						flexDirection: "row",
-						gap: 5,
-						alignItems: "center",
-					}}>
-					<Icon
-						name="chevron-left"
-						size={30}
-						type="Feather"
-						color={Colors.textSecondary}
-					/>
-					<Text
-						style={{
-							color: Colors.textSecondary,
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-						}}>
-						Back
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={{
-						padding: 10,
-						zIndex: 100,
-						flexDirection: "row",
-						gap: 5,
-						alignItems: "center",
-					}}
+				<Button
+					style={{ gap: 2 }}
+					variant={"unstyled"}
+					leftIcon={
+						<Icon
+							name="chevron-left"
+							size={25}
+							type="Feather"
+							color={Colors.textSecondary}
+						/>
+					}
+					onPress={() => navigation.goBack()}>
+					Back Home
+				</Button>
+
+				<Button
+					style={{ gap: 2 }}
+					variant={"unstyled"}
+					rightIcon={
+						<Icon
+							name="chevron-right"
+							size={25}
+							type="Feather"
+							color={Colors.textSecondary}
+						/>
+					}
 					onPress={() => navigation.navigate("Party", { eventId })}>
-					<Text
-						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
-							color: Colors.textSecondary,
-						}}>
-						Skip to Party
-					</Text>
-					<Icon
-						name="chevron-right"
-						size={30}
-						type="Feather"
-						color={Colors.textSecondary}
-					/>
-				</TouchableOpacity>
+					Skip To Party
+				</Button>
 			</View>
 			<SafeAreaView style={{ flex: 1, height: Dim.height }}>
 				<Animated.Text
@@ -344,25 +324,16 @@ export default function CreatePartyPage({ route, navigation }) {
 							<QRCode value={data.inviteCode} size={Dim.width - 150} />
 						</View>
 					</View>
-					<TouchableOpacity
+					<Button
+						variant="outlined"
+						colorScheme="gray"
 						onPress={() => {
 							navigation.navigate("PartySettings", { eventId, isHost: true });
 						}}
-						style={{
-							zIndex: 50,
-							width: Dim.width - 130,
-							...ButtonStyles.button,
-							...ButtonStyles.outlinedTextSecondary,
-						}}>
-						<Icon name="settings" color={Colors.textSecondary} />
-						<Text
-							style={{
-								...ButtonStyles.buttonText,
-								color: Colors.textSecondary,
-							}}>
-							Adjust Party Settings
-						</Text>
-					</TouchableOpacity>
+						style={{ zIndex: 50, width: Dim.width - 130 }}
+						leftIcon={<Icon name="settings" color={Colors.textSecondary} />}>
+						Adjust Party Settings
+					</Button>
 
 					<Text
 						style={{
@@ -373,9 +344,15 @@ export default function CreatePartyPage({ route, navigation }) {
 						Take the First Picture!
 					</Text>
 					<TouchableOpacity
-						onPress={() => navigation.navigate("Camera", { eventId })}
+						onPress={() => {
+							trackEvent("Take_Photo", {
+								eventId,
+								location: "Create Party Page",
+							});
+							navigation.navigate("Camera", { eventId });
+						}}
 						style={{
-							...ButtonStyles.primary,
+							backgroundColor: Colors.primary,
 							width: 80,
 							height: 80,
 							borderRadius: 40,

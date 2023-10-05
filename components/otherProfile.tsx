@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { Picture } from "./avatar";
 import { Colors, Fonts } from "../styles/theme";
-import { ButtonStyles } from "../styles/styles";
 import friendApi from "../api/user/friend";
 import userApi from "../api/user/user";
 import Icon from "./core/icons";
-import DefaultOptions from "./core/defaultOptions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Text } from "./SmileNowUI";
 type FriendStatus = "stranger" | "requestedYou" | "requested" | "accepted";
 export default function OtherProfile({ id }) {
 	const queryClient = useQueryClient();
@@ -72,80 +71,70 @@ export default function OtherProfile({ id }) {
 	function ActionButton() {
 		if (friendStatus === "stranger") {
 			return (
-				<TouchableOpacity
-					onPress={() => sendFriendRequest()}
-					style={{ ...ButtonStyles.button, ...ButtonStyles.primary }}>
-					<Icon name="person-add" size={20} color="white" />
-					<Text style={{ ...ButtonStyles.buttonText }}>
-						Send Friend Request
-					</Text>
-				</TouchableOpacity>
+				<Button
+					leftIcon={
+						<Icon name="person-add" size={20} color={Colors.background} />
+					}
+					onPress={() => sendFriendRequest()}>
+					Send Friend Request
+				</Button>
 			);
 		}
 		if (friendStatus === "requestedYou") {
 			return (
-				<>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 						}}>
 						{name} wants to be friends!
 					</Text>
-					<TouchableOpacity
-						onPress={() => acceptRequest.mutate()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.success }}>
-						<Icon name="person-add" size={20} color="white" />
-						<Text style={{ ...ButtonStyles.buttonText }}>
-							Accept Friend Request
-						</Text>
-					</TouchableOpacity>
-				</>
+					<Button
+						colorScheme="success"
+						leftIcon={
+							<Icon name="person-add" size={20} color={Colors.background} />
+						}
+						onPress={() => acceptRequest.mutate()}>
+						Accept Friend Request
+					</Button>
+				</View>
 			);
 		}
 		if (friendStatus === "requested") {
 			return (
-				<>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 							textAlign: "center",
 						}}>
 						Still waiting for {name} to add you back
 					</Text>
-					<TouchableOpacity
-						onPress={() => removeFriend()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}>
-						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
-							Friend Request Pending
-						</Text>
-					</TouchableOpacity>
-				</>
+					<Button colorScheme="gray" onPress={() => removeFriend()}>
+						Friend Request Pending
+					</Button>
+				</View>
 			);
 		}
-		if (friendStatus === "accepted") {
+		if (friendStatus === "accepted" || true) {
 			return (
-				<>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
-							fontFamily: Fonts.body.fontFamily,
-							fontSize: Fonts.body.fontSize,
 							marginBottom: 10,
 						}}>
 						You're friends with {name}
 					</Text>
-					<TouchableOpacity
-						onPress={() => removeFriend()}
-						style={{ ...ButtonStyles.button, ...ButtonStyles.gray }}>
-						<Icon name="person-remove" size={20} color={Colors.text} />
-						<Text style={{ ...ButtonStyles.buttonText, color: Colors.text }}>
-							Remove Friend
-						</Text>
-					</TouchableOpacity>
-				</>
+					<Button
+						variant="outlined"
+						colorScheme="danger"
+						leftIcon={
+							<Icon name="person-remove" size={20} color={Colors.danger} />
+						}
+						onPress={() => removeFriend()}>
+						Remove Friend
+					</Button>
+				</View>
 			);
 		}
 	}
@@ -162,18 +151,17 @@ export default function OtherProfile({ id }) {
 			}}>
 			<Picture size={80} pic={picture} />
 			<Text
+				variant="title"
 				style={{
 					marginTop: 20,
 					marginBottom: 5,
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: Fonts.title.fontSize,
 				}}>
 				{name || "Loading..."}
 			</Text>
 			<Text
+				variant="button"
+				colorScheme="textSecondary"
 				style={{
-					fontFamily: Fonts.title.fontFamily,
-					fontSize: Fonts.button.fontSize,
 					color: Colors.textSecondary,
 				}}>
 				@{userName || "username"}

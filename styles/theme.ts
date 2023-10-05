@@ -12,8 +12,10 @@ export const Colors = {
 	tertiaryDark: "#e3b96b",
 	//Others
 	urgent: "#ed7286",
-	danger: "#d1384a",
+	danger: "#FF1313",
+	dangerDark: "#b12a3a",
 	success: "#4caf50",
+	successDark: "#388e3c",
 	background: "#FAFAFA",
 	foreground: "#EBEBEB",
 	text: "#1F1F1F",

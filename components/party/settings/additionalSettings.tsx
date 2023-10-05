@@ -1,8 +1,7 @@
 import Icon from "../../core/icons";
 import eventApi from "../../../api/post/event";
 import React, { useContext } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
-import { ButtonStyles } from "../../../styles/styles";
+import { Alert, View } from "react-native";
 import { Colors, Fonts } from "../../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "react-native-toast-notifications";
@@ -10,8 +9,25 @@ import { IEvent } from "../../../pages/party/party";
 import { useNavigation } from "@react-navigation/native";
 import archiveApi from "../../../api/post/archive";
 import { Context } from "../../../providers/provider";
-
-function SettingsButton({ title, description, icon, buttonText, onPress }) {
+import { ButtonColorSchemeType } from "../../SmileNowUI/button";
+import { Button, Text } from "../../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
+interface ISettingsButton {
+	title: string;
+	description: string;
+	icon: string;
+	buttonText: string;
+	onPress: () => void;
+	colorScheme?: ButtonColorSchemeType;
+}
+function SettingsButton({
+	title,
+	description,
+	icon,
+	buttonText,
+	onPress,
+	colorScheme,
+}: ISettingsButton) {
 	return (
 		<View
 			style={{
@@ -27,39 +43,24 @@ function SettingsButton({ title, description, icon, buttonText, onPress }) {
 				style={{
 					flex: 1,
 				}}>
+				<Text>{title}</Text>
 				<Text
+					variant="small"
+					colorScheme="textSecondary"
 					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-						color: Colors.text,
-					}}>
-					{title}
-				</Text>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.small.fontSize,
-						color: Colors.textSecondary,
 						flex: 0,
 					}}>
 					{description}
 				</Text>
 			</View>
-			<TouchableOpacity
+			<Button
 				onPress={onPress}
-				style={{
-					...ButtonStyles.buttonSmall,
-					...ButtonStyles.gray,
-				}}>
-				<Icon name={icon} size={15} color={Colors.text} />
-				<Text
-					style={{
-						...ButtonStyles.buttonTextSmall,
-						color: Colors.text,
-					}}>
-					{buttonText}
-				</Text>
-			</TouchableOpacity>
+				size="xs"
+				variant="outlined"
+				colorScheme={colorScheme || "gray"}
+				leftIcon={<Icon name={icon} size={20} color={Colors.text} />}>
+				{buttonText}
+			</Button>
 		</View>
 	);
 }
@@ -91,6 +92,7 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 					type: "success",
 					placement: "top",
 				});
+
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},
@@ -114,6 +116,9 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 				toast.show("Your party has been restored", {
 					type: "success",
 					placement: "top",
+				});
+				trackEvent("archiveParty", {
+					isArchiving: false,
 				});
 				//@ts-expect-error
 				navigation.navigate("Home");
@@ -172,6 +177,7 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 				toast.show("You have been removed from the event", {
 					placement: "top",
 				});
+				trackEvent("leaveParty");
 				//@ts-expect-error
 				navigation.navigate("Home");
 			},
@@ -201,11 +207,10 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 		<View>
 			{/* Party Settings */}
 			<Text
+				variant="subTitle"
 				style={{
-					fontFamily: Fonts.subTitle.fontFamily,
-					fontSize: Fonts.button.fontSize,
-					width: "100%",
 					marginTop: 5,
+					fontSize: 20,
 				}}>
 				Party Settings
 			</Text>
@@ -241,27 +246,24 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 			) : (
 				<></>
 			)}
-			<TouchableOpacity
-				style={{
-					...ButtonStyles.button,
-					...ButtonStyles.outlined,
-					marginTop: 10,
-				}}
-				onPress={leaveParty}>
-				<Icon
-					name="logout"
-					size={25}
-					style={{
-						transform: [{ rotate: "180deg" }],
-					}}
-				/>
-				<Text
-					style={{
-						fontSize: 18,
-					}}>
-					Leave Party
-				</Text>
-			</TouchableOpacity>
+			<Button
+				size="md"
+				style={{ flex: 1, marginTop: 50 }}
+				variant="outlined"
+				colorScheme="danger"
+				onPress={leaveParty}
+				leftIcon={
+					<Icon
+						name="logout"
+						color={Colors.danger}
+						size={25}
+						style={{
+							transform: [{ rotate: "180deg" }],
+						}}
+					/>
+				}>
+				Leave Party
+			</Button>
 		</View>
 	);
 }

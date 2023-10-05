@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 import {
-	Button,
 	Image,
 	Text,
 	TextInput,
@@ -12,10 +11,9 @@ import {
 import { Colors, Fonts } from "../../styles/theme";
 // @ts-expect-error
 import LogoWhite from "../../assets/logo_white.png";
-import { ButtonStyles, Dim } from "../../styles/styles";
 import Icon from "../../components/core/icons";
 import authApi from "../../api/user/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "../../components/SmileNowUI";
 // todo - make sure button is disabled if phone number is not 10 digits and code is not entered
 // todo - make sure phone number is only numbers
 // todo - loading indicator on "next" press
@@ -46,14 +44,12 @@ export default function ForgotPassPage({ navigation }) {
 				display: "flex",
 				alignItems: "center",
 			}}>
-			{/* LOGO */}
 			<TouchableOpacity
 				onPress={() => navigation.goBack()}
 				style={{
-					...ButtonStyles.button,
 					position: "absolute",
 					top: 60,
-					left: 0,
+					left: 30,
 				}}>
 				<Icon name="arrow-back" color={Colors.background} size={30} />
 			</TouchableOpacity>
@@ -95,19 +91,19 @@ export default function ForgotPassPage({ navigation }) {
 					color: Colors.background,
 				}}
 			/>
-			<TouchableOpacity
+			<Button
 				onPress={forgotPassword}
 				disabled={phone.length < 10}
+				variant="outlined"
+				size="lg"
+				colorScheme="white"
 				style={{
-					...ButtonStyles.button,
-					...ButtonStyles.outlinedWhite,
 					marginTop: 40,
-					borderRadius: 5,
 					opacity: phone.length < 10 ? 0.5 : 1,
 					width: "100%",
 				}}>
-				<Text style={{ ...ButtonStyles.buttonTextLarge }}>Next</Text>
-			</TouchableOpacity>
+				Next
+			</Button>
 		</View>
 	);
 }

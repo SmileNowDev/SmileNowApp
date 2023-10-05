@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Image, Alert } from "react-native";
-import { ButtonStyles, GlobalStyles } from "../../styles/styles";
+import { View, StyleSheet, Image, Alert } from "react-native";
+import { GlobalStyles } from "../../styles/styles";
 import { Colors, Fonts } from "../../styles/theme";
 import Icon from "../core/icons";
 // @ts-expect-error
@@ -8,6 +8,7 @@ import logo from "../../assets/logo_color.png";
 import AnimatedLottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Button, Text } from "../SmileNowUI";
 export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 	const [showTutorials, setShowTutorials] = useState(false);
 	useEffect(() => {
@@ -16,6 +17,15 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 			else setShowTutorials(false);
 		});
 	}, []);
+	async function handleDontShowAgain() {
+		setShowTutorials(false);
+		await AsyncStorage.setItem("showPartyTutorial", "false");
+		setShowTutorials(false);
+		Alert.alert(
+			"We won't show you this again",
+			"Go to settings to change this"
+		);
+	}
 
 	if (isHost && showTutorials) {
 		return (
@@ -28,34 +38,15 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 							marginVertical: 20,
 						}}>
 						<Image source={logo} style={{ width: 60, height: 60 }} />
-
-						<Text
-							style={{
-								fontFamily: Fonts.subTitle.fontFamily,
-								fontSize: Fonts.subTitle.fontSize,
-							}}>
-							Welcome to your party!
-						</Text>
+						<Text>Welcome to your party!</Text>
 					</View>
 					<View style={styles.step}>
 						<Icon name="people" size={25} color={Colors.textSecondary} />
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							See Your Attendees
-						</Text>
+						<Text>See Your Attendees</Text>
 					</View>
 					<View style={styles.step}>
 						<Icon name="qr-code" size={25} color={Colors.textSecondary} />
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							Invite your friends to join
-						</Text>
+						<Text>Invite your friends to join</Text>
 					</View>
 					<View style={styles.step}>
 						<Icon
@@ -64,35 +55,18 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 							size={25}
 							color={Colors.textSecondary}
 						/>
-						<Text
-							style={{
-								fontFamily: Fonts.body.fontFamily,
-								fontSize: Fonts.body.fontSize,
-							}}>
-							Edit the name or notification settings
-						</Text>
+						<Text>Edit the name or notification settings</Text>
 					</View>
-					<TouchableOpacity
+					<Button
+						variant={"link"}
 						style={{
-							...ButtonStyles.button,
 							marginTop: 20,
 						}}
 						onPress={() => {
-							AsyncStorage.setItem("showPartyTutorial", "false");
-							setShowTutorials(false);
-							Alert.alert(
-								"We won't show you this again",
-								"Go to settings to change this"
-							);
+							handleDontShowAgain();
 						}}>
-						<Text
-							style={{
-								...ButtonStyles.buttonText,
-								color: Colors.textSecondary,
-							}}>
-							Don't Show Again
-						</Text>
-					</TouchableOpacity>
+						Don't Show Again
+					</Button>
 				</View>
 			</>
 		);
@@ -100,9 +74,8 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 		return (
 			<View style={styles.container}>
 				<Text
+					variant="subTitle"
 					style={{
-						fontFamily: Fonts.subTitle.fontFamily,
-						fontSize: Fonts.subTitle.fontSize,
 						textAlign: "center",
 					}}>
 					This party is just getting started!
@@ -116,8 +89,6 @@ export default function EmptyPartyMessage({ isHost }: { isHost: boolean }) {
 
 				<Text
 					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
 						textAlign: "center",
 					}}>
 					Who's going to take the first picture?

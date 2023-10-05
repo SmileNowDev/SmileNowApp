@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import { Colors, Fonts } from "../styles/theme";
-import { GlobalStyles, ButtonStyles, Dim } from "../styles/styles";
+import { GlobalStyles, Dim } from "../styles/styles";
 import reportApi from "../api/interaction/report";
 import Header from "../components/layout/header";
-import {
-	View,
-	SafeAreaView,
-	Text,
-	TextInput,
-	Alert,
-	TouchableOpacity,
-} from "react-native";
+import { View, SafeAreaView, TextInput, Alert } from "react-native";
+import { Button, Text } from "../components/SmileNowUI";
 export default function ReportPage({ route, navigation }) {
 	const { type, id } = route.params;
 	const [message, setMessage] = useState("");
@@ -44,14 +38,7 @@ export default function ReportPage({ route, navigation }) {
 		<SafeAreaView>
 			<Header goBack title="Report" />
 			<View style={{ padding: 10 }}>
-				<Text
-					style={{
-						fontFamily: Fonts.body.fontFamily,
-						fontSize: Fonts.body.fontSize,
-					}}>
-					{" "}
-					Why are you reporting this {type}
-				</Text>
+				<Text>Why are you reporting this {type}</Text>
 				<TextInput
 					placeholderTextColor={Colors.textSecondary}
 					style={{
@@ -65,14 +52,9 @@ export default function ReportPage({ route, navigation }) {
 					value={message}
 					onChangeText={setMessage}
 				/>
-				<TouchableOpacity
-					onPress={() => report()}
-					style={{
-						...ButtonStyles.buttonLarge,
-						...ButtonStyles.primary,
-					}}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Submit</Text>
-				</TouchableOpacity>
+				<Button onPress={() => report()} style={{ flex: 0.75, marginTop: 10 }}>
+					Submit
+				</Button>
 			</View>
 		</SafeAreaView>
 	);

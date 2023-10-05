@@ -1,19 +1,12 @@
 // File:
 // Default
 import React from "react";
-import {
-	Alert,
-	SafeAreaView,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { Alert, SafeAreaView, ScrollView, View } from "react-native";
 // Libraries
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ScreenWrapper from "../components/core/screenWrapper";
-import { ButtonStyles } from "../styles/styles";
 import Header from "../components/layout/header";
+import { Button, Text } from "../components/SmileNowUI";
+import { Dim } from "../styles/styles";
 
 export default function TermsAndConditions({ navigation }) {
 	// Functions
@@ -43,8 +36,12 @@ export default function TermsAndConditions({ navigation }) {
 			<Header goBack={false} />
 
 			<ScrollView style={{ padding: 10 }}>
+				<Text variant={"subTitle"}>Smile Now EULA & Privacy Policy</Text>
+				<Text variant="button" style={{ marginBottom: 20 }}>
+					Please Scroll and Click Accept
+				</Text>
 				<Text>EULA</Text>
-				<Text>
+				<Text style={{ fontSize: 8 }}>
 					This End-User License Agreement ("EULA") is a legal agreement between
 					you and Quae, Inc.. Our EULA was created by EULA Template for Quae.
 					This EULA agreement governs your acquisition and use of our Quae
@@ -106,7 +103,7 @@ export default function TermsAndConditions({ navigation }) {
 					accordance with the laws of US.
 				</Text>
 				<Text>Privacy Policy</Text>
-				<Text>
+				<Text style={{ fontSize: 8 }}>
 					Last updated: June 22, 2021 This Privacy Policy describes Our policies
 					and procedures on the collection, use and disclosure of Your
 					information when You use the Service and tells You about Your privacy
@@ -287,12 +284,11 @@ export default function TermsAndConditions({ navigation }) {
 					email: info@quae.app
 				</Text>
 
-				<TouchableOpacity
-					onPress={close}
-					style={{ ...ButtonStyles.primary, ...ButtonStyles.buttonLarge }}>
-					<Text style={{ ...ButtonStyles.buttonTextLarge }}>Accept</Text>
-				</TouchableOpacity>
-				<View style={{ height: 100 }} />
+				<View style={{ height: 250, alignItems: "center", paddingTop: 40 }}>
+					<Button size="lg" onPress={close} style={{ width: Dim.width * 0.8 }}>
+						Accept
+					</Button>
+				</View>
 			</ScrollView>
 		</SafeAreaView>
 	);

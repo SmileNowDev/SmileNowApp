@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { GlobalStyles } from "../../styles/styles";
 import UserCard from "../userCard";
 import * as Contacts from "expo-contacts";
@@ -7,6 +7,7 @@ import userApi from "../../api/user/user";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import { Colors } from "../../styles/theme";
+import { Text } from "../SmileNowUI";
 type ContactType = {
 	contactType: string;
 	firstName: string;

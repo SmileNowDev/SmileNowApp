@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@aptabase/react-native": "^0.3.0",
     "@dudigital/react-native-zoomable-view": "^1.1.4",
     "@expo-google-fonts/exo": "^0.2.3",
     "@expo-google-fonts/fuzzy-bubbles": "^0.2.3",
@@ -49,7 +50,7 @@
     "lottie-react-native": "^5.1.6",
     "react": "18.2.0",
     "react-native": "^0.71.6",
-    "react-native-dotenv": "^3.4.8",
+    "react-native-dotenv": "^3.4.9",
     "react-native-figma-squircle": "^0.3.3",
     "react-native-gesture-handler": "^2.10.1",
     "react-native-html-to-pdf": "^0.12.0",

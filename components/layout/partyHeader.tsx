@@ -1,9 +1,11 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../../styles/styles";
+import { Text } from "../SmileNowUI";
+import { trackEvent } from "@aptabase/react-native";
 interface HeaderProps {
 	title: string;
 	eventId: string;
@@ -41,7 +43,7 @@ export default function PartyHeader({
 
 				<Text
 					numberOfLines={1}
-					ellipsizeMode="tail"
+					ellipsize="tail"
 					style={{
 						fontFamily: Fonts.title.fontFamily,
 						fontSize: 20,
@@ -58,19 +60,29 @@ export default function PartyHeader({
 					gap: 15,
 				}}>
 				<TouchableOpacity
-					onPress={() =>
+					onPress={() => {
+						trackEvent("Party_Action", {
+							eventId,
+							action_name: "openPartyAttendees",
+							role: isHost ? "host" : "guest",
+						});
 						// @ts-expect-error
-						navigation.navigate("PartyAttendees", { eventId, isHost, name })
-					}>
+						navigation.navigate("PartyAttendees", { eventId, isHost, name });
+					}}>
 					<Icon name="people" size={25} color={Colors.textSecondary} />
 				</TouchableOpacity>
 				{isHost ? (
 					<>
 						<TouchableOpacity
-							onPress={() =>
+							onPress={() => {
+								trackEvent("Party_Action", {
+									eventId,
+									action_name: "openPartyInvite",
+									role: isHost ? "host" : "guest",
+								});
 								// @ts-expect-error
-								navigation.navigate("InviteToParty", { eventId })
-							}>
+								navigation.navigate("InviteToParty", { eventId });
+							}}>
 							<Icon name="qr-code" size={25} color={Colors.textSecondary} />
 						</TouchableOpacity>
 					</>
@@ -78,10 +90,15 @@ export default function PartyHeader({
 					<></>
 				)}
 				<TouchableOpacity
-					onPress={() =>
+					onPress={() => {
+						trackEvent("Party_Action", {
+							eventId,
+							action_name: "openPartySettings",
+							role: isHost ? "host" : "guest",
+						});
 						// @ts-expect-error
-						navigation.navigate("PartySettings", { eventId, isHost })
-					}>
+						navigation.navigate("PartySettings", { eventId, isHost });
+					}}>
 					<Icon
 						name="settings"
 						type="Feather"

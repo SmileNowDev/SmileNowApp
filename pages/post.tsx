@@ -13,11 +13,11 @@ import {
 } from "react-native";
 import Header from "../components/layout/header";
 import postApi from "../api/post/post";
-import Photo, { PhotoProps } from "../components/post/photo";
+import Photo from "../components/post/photo";
 import commentApi from "../api/interaction/comment";
 import Icon from "../components/core/icons";
 import { Colors } from "../styles/theme";
-import { ButtonStyles, Dim, GlobalStyles } from "../styles/styles";
+import { Dim, GlobalStyles } from "../styles/styles";
 import Comment from "../components/post/comment";
 import ScreenWrapper from "../components/core/screenWrapper";
 import ModalWrapper from "../components/core/modalWrapper";
@@ -28,6 +28,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
+import { Button } from "../components/SmileNowUI";
 export const imageWidth = Dim.width - 40;
 export const imageHeight = imageWidth + 100;
 
@@ -59,14 +60,16 @@ export default function PostPage({ route }) {
 		src: string;
 		caption: string;
 		image: string;
-		owner: {
+		user: {
 			_id: string;
 			name: string;
-			picture: string;
+			src: string;
 		};
 		date: string;
 		likes: number;
 		comments: number;
+		createdAt: string;
+		isLiked: boolean;
 	};
 	const {
 		data: postData,
@@ -172,29 +175,26 @@ export default function PostPage({ route }) {
 				<Header
 					goBack
 					rightContent={
-						// @ts-expect-error
 						postData?.user._id === userId ? (
-							<TouchableOpacity
-								onPress={() => setEditing(true)}
+							<Button
+								size="sm"
+								variant="outlined"
+								colorScheme="gray"
 								style={{
-									...ButtonStyles.buttonSmall,
-									...ButtonStyles.outlined,
 									position: "absolute",
 									right: 0,
-								}}>
-								<Icon name="edit" size={20} color={Colors.text} />
-								<Text
-									style={{
-										...ButtonStyles.buttonText,
-										color: Colors.text,
-									}}>
-									Edit
-								</Text>
-							</TouchableOpacity>
+								}}
+								onPress={() => setEditing(true)}
+								leftIcon={
+									<Icon name="edit" size={15} color={Colors.textSecondary} />
+								}>
+								Edit
+							</Button>
 						) : null
 					}
 				/>
 				<ScreenWrapper
+					analyticsTitle="Post Page"
 					onRefresh={() => {
 						refetchPost();
 						refetchComments();

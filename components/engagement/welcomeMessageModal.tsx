@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import engagementApi from "../../api/user/engagement";
 import WelcomeMessage from "./welcomeMessage";
 import ModalWrapper from "../core/modalWrapper";
-import { ButtonStyles, Dim } from "../../styles/styles";
+import { Dim } from "../../styles/styles";
 import Icon from "../core/icons";
 import { Colors, Fonts } from "../../styles/theme";
+import { Button } from "../SmileNowUI";
 
 export default function WelcomeMessageModal() {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -82,16 +83,14 @@ export default function WelcomeMessageModal() {
 							readMessage(message._id);
 							setModalVisible(false);
 						}}
-						type={"center"}
-					>
+						type={"center"}>
 						<View
 							style={{
 								position: "relative",
 								height: "100%",
 								borderRadius: 10,
 								maxHeight: Dim.height - 160,
-							}}
-						>
+							}}>
 							<TouchableOpacity
 								onPress={() => {
 									readMessage(message._id);
@@ -103,65 +102,14 @@ export default function WelcomeMessageModal() {
 									top: 0,
 									right: 0,
 									padding: 10,
-								}}
-							>
-								<Icon name='close' size={30} color={Colors.textSecondary} />
+								}}>
+								<Icon name="close" size={30} color={Colors.textSecondary} />
 							</TouchableOpacity>
-							<View
-								style={{
-									width: Dim.width - 40,
-									justifyContent: "center",
-									alignItems: "center",
-									position: "absolute",
-									bottom: 0,
-									zIndex: 100,
-								}}
-							>
-								<TouchableOpacity
-									onPress={() => readMessage(message._id)}
-									style={{
-										width: "80%",
-										...ButtonStyles.buttonLarge,
-										backgroundColor: Colors.primary,
-									}}
-								>
-									<Text
-										style={{
-											...ButtonStyles.buttonTextLarge,
-										}}
-									>
-										{message.buttonCTA || welcomeMessages.length === 1
-											? "Close"
-											: "Next"}
-									</Text>
-								</TouchableOpacity>
-								{welcomeMessages.length >= 2 ? (
-									<>
-										<TouchableOpacity
-											onPress={() => handleSkipAll()}
-											style={{
-												...ButtonStyles.button,
-												marginTop: 10,
-											}}
-										>
-											<Text
-												style={{
-													fontSize: 15,
-												}}
-											>
-												Close All
-											</Text>
-										</TouchableOpacity>
-									</>
-								) : (
-									<></>
-								)}
-							</View>
+
 							<View
 								style={{
 									maxHeight: Dim.height - 160,
-								}}
-							>
+								}}>
 								<View
 									style={{
 										borderRadius: 20,
@@ -170,10 +118,41 @@ export default function WelcomeMessageModal() {
 										alignItems: "center",
 										paddingTop: 30,
 										height: Dim.height - 160,
-									}}
-								>
+									}}>
 									<WelcomeMessage key={message._id + "1"} message={message} />
 								</View>
+							</View>
+							<View
+								style={{
+									width: Dim.width - 40,
+									justifyContent: "center",
+									alignItems: "center",
+									position: "absolute",
+									bottom: 0,
+									zIndex: 100,
+								}}>
+								<Button
+									onPress={() => readMessage(message._id)}
+									size="lg"
+									style={{
+										width: "80%",
+									}}>
+									{message.buttonCTA || welcomeMessages.length === 1
+										? "Close"
+										: "Next"}
+								</Button>
+								{welcomeMessages.length >= 2 ? (
+									<>
+										<Button
+											variant="unstyled"
+											onPress={() => handleSkipAll()}
+											style={{ marginTop: 10 }}>
+											Close All
+										</Button>
+									</>
+								) : (
+									<></>
+								)}
 							</View>
 						</View>
 					</ModalWrapper>

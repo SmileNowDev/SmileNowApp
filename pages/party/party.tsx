@@ -1,39 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	SafeAreaView,
 	Text,
 	TouchableOpacity,
 	View,
 	FlatList,
-	ActivityIndicator,
-	Image,
-	Alert,
 	TouchableWithoutFeedback,
-	Animated,
+	Alert,
 } from "react-native";
 import PartyHeader from "../../components/layout/partyHeader";
 import Photo from "../../components/post/photo";
-import Icon from "../../components/core/icons";
-import { Colors, Fonts } from "../../styles/theme";
-import { ButtonStyles, Dim, GlobalStyles } from "../../styles/styles";
+import { Fonts } from "../../styles/theme";
+import { Dim } from "../../styles/styles";
 import eventApi from "../../api/post/event";
 import postApi from "../../api/post/post";
 import ScreenWrapper from "../../components/core/screenWrapper";
 import EmptyPartyMessage from "../../components/info/emptyPartyMessage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import PartyLoading from "../../components/party/partyLoading";
-import {
-	useInfiniteQuery,
-	useQuery,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import ActivateParty from "../../components/party/activateParty";
 import TakePhoto from "../../components/party/takePhoto";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { imageHeight } from "../post";
-import NewPost from "../../components/party/newPosts";
+import { useIsFocused } from "@react-navigation/native";
 import PostingIndicator from "../../components/party/postingIndicator";
 import NewPosts from "../../components/party/newPosts";
+import { trackEvent } from "@aptabase/react-native";
 export type NotificationFrequencyType = "slow" | "normal" | "fast";
 export interface IEvent {
 	_id: string;
@@ -235,6 +225,9 @@ export default function PartyPage({ route, navigation }) {
 													<TouchableOpacity
 														delayPressIn={500}
 														onPress={() => {
+															trackEvent("View_Post", {
+																location: "party",
+															});
 															navigation.navigate("Post", {
 																postId: item._id,
 																eventId: eventId,
@@ -288,57 +281,3 @@ export default function PartyPage({ route, navigation }) {
 		);
 	}
 }
-// const [showHint1, setShowHint1] = useState(false);
-// function queryTipState() {
-// 	AsyncStorage.getItem("@10Min_Tip").then((result) => {
-// 		if (result === null) {
-// 			// if not found
-// 			setShowHint1(true);
-// 		}
-// 	});
-// }
-// useEffect(() => {
-// 	queryTipState();
-// }, []);
-// async function hideHint1() {
-// 	let result = await AsyncStorage.setItem("@10Min_Tip", "true");
-// }
-// {showHint1 ? (
-// 	<View
-// 		style={{
-// 			position: "absolute",
-// 			bottom: 100,
-// 			left: 20,
-// 			right: 20,
-// 			zIndex: 90,
-
-// 			backgroundColor: Colors.background,
-// 			...GlobalStyles.Container,
-// 			...GlobalStyles.modalShadow,
-// 		}}>
-// 		<Text
-// 			style={{
-// 				fontFamily: Fonts.body.fontFamily,
-// 				fontSize: Fonts.body.fontSize,
-// 				textAlign: "center",
-// 			}}>
-// 			Photos take 10 minutes to develop!
-// 		</Text>
-// 		<TouchableOpacity
-// 			onPress={() => hideHint1()}
-// 			style={{
-// 				marginTop: 25,
-// 				...ButtonStyles.button,
-// 				...ButtonStyles.primary,
-// 			}}>
-// 			<Text
-// 				style={{
-// 					...ButtonStyles.buttonText,
-// 				}}>
-// 				Got it!
-// 			</Text>
-// 		</TouchableOpacity>
-// 	</View>
-// ) : (
-// 	<></>
-// )}
