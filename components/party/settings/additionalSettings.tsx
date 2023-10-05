@@ -1,6 +1,6 @@
 import Icon from "../../core/icons";
 import eventApi from "../../../api/post/event";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Alert, View } from "react-native";
 import { Colors, Fonts } from "../../../styles/theme";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +12,8 @@ import { Context } from "../../../providers/provider";
 import { ButtonColorSchemeType } from "../../SmileNowUI/button";
 import { Button, Text } from "../../SmileNowUI";
 import { trackEvent } from "@aptabase/react-native";
+import { GlobalStyles } from "../../../styles/styles";
+import QueryLoadingStatus from "../../core/queryLoadingStatus";
 interface ISettingsButton {
 	title: string;
 	description: string;
@@ -19,6 +21,7 @@ interface ISettingsButton {
 	buttonText: string;
 	onPress: () => void;
 	colorScheme?: ButtonColorSchemeType;
+	disabled?: boolean;
 }
 function SettingsButton({
 	title,
@@ -27,17 +30,20 @@ function SettingsButton({
 	buttonText,
 	onPress,
 	colorScheme,
+	disabled,
 }: ISettingsButton) {
 	return (
 		<View
 			style={{
 				display: "flex",
-				flexDirection: "row",
+				flexDirection: "column",
 				justifyContent: "space-between",
 				alignItems: "flex-start",
 				width: "100%",
-				gap: 50,
-				marginVertical: 10,
+				gap: 10,
+				marginBottom: 5,
+				...GlobalStyles.Container,
+				backgroundColor: Colors.background,
 			}}>
 			<View
 				style={{
@@ -55,20 +61,43 @@ function SettingsButton({
 			</View>
 			<Button
 				onPress={onPress}
-				size="xs"
+				size="sm"
 				variant="outlined"
+				disabled={disabled}
+				style={{
+					width: 125,
+					paddingVertical: 10,
+				}}
 				colorScheme={colorScheme || "gray"}
-				leftIcon={<Icon name={icon} size={20} color={Colors.text} />}>
+				leftIcon={
+					<Icon
+						name={icon}
+						size={20}
+						color={
+							colorScheme === "danger"
+								? Colors.danger
+								: colorScheme === "success"
+								? Colors.success
+								: Colors.textSecondary
+						}
+					/>
+				}>
 				{buttonText}
 			</Button>
 		</View>
 	);
 }
-export default function AdditionalSettings({ eventId, isHost, archived }) {
+export default function AdditionalSettings({
+	eventId,
+	isHost,
+	archived,
+	active,
+}) {
 	const { userId } = useContext(Context);
 	const toast = useToast();
 	const navigation = useNavigation();
 	const queryClient = useQueryClient();
+	const [isActive, setIsActive] = useState(active);
 	const archiveMutation = useMutation(
 		//@ts-expect-error
 		({ eventId }) => archiveApi.create({ eventId }),
@@ -135,6 +164,72 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 			//@ts-expect-error
 			unArchiveMutation.mutate({ eventId });
 		}
+	}
+	const pauseMutation = useMutation((eventId) => eventApi.start({ eventId }), {
+		onSuccess: (data) => {
+			// =====
+			//example
+			// onSuccess: (data) => {
+			// 	//@ts-expect-error
+			// 	let muted = !data.data.muted;
+
+			// 	setIsMuted(muted);
+			// 	let message = muted
+			// 		? "Your notifications are off 🤫"
+			// 		: "You're now unmuted! 🎉";
+			// 	toast.show(message);
+			// 	if (muted) {
+			// 		trackEvent("Party_Action", {
+			// 			action_name: "muteNotifications",
+			// 		});
+			// 	} else {
+			// 		trackEvent("Party_Action", {
+			// 			action_name: "unmuteNotifications",
+			// 		});
+			// 	}
+			// 	queryClient.setQueryData(["event", eventId], (oldData) => ({
+			// 		...(oldData as IEvent),
+			// 		//@ts-expect-error
+			// 		muted: data.data.muted,
+			// 	}));
+
+			// =====
+
+			console.log("data", data.data);
+
+			// @ts-expect-error
+			let isActive = !data.data.started;
+			setIsActive(isActive);
+			if (isActive) {
+				trackEvent("Party_Action", {
+					action_name: "pauseParty",
+				});
+			} else {
+				trackEvent("Party_Action", {
+					action_name: "resumeParty",
+				});
+			}
+			let message = isActive
+				? "The party is back on 😎"
+				: "The party is paused now 😢";
+			toast.show(message, {
+				type: "info",
+			});
+			queryClient.invalidateQueries(["event", eventId]);
+			queryClient.setQueryData(["event", eventId], (oldData) => ({
+				...(oldData as IEvent),
+				isActive,
+			}));
+		},
+		onError: (error) => {
+			// console.log(error);
+			toast.show("Something went wrong, try again later", {
+				type: "danger",
+			});
+		},
+	});
+	async function handlePauseParty() {
+		pauseMutation.mutate(eventId);
 	}
 	const deleteMutation = useMutation(
 		//@ts-expect-error
@@ -205,65 +300,94 @@ export default function AdditionalSettings({ eventId, isHost, archived }) {
 	}
 	return (
 		<View>
-			{/* Party Settings */}
-			<Text
-				variant="subTitle"
+			{isActive ? <></> : <></>}
+			<View></View>
+			<View
 				style={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginBottom: 20,
 					marginTop: 5,
-					fontSize: 20,
 				}}>
-				Party Settings
-			</Text>
-			{!archived ? (
-				<SettingsButton
-					title="Archive Party"
-					description={
-						"Archived parties are accessible from your profile, but won't show up on the home page"
-					}
-					icon="archive"
-					buttonText="Archive"
-					onPress={toggleArchive}
+				<Text
+					variant="subTitle"
+					style={{
+						fontSize: 20,
+					}}>
+					Additional Settings
+				</Text>
+				<QueryLoadingStatus
+					isLoading={pauseMutation.isLoading}
+					status={pauseMutation.status}
 				/>
-			) : (
-				<SettingsButton
-					title="Unarchive Party"
-					description={"Bring this party back to your home page"}
-					icon="unarchive"
-					buttonText="Unarchive"
-					onPress={toggleArchive}
-				/>
-			)}
+			</View>
+
 			{isHost ? (
-				<SettingsButton
-					title="Delete Party"
-					description={
-						"This permanently deletes the party and all its pictures"
-					}
-					icon="delete"
-					buttonText="Delete"
-					onPress={deleteParty}
-				/>
-			) : (
-				<></>
-			)}
-			<Button
-				size="md"
-				style={{ flex: 1, marginTop: 50 }}
-				variant="outlined"
-				colorScheme="danger"
-				onPress={leaveParty}
-				leftIcon={
-					<Icon
-						name="logout"
-						color={Colors.danger}
-						size={25}
-						style={{
-							transform: [{ rotate: "180deg" }],
+				<>
+					<SettingsButton
+						title={isActive ? "Pause Party" : "Resume Party"}
+						description={
+							isActive
+								? "Temporarily pause this event, you can restart it later"
+								: "Get the party going again, like it never even stopped!"
+						}
+						icon={isActive ? "pause" : "play-circle-filled"}
+						buttonText={isActive ? "Pause" : "Resume"}
+						colorScheme={isActive ? "gray" : "success"}
+						onPress={() => {
+							handlePauseParty();
 						}}
 					/>
-				}>
-				Leave Party
-			</Button>
+					<SettingsButton
+						title="End Party"
+						description="Wrap up the event to unlock make the most of your pictures!"
+						icon="cancel"
+						buttonText="End Party"
+						onPress={() => {
+							Alert.alert("Implement the end party api ya bum");
+						}}
+					/>
+					<SettingsButton
+						title="Delete Party"
+						description={
+							"This permanently deletes the party and all its pictures"
+						}
+						colorScheme="danger"
+						icon="delete"
+						buttonText="Delete"
+						onPress={deleteParty}
+					/>
+				</>
+			) : (
+				<>
+					{!pauseMutation.data ? (
+						<>
+							<SettingsButton
+								title={archived ? "Unarchive Party" : "Archive Party"}
+								description={
+									archived
+										? "Archived parties are accessible from your profile, but won't show up on the home page"
+										: "Bring this party back to your home page"
+								}
+								icon={archived ? "unarchive" : "archive"}
+								buttonText={archived ? "Unarchive" : "Archive"}
+								onPress={toggleArchive}
+							/>
+						</>
+					) : (
+						<></>
+					)}
+					<SettingsButton
+						title="Leave Party"
+						description={"No Don't go, you're so sexy ah hhaa"}
+						icon="logout"
+						buttonText="Leave"
+						onPress={leaveParty}
+						colorScheme="danger"
+					/>
+				</>
+			)}
 		</View>
 	);
 }

@@ -26,7 +26,8 @@ export default function NotificationsSettings({
 	const { userId } = useContext(Context);
 	const queryClient = useQueryClient();
 	const toast = useToast();
-
+	const isActive = // @ts-expect-error
+	queryClient.getQueryData(["event", eventId]).isActive as boolean;
 	const [notificationStatus, setNotificationStatus] = useState(active);
 	const [isMuted, setIsMuted] = useState(muted);
 	const [newNotificationFrequency, setNewNotificationFrequency] = useState(
@@ -75,35 +76,7 @@ export default function NotificationsSettings({
 			{ eventId, userId, muteStatus: isMuted }
 		);
 	}
-	const activeMutation = useMutation((eventId) => eventApi.start({ eventId }), {
-		onSuccess: (data) => {
-			//@ts-expect-error
-			setNotificationStatus(!data.data.started);
-			//@ts-expect-error
-			let message = !data.data.started
-				? "The party is officially started 😎"
-				: "The party is over 😢";
-			toast.show(message, {
-				type: "info",
-			});
-			queryClient.setQueryData(["event", eventId], (oldData) => ({
-				...(oldData as IEvent),
-				//@ts-expect-error
-				isActive: data.data.started,
-			}));
-		},
-		onError: (error) => {
-			// console.log(error);
-			toast.show("Something went wrong, try again later", {
-				type: "danger",
-			});
-		},
-	});
-	async function handleNotificationStatusChange() {
-		// console.log("here");
-		// api to switch notification status
-		activeMutation.mutate(eventId);
-	}
+
 	const notificationFrequencyMutation = useMutation(
 		// @ts-expect-error
 		({ eventId, frequency }) =>
@@ -150,6 +123,7 @@ export default function NotificationsSettings({
 	}
 	return (
 		<View>
+			<Text>{isActive.toString()}</Text>
 			<View
 				style={{
 					display: "flex",
@@ -166,47 +140,9 @@ export default function NotificationsSettings({
 					Notification Settings
 				</Text>
 				<QueryLoadingStatus
-					isLoading={activeMutation.isLoading || muteMutation.isLoading}
-					status={activeMutation.status || muteMutation.status}
+					isLoading={muteMutation.isLoading}
+					status={muteMutation.status}
 				/>
-			</View>
-			<View
-				style={{
-					gap: 10,
-					display: "flex",
-					flexDirection: "row",
-					alignItems: "flex-start",
-					justifyContent: "flex-start",
-					padding: 5,
-					marginTop: 10,
-				}}>
-				{notificationStatus ? (
-					<View>
-						<PulseIndicator color={Colors.primary} size={20} />
-					</View>
-				) : (
-					<Icon name="circle" size={20} color={Colors.textSecondary} />
-				)}
-				<View style={{ flex: 1 }}>
-					<Text>
-						This party is {notificationStatus ? "active" : "inactive"}
-					</Text>
-					<Text variant="small" colorScheme="textSecondary">
-						{notificationStatus
-							? "Notifications are being sent out randomly every few minutes"
-							: "No notifications are being sent out right now, activate the party to start notifications"}
-					</Text>
-				</View>
-
-				{isHost ? (
-					<Switch
-						value={notificationStatus}
-						onValueChange={handleNotificationStatusChange}
-						disabled={activeMutation.isLoading}
-					/>
-				) : (
-					<></>
-				)}
 			</View>
 
 			<View

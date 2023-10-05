@@ -58,6 +58,7 @@ export default function PartySettings({ route, navigation }: PartyDetailProps) {
 					isHost={data.isHost || isHost}
 					archived={data.archived}
 					eventId={data._id}
+					active={data.isActive}
 				/>
 				<View style={{ height: Dim.height / 2 }} />
 			</ScreenWrapper>
